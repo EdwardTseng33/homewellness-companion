@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Noto+Serif+TC:wght@400;500;600&family=Source+Serif+Pro:ital,wght@0,400;0,600;1,400&family=Fira+Code:wght@400;500&display=swap');
+
+@layer base {
+  :root {
+    --bg-cream: #FAF6F0;
+    --bg-paper: #FFFBF5;
+    --bg-soft: #F5E6D3;
+    --amber: #D4712A;
+    --amber-deep: #B85A1F;
+    --amber-light: #E89B5F;
+    --cocoa: #8B4513;
+    --cocoa-deep: #5A2D0A;
+    --ink: #2A1F18;
+    --ink-soft: #4A3A2E;
+    --ink-mute: #8A7560;
+  }
+
+  html,
+  body {
+    background: var(--bg-cream);
+    color: var(--ink);
+    font-family: 'Source Serif Pro', 'Noto Serif TC', Georgia, serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* warm subtle paper texture */
+  body {
+    background-image: radial-gradient(
+        circle at 20% 10%,
+        rgba(212, 113, 42, 0.04) 0,
+        transparent 40%
+      ),
+      radial-gradient(
+        circle at 80% 90%,
+        rgba(139, 69, 19, 0.05) 0,
+        transparent 45%
+      );
+    background-attachment: fixed;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: 'Fraunces', 'Noto Serif TC', Georgia, serif;
+    letter-spacing: -0.01em;
+  }
+
+  /* hide scrollbar arrows but keep functional */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(212, 113, 42, 0.3);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(212, 113, 42, 0.5);
+  }
+}
+
+@layer components {
+  .bubble-elder {
+    background-color: rgba(212, 113, 42, 0.12);
+    color: var(--amber-deep);
+    border-radius: 16px 16px 4px 16px;
+  }
+
+  .bubble-device {
+    background-color: var(--bg-soft);
+    color: var(--cocoa-deep);
+    border-radius: 16px 16px 16px 4px;
+  }
+
+  .tool-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(139, 69, 19, 0.08);
+    color: var(--cocoa);
+    font-family: 'Fira Code', ui-monospace, monospace;
+    font-size: 11px;
+  }
+
+  .display-italic {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+  }
+
+  .gradient-amber {
+    background: linear-gradient(
+      135deg,
+      var(--amber) 0%,
+      var(--amber-deep) 100%
+    );
+  }
+}
