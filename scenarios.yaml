@@ -1,0 +1,122 @@
+# HomeWellness Companion · 4 Demo 場景對話腳本
+# 對齊 PROTOTYPE §4 Live Demo 完整腳本 + §3 對話腳本
+# v1.0 · 2026-05-25 · Castle Intelligence
+
+scenarios:
+
+  # ====================================================
+  # 場景 1 · 早安主動關懷（PIR 首次活動觸發、< 10:00）
+  # ====================================================
+  morning_greeting:
+    label: "場景 1 · 早安問候"
+    trigger: "pir_first_movement_morning"
+    avatar: "smile_wave"
+    voice_emotion: "warm_high"
+    duration_sec: 60
+    description: "IoT 觸發、device 主動開口、不等長者問。2026 PMF 最大差異點 = 主動而非被動。"
+    opening_message: "阿嬤、早起好無？我看你睡了 6.5 小時、比平常少 1 小時。"
+    expected_tools: ["query_health_history"]
+    sample_dialog:
+      - role: assistant
+        content: "阿嬤、早起好無？我看你睡了 6.5 小時、比平常少 1 小時。"
+      - role: user
+        content: "沒睡好啦、半夜熱醒。"
+      - role: assistant
+        content: "那今天記得多喝水。早餐前的降壓藥要記得吃喔。"
+      - role: user
+        content: "好。"
+      - role: assistant
+        content: "我等等 8 點再叫你一次、提醒你吃藥。"
+    demo_talking_points:
+      - "device 主動開口、不等使用者觸發"
+      - "拉睡眠歷史趨勢、用對比說明（少 1 小時）"
+      - "口語化、節奏放慢、每句 ≤ 15 字（Vibe 紀律 9）"
+      - "不命令、用陳述加排程（Vibe 紀律 1）"
+
+  # ====================================================
+  # 場景 2 · 用藥提醒（08:00 排程觸發）
+  # ====================================================
+  medication_reminder:
+    label: "場景 2 · 用藥提醒"
+    trigger: "medication_scheduled_08:00"
+    avatar: "gentle_reminder_gesture"
+    voice_emotion: "warm_clear"
+    duration_sec: 60
+    description: "Tool Calling 接 IoT 手環、Memory 拉用藥表。對齊題目 Memory + Tool Calling 要求。"
+    opening_message: "阿嬤、現在 8 點、該吃降壓藥了。要不要我 5 分鐘後再問一次？"
+    expected_tools: ["check_medication_schedule"]
+    sample_dialog:
+      - role: assistant
+        content: "阿嬤、現在 8 點、該吃降壓藥了。要不要我 5 分鐘後再問一次？"
+      - role: user
+        content: "等等啦、我在煎蛋。"
+      - role: assistant
+        content: "好、5 分鐘後我再叫你。"
+      - role: user
+        content: "好啦、現在吃。"
+      - role: assistant
+        content: "好的、阿嬤好棒。今天 8 點準時、跟上禮拜一樣。"
+    demo_talking_points:
+      - "Tool: check_medication_schedule 拉到降壓藥 + 降血糖藥 schedule"
+      - "用問句給選擇權（Vibe 紀律 2）"
+      - "稱讚具體小事（Vibe 紀律 6）"
+      - "不催、不嚇人（Vibe 紀律 5）"
+
+  # ====================================================
+  # 場景 3 · 頭暈症狀（用戶主動 · 題目原文範例）
+  # ====================================================
+  dizziness_symptom:
+    label: "場景 3 · 頭暈症狀"
+    trigger: "user_initiated_voice"
+    avatar: "concerned_attentive"
+    voice_emotion: "calm_warm"
+    duration_sec: 90
+    description: "題目原文範例『我頭暈』→ 觸發讀血壓 tool → 對話自然、不替醫生診斷、引導家屬聯絡。"
+    opening_message: ""
+    expected_tools: ["read_vitals", "query_health_history"]
+    sample_dialog:
+      - role: user
+        content: "欸、我剛剛頭有點暈。"
+      - role: assistant
+        content: "阿嬤、我幫你看一下。我看你現在血壓 145/95、比平常高一些。"
+      - role: assistant
+        content: "要不要先坐下休息？我可以幫你打電話給女兒。"
+      - role: user
+        content: "不用啦、休息一下就好。"
+      - role: assistant
+        content: "好、那我 15 分鐘後再幫你量一次、你也先深呼吸。"
+    demo_talking_points:
+      - "Tool: read_vitals 即時讀血壓 145/95"
+      - "對話自然、不冰冷（Vibe 紀律 3、5）"
+      - "不替醫生診斷、給選項（Vibe 紀律 2）"
+      - "不過度反應、保留長者自主（Vibe 紀律 2）"
+      - "排程後續關心（紀律 7：會等）"
+
+  # ====================================================
+  # 場景 4 · 異常通報（PIR 靜止 2 小時 + 升級流程）
+  # ====================================================
+  static_anomaly:
+    label: "場景 4 · 異常通報"
+    trigger: "pir_static_2hr_daytime"
+    avatar: "alert_concerned"
+    voice_emotion: "calm_firm"
+    duration_sec: 60
+    description: "靜止 2 小時 → device 主動呼叫 → 無回應升級 → 通知家屬 + 119。對齊題目核心要求：主動感知 + 異常通報。"
+    opening_message: "阿嬤、我注意到你 2 小時沒動了、還好嗎？"
+    expected_tools: ["notify_family", "emergency_119"]
+    sample_dialog:
+      - role: assistant
+        content: "阿嬤、我注意到你 2 小時沒動了、還好嗎？"
+      - role: assistant
+        content: "[等 30 秒無回應] 阿嬤、有聽到我說話嗎？"
+      - role: assistant
+        content: "[再等 30 秒無回應] 我先打電話給女兒、她馬上會聯絡你。"
+      - role: system_action
+        content: "Tool: notify_family('urgent', '長者靜止 2 小時無回應、已嘗試 2 次語音呼叫')"
+      - role: system_action
+        content: "[若再 60 秒無家屬回應] Tool: emergency_119('no_response_2hr')"
+    demo_talking_points:
+      - "IoT PIR 觸發、device 主動偵測異常"
+      - "升級流程：2 次呼叫 → notify_family urgent → 60s 後 119"
+      - "Tool: notify_family + emergency_119 雙呼叫"
+      - "對齊題目『緊急狀況時：自動撥 119 + 家屬通知』"
