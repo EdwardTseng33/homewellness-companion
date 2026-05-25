@@ -2,8 +2,8 @@
 """
 HomeWellness Companion · Live Demo Chatbot
 ================================================
-面試 5/30 用 · Streamlit + LangGraph-style + Claude Sonnet 4.5
-不是骨架、是 working version
+銀髮陪伴 AI · Streamlit + LangGraph-style + Claude Sonnet 4.5
+真實可跑版本（含 Memory + Tool Calling + 主動觸發）
 
 跑法：
     pip install -r requirements.txt
