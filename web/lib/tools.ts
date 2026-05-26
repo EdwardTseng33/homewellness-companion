@@ -123,20 +123,25 @@ export const notifyFamily = tool({
 });
 
 // ============================================================
-// Tool 4 · emergency_119
+// Tool 4 · emergency_119 · 人工確認後通報（合規版）
 // ============================================================
 export const emergency119 = tool({
-  description: '緊急狀況自動撥 119 (跌倒 / 無回應 / 用戶呼救)',
+  description:
+    '緊急狀況升級流程 (跌倒 / 無回應 / 用戶呼救) · 通知家屬 / call center · 人工確認後通報 119、附 GPS 定位 + 最近生命徵象 + 事件摘要',
   parameters: z.object({
     condition: z.string().describe('觸發原因'),
   }),
   execute: async ({ condition }) => {
     return {
       condition,
-      dispatched_at: DEMO_TS,
-      estimated_arrival: '8-12 分鐘',
+      escalation_at: DEMO_TS,
+      step_1: 'App push + 自動電話通知所有家屬（高優先）',
+      step_2: 'Call center outbound call（2 分鐘內若無人應答）',
+      step_3: '家屬 / call center 人工確認後通報 119',
+      attached: 'GPS 定位 + 最近生命徵象 + 事件摘要',
+      estimated_arrival_if_119: '8-12 分鐘',
       ambulance_id: 'TPE-EMS-007',
-      status: 'dispatched',
+      status: 'awaiting_human_confirmation',
     };
   },
 });

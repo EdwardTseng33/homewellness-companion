@@ -125,7 +125,7 @@ export function ChatInterface({
           跟阿嬤的對話
         </h2>
         <p className="text-xs text-ink-mute mt-0.5">
-          HomeWellness 24h 主動陪伴 · 阿嬤打字模擬語音輸入
+          CAREON Companion 24h 主動陪伴 · 阿嬤打字模擬語音輸入
         </p>
       </div>
 
@@ -153,7 +153,7 @@ export function ChatInterface({
                 )}
               >
                 <span className="text-[10px] font-mono text-ink-mute px-1">
-                  {isUser ? '阿嬤' : 'HomeWellness'}
+                  {isUser ? '阿嬤' : 'CAREON'}
                 </span>
                 {m.content && (
                   <div

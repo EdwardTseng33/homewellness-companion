@@ -134,9 +134,9 @@ export const SCENARIOS: Scenario[] = [
     ],
     talkingPoints: [
       'IoT PIR 觸發、device 主動偵測異常',
-      '升級流程：2 次呼叫 → notifyFamily urgent → 60s 後 119',
+      '升級流程：2 次呼叫 → notifyFamily urgent → call center → 人工確認後通報 119',
       'Tool: notifyFamily + emergency119 雙呼叫',
-      '對齊「緊急狀況時：自動撥 119 + 家屬通知」',
+      '對齊 CAREON 合規定位：「家屬 / call center 人工確認後通報 119」（非自動撥、避法律 / 倫理風險）',
     ],
   },
 ];

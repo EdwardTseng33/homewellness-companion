@@ -2,9 +2,9 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'HomeWellness Companion · 家暖',
+  title: 'CAREON Companion · AI 智慧身心照護 + 智能給藥機',
   description:
-    'Elder care AI · proactive companion · Claude Sonnet 4.5 + 5 tools + 4 scenarios',
+    'CAREON · 銀髮居家身心照護員 · Claude Sonnet 4.6 + 5 tools + 4 scenarios · Safety Guardrail',
   icons: {
     icon: '/favicon.svg',
   },

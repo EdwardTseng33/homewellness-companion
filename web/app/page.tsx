@@ -109,10 +109,10 @@ export default function HomePage() {
             </div>
             <div>
               <h1 className="font-display text-lg sm:text-xl text-cocoa-deep leading-tight">
-                HomeWellness <span className="display-italic">Companion</span>
+                CAREON <span className="display-italic">Companion</span>
               </h1>
               <p className="text-[11px] text-ink-mute font-mono leading-tight">
-                家暖 · 銀髮陪伴 AI · Claude Sonnet 4.5
+                關懷在這裡 · AI 智慧身心照護 + 智能給藥機 · Sonnet 4.6
               </p>
             </div>
           </div>
