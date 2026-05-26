@@ -5,6 +5,10 @@
 // Design tokens 從 Anthropic Design 拆出 (window-primitives.jsx)
 
 import { useState, useEffect, useRef } from 'react';
+import {
+  MessageCircle, Phone, Menu, BarChart3, Pill, Search,
+  Thermometer, Users, Radio, User, Mic, Video as VideoIcon,
+} from 'lucide-react';
 
 // === Design Tokens ===
 const T = {
@@ -158,7 +162,7 @@ function SummaryPanel({ title, rows }: { title: string; rows: { label: string; v
   );
 }
 
-function CircleBtn({ label, sub, icon, bg, size = 72, onClick }: { label: string; sub?: string; icon: string; bg: string; size?: number; onClick?: () => void }) {
+function CircleBtn({ label, sub, icon, bg, size = 72, onClick }: { label: string; sub?: string; icon: React.ReactNode; bg: string; size?: number; onClick?: () => void }) {
   return (
     <button
       onClick={onClick}
@@ -173,22 +177,21 @@ function CircleBtn({ label, sub, icon, bg, size = 72, onClick }: { label: string
           width: size, height: size, borderRadius: '50%',
           background: bg,
           color: '#fff',
-          backdropFilter: 'blur(18px) saturate(130%)',
-          WebkitBackdropFilter: 'blur(18px) saturate(130%)',
+          backdropFilter: 'blur(20px) saturate(140%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(140%)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: size * 0.42,
-          boxShadow: '0 8px 24px rgba(0,0,0,0.35)',
+          boxShadow: '0 10px 28px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
           position: 'relative', overflow: 'hidden',
         }}
       >
         <div
           style={{
             position: 'absolute', top: 0, left: '15%', right: '15%', height: 1,
-            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent)',
+            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.65), transparent)',
             borderRadius: 999, pointerEvents: 'none',
           }}
         />
-        <span>{icon}</span>
+        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{icon}</span>
       </div>
       <span style={{ color: '#fff', fontFamily: '"Noto Sans TC", sans-serif', fontSize: 14, fontWeight: 600, letterSpacing: '0.02em', textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}>
         {label}
@@ -495,44 +498,180 @@ function ScreenMedication() {
 function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
   return (
     <>
-      <div style={{ position: 'absolute', top: 60, right: 32, width: 200, height: 150, background: T.glassDarkDeep, borderRadius: 16, border: '2px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: T.paper, fontFamily: 'Inter', fontSize: 12 }}>
-        我（PIP）
+      {/* LIVE 玻璃膠囊 · 紅脈動點 + 計時 · 在主時間 chip 旁 */}
+      <div style={{
+        position: 'absolute', top: 24, left: 200,
+        display: 'flex', alignItems: 'center', gap: 10,
+        padding: '8px 16px',
+        background: 'rgba(216,90,85,0.92)', color: '#fff',
+        backdropFilter: 'blur(14px) saturate(140%)',
+        WebkitBackdropFilter: 'blur(14px) saturate(140%)',
+        borderRadius: 999,
+        fontFamily: '"JetBrains Mono", monospace',
+        fontSize: 12, fontWeight: 700, letterSpacing: '0.18em',
+        boxShadow: '0 6px 20px rgba(216,90,85,0.45), inset 0 1px 0 rgba(255,255,255,0.25)',
+      }}>
+        <span style={{
+          width: 8, height: 8, borderRadius: '50%', background: '#fff',
+          animation: 'pulse 1.4s ease-in-out infinite',
+        }} />
+        LIVE · 02:14
       </div>
-      <div style={{ position: 'absolute', top: 32, left: 80, padding: '6px 14px', background: T.red, color: '#fff', borderRadius: 999, fontFamily: '"JetBrains Mono", monospace', fontSize: 12, fontWeight: 700, letterSpacing: '0.16em' }}>
-        🔴 LIVE · 02:14
+
+      {/* PIP 玻璃框 · 阿姨自己鏡頭 placeholder */}
+      <div style={{
+        position: 'absolute', top: 92, right: 32,
+        width: 196, height: 138, borderRadius: 16,
+        overflow: 'hidden',
+        background: 'linear-gradient(135deg, #3A2820 0%, #1F1B17 100%)',
+        border: '1.5px solid rgba(255,255,255,0.22)',
+        boxShadow: '0 12px 36px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.15)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        flexDirection: 'column', gap: 6,
+      }}>
+        {/* 阿姨頭像 placeholder · 暖色漸層圓 + 「阿」字 */}
+        <div style={{
+          width: 54, height: 54, borderRadius: '50%',
+          background: 'linear-gradient(135deg, #E5BFB8, #C9685F)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: '#fff', fontFamily: '"Noto Serif TC", serif',
+          fontSize: 22, fontWeight: 500,
+          boxShadow: '0 4px 12px rgba(201,104,95,0.4)',
+        }}>阿</div>
+        <span style={{ color: 'rgba(255,255,255,0.78)', fontFamily: 'Inter', fontSize: 11, letterSpacing: '0.06em' }}>我 · 王阿姨</span>
       </div>
-      <div style={{ position: 'absolute', bottom: 130, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 16 }}>
-        <LiquidButton color={T.glassDarkDeep as any}>🎤</LiquidButton>
-        <LiquidButton color={T.red} big onClick={onEnd}>結束</LiquidButton>
-        <LiquidButton color={T.glassDarkDeep as any}>📷</LiquidButton>
+
+      {/* 中央狀態提示（不擋臉、低調） */}
+      <div style={{
+        position: 'absolute', top: 80, left: '50%',
+        transform: 'translateX(-50%)',
+        padding: '6px 16px',
+        background: 'rgba(36,28,20,0.55)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        borderRadius: 999,
+        color: 'rgba(255,255,255,0.88)',
+        fontFamily: '"Noto Sans TC", sans-serif',
+        fontSize: 13, fontWeight: 500, letterSpacing: '0.04em',
+      }}>
+        通話中 · 兒子 · 大華
       </div>
+
+      {/* 底部 3 顆按鈕 · 玻璃化圓鈕 + 中央紅膠囊 */}
+      <div style={{
+        position: 'absolute', bottom: 86, left: '50%',
+        transform: 'translateX(-50%)',
+        display: 'flex', gap: 22, alignItems: 'center',
+      }}>
+        {/* Mic 玻璃圓鈕 */}
+        <button style={{
+          width: 64, height: 64, borderRadius: '50%',
+          background: 'rgba(36,28,20,0.72)',
+          backdropFilter: 'blur(20px) saturate(140%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(140%)',
+          border: '1.5px solid rgba(255,255,255,0.20)',
+          boxShadow: '0 10px 28px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.20)',
+          cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          position: 'relative',
+        }}>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+            <line x1="12" y1="19" x2="12" y2="22" />
+            <line x1="8" y1="22" x2="16" y2="22" />
+          </svg>
+        </button>
+
+        {/* End call 紅膠囊 */}
+        <button onClick={onEnd} style={{
+          padding: '20px 42px', borderRadius: 999,
+          background: 'linear-gradient(135deg, #D85A55 0%, #C04540 100%)',
+          color: '#fff', border: 'none',
+          fontFamily: '"Noto Serif TC", serif',
+          fontSize: 22, fontWeight: 500, letterSpacing: '0.04em',
+          boxShadow: '0 14px 36px rgba(216,90,85,0.55), inset 0 1px 0 rgba(255,255,255,0.25)',
+          cursor: 'pointer',
+        }}>結束</button>
+
+        {/* Camera 玻璃圓鈕 */}
+        <button style={{
+          width: 64, height: 64, borderRadius: '50%',
+          background: 'rgba(36,28,20,0.72)',
+          backdropFilter: 'blur(20px) saturate(140%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(140%)',
+          border: '1.5px solid rgba(255,255,255,0.20)',
+          boxShadow: '0 10px 28px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.20)',
+          cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+            <circle cx="12" cy="13" r="4" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Demo placeholder note */}
+      <div style={{
+        position: 'absolute', bottom: 28, left: 32,
+        fontFamily: '"JetBrains Mono", monospace', fontSize: 10,
+        color: 'rgba(255,255,255,0.55)', letterSpacing: '0.18em',
+      }}>● 示範影像 · 真實版接通兒子大華視訊</div>
     </>
   );
 }
 
 function ScreenMenu({ onPick }: { onPick: (s: ScreenId) => void }) {
-  const items: { label: string; emoji: string; screen?: ScreenId }[] = [
-    { label: '健康報告', emoji: '📊', screen: 'reflect' },
-    { label: '今日用藥', emoji: '💊', screen: 'medication' },
-    { label: '藥箱監測', emoji: '🔍' },
-    { label: '環境感測', emoji: '🌡️' },
-    { label: '聯絡家人', emoji: '👨‍👩‍👧', screen: 'family-call' },
-    { label: '陪伴聊天', emoji: '💬', screen: 'companion-confirm' },
-    { label: '連線裝置', emoji: '📡' },
-    { label: '個人資料', emoji: '👤' },
+  const items: { label: string; icon: React.ReactNode; tint: string; screen?: ScreenId }[] = [
+    { label: '健康報告', icon: <BarChart3 size={28} strokeWidth={1.6} />, tint: T.amber, screen: 'reflect' },
+    { label: '今日用藥', icon: <Pill size={28} strokeWidth={1.6} />, tint: T.amber, screen: 'medication' },
+    { label: '藥箱監測', icon: <Search size={28} strokeWidth={1.6} />, tint: T.sage },
+    { label: '環境感測', icon: <Thermometer size={28} strokeWidth={1.6} />, tint: T.sage },
+    { label: '聯絡家人', icon: <Users size={28} strokeWidth={1.6} />, tint: T.rose, screen: 'family-call' },
+    { label: '陪伴聊天', icon: <MessageCircle size={28} strokeWidth={1.6} />, tint: T.rose, screen: 'companion-confirm' },
+    { label: '連線裝置', icon: <Radio size={28} strokeWidth={1.6} />, tint: T.amber },
+    { label: '個人資料', icon: <User size={28} strokeWidth={1.6} />, tint: T.sage },
   ];
   return (
-    <div style={{ position: 'absolute', inset: 80, background: T.glassDeep, backdropFilter: 'blur(24px)', borderRadius: 24, padding: 32, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gridTemplateRows: 'repeat(2, 1fr)', gap: 18 }}>
-      {items.map((item, i) => (
-        <button
-          key={i}
-          onClick={() => item.screen && onPick(item.screen)}
-          style={{ background: '#fff', border: 'none', borderRadius: 18, padding: 16, cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, boxShadow: '0 4px 16px rgba(0,0,0,0.08)' }}
-        >
-          <span style={{ fontSize: 38 }}>{item.emoji}</span>
-          <span style={{ fontFamily: '"Noto Serif TC", serif', fontSize: 18, fontWeight: 500, color: T.ink }}>{item.label}</span>
-        </button>
-      ))}
+    <div style={{
+      position: 'absolute', inset: 60,
+      background: 'rgba(255,253,248,0.92)',
+      backdropFilter: 'blur(28px) saturate(140%)',
+      WebkitBackdropFilter: 'blur(28px) saturate(140%)',
+      borderRadius: 28,
+      padding: 36,
+      display: 'flex', flexDirection: 'column', gap: 24,
+      boxShadow: '0 24px 80px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.55)',
+    }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+        <span style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 11, letterSpacing: '0.22em', color: T.ink3 }}>WHAT WOULD YOU LIKE</span>
+        <span style={{ fontFamily: '"Newsreader", "Noto Serif TC", serif', fontSize: 30, fontWeight: 500, color: T.ink, letterSpacing: '-0.01em' }}>想做什麼？</span>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gridTemplateRows: 'repeat(2, 1fr)', gap: 16, flex: 1 }}>
+        {items.map((item, i) => (
+          <button
+            key={i}
+            onClick={() => item.screen && onPick(item.screen)}
+            style={{
+              background: '#FFFEFA',
+              border: '1px solid rgba(31,27,23,0.06)',
+              borderRadius: 20, padding: '20px 14px',
+              cursor: item.screen ? 'pointer' : 'default',
+              opacity: item.screen ? 1 : 0.72,
+              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12,
+              boxShadow: '0 6px 18px rgba(31,27,23,0.06), inset 0 1px 0 rgba(255,255,255,0.8)',
+              transition: 'transform 0.18s ease, box-shadow 0.18s ease',
+            }}
+          >
+            <div style={{
+              width: 52, height: 52, borderRadius: '50%',
+              background: item.tint, color: '#fff',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: `0 6px 16px ${item.tint}55`,
+            }}>{item.icon}</div>
+            <span style={{ fontFamily: '"Noto Serif TC", serif', fontSize: 17, fontWeight: 500, color: T.ink, letterSpacing: '0.01em' }}>{item.label}</span>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
@@ -688,7 +827,7 @@ export default function DevicePage() {
             <video
               key={videoSrc}
               autoPlay loop muted playsInline
-              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.85)' }}
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.96) saturate(1.05)' }}
             >
               <source src={videoSrc} type="video/mp4" />
             </video>
@@ -722,11 +861,11 @@ export default function DevicePage() {
           {/* Bottom Floating Buttons */}
           {screen !== 'standby' && screen !== 'goodnight' && screen !== 'menu' && screen !== 'family-call' && screen !== 'companion-confirm' && (
             <div style={{ position: 'absolute', bottom: 26, left: 26, right: 26, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', pointerEvents: 'none' }}>
-              <CircleBtn label="陪伴聊天" sub="剩 82 分" icon="💬" bg={T.amber} onClick={() => setScreen('companion-confirm')} />
+              <CircleBtn label="陪伴聊天" sub="剩 82 分" icon={<MessageCircle size={28} strokeWidth={1.8} color="#fff" />} bg={T.amber} onClick={() => setScreen('companion-confirm')} />
               <VoicePill />
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-end', pointerEvents: 'auto' }}>
-                <CircleBtn label="呼叫家人" icon="📞" bg={T.sage} size={56} onClick={() => setScreen('family-call')} />
-                <CircleBtn label="選單" icon="☰" bg="rgba(36,28,20,0.78)" size={56} onClick={() => setScreen('menu')} />
+                <CircleBtn label="呼叫家人" icon={<Phone size={22} strokeWidth={1.8} color="#fff" />} bg={T.sage} size={56} onClick={() => setScreen('family-call')} />
+                <CircleBtn label="選單" icon={<Menu size={22} strokeWidth={1.8} color="#fff" />} bg="rgba(36,28,20,0.78)" size={56} onClick={() => setScreen('menu')} />
               </div>
             </div>
           )}
