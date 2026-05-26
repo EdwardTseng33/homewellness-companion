@@ -57,7 +57,7 @@ function moodToTint(mood: string) {
 }
 
 function screenToVideo(s: ScreenId) {
-  if (s === 'standby' || s === 'goodnight') return null;
+  if (s === 'standby' || s === 'goodnight' || s === 'family-call' || s === 'menu' || s === 'reflect') return null;
   if (s === 'engage' || s === 'companion') return '/lily/lily-talking.mp4';
   if (s === 'health' || s === 'nudge') return '/lily/lily-greeting.mp4';
   if (s === 'medication') return '/lily/lily-listening.mp4';
@@ -498,6 +498,44 @@ function ScreenMedication() {
 function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
   return (
     <>
+      {/* 暖光室內漸層背景 · 模擬兒子家中環境 */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: `
+          radial-gradient(ellipse at 30% 25%, rgba(248,210,165,0.45) 0%, transparent 55%),
+          radial-gradient(ellipse at 75% 70%, rgba(201,104,95,0.18) 0%, transparent 50%),
+          linear-gradient(160deg, #3D2E22 0%, #2A1F18 45%, #1F1A14 100%)
+        `,
+      }} />
+
+      {/* 兒子大華頭像 placeholder · 大圓 + 漸層 + 「華」字 + 暖光 ring */}
+      <div style={{
+        position: 'absolute', top: '50%', left: '50%',
+        transform: 'translate(-50%, -56%)',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16,
+      }}>
+        <div style={{
+          width: 220, height: 220, borderRadius: '50%',
+          background: 'linear-gradient(135deg, #E5BFB8 0%, #C9685F 60%, #A04A45 100%)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: '#fff',
+          fontFamily: '"Noto Serif TC", serif',
+          fontSize: 96, fontWeight: 500,
+          boxShadow: '0 24px 60px rgba(201,104,95,0.45), 0 0 0 6px rgba(255,253,248,0.08), inset 0 3px 0 rgba(255,255,255,0.25)',
+        }}>華</div>
+        <span style={{
+          color: 'rgba(255,253,248,0.92)',
+          fontFamily: '"Newsreader", "Noto Serif TC", serif',
+          fontSize: 28, fontWeight: 500, letterSpacing: '0.02em',
+          textShadow: '0 2px 8px rgba(0,0,0,0.5)',
+        }}>兒子 · 大華</span>
+        <span style={{
+          color: 'rgba(255,253,248,0.62)',
+          fontFamily: '"JetBrains Mono", monospace',
+          fontSize: 12, letterSpacing: '0.18em',
+        }}>HE PICKED UP · 02:14</span>
+      </div>
+
       {/* LIVE 玻璃膠囊 · 紅脈動點 + 計時 · 在主時間 chip 旁 */}
       <div style={{
         position: 'absolute', top: 24, left: 200,
