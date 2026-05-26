@@ -4,6 +4,8 @@
 Next.js 14 + Vercel ai-sdk + Anthropic Claude Sonnet 4.6
 
 🔗 **Live Demo**：https://web-one-kohl-15.vercel.app
+   - 主對話 demo：`/`
+   - **Lily Avatar POC**：`/device` — 阿康/小晴 真人 avatar lipsync 雛形（castle-voice-engine 整合層）
 
 ---
 
@@ -157,6 +159,42 @@ npm run dev
 | Deployment | Vercel (zero config) |
 
 → **3 階段自架轉換策略**：M1-3 OpenAI Realtime 過渡 → M3-9 Inworld（100% 相容遷移）→ M9-24 完全自架（Pipecat + faster-whisper + Fish Speech + Kyutai Moshi）· 把每用戶月 voice 成本從 $50-80 砍到 $5-12 USD。
+
+---
+
+## 八-2、`/device` POC 與 castle-voice-engine 整合
+
+`/device` 路由為 **Lily avatar 雛形**——示範 CAREON Companion 主機端的 voice + avatar 互動層。
+
+### 路徑
+- `app/device/page.tsx` — 全螢幕 video loop + 對話泡泡 + idle / listening / talking / greeting 4 狀態切換
+- `public/lily/*.mp4` — 預錄 idle / listening / talking / greeting 4 段 loop
+- `public/lily/lily-portrait.png` — 靜態 portrait fallback
+
+### 與 castle-voice-engine 整合（Production 路徑）
+
+```
+[Browser /device]
+   ↓ user utterance (WebRTC mic)
+[Vercel Edge Function]  ← MVP 階段路徑
+   ↓ stream
+[castle-voice-engine API gateway]  ← Phase 2 自架
+   ├─→ faster-whisper STT (Jetson edge)
+   ├─→ OpenAI Realtime 2 / Bedrock Claude 4.5 (cloud · routing by intent)
+   ├─→ Fish Speech / Realtime 2 TTS stream
+   └─→ Wav2Lip / MuseTalk avatar lipsync (GPU · 60-90ms/frame)
+   ↓ video + audio stream
+[Browser /device]  ← seamless lipsync playback
+```
+
+目前 Web Demo 用**預錄 4 段 mp4** 模擬 state 切換；production 版會接 castle-voice-engine 的 lipsync stream API（Phase 2 自架完成後）。
+
+### 設計目標
+- 端到端 P99 延遲 &lt; 1.5s（user utter → first audio）
+- 70% 例行場景跑端側 Llama / Phi-4-mini，不上雲降隱私風險
+- 30% 複雜推理 + 情感對話路由到雲端 Realtime 2 / Claude
+
+→ 完整 latency budget 與 routing 決策，見 `CAREON-INTERVIEW-PROPOSAL-v1.html` §6.5 / §7.5-7.6。
 
 ---
 
