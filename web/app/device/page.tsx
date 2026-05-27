@@ -5,6 +5,41 @@
 // Design tokens 從 Anthropic Design 拆出 (window-primitives.jsx)
 
 import { useState, useEffect } from 'react';
+
+// === Lily 語音 · 瀏覽器內建 TTS（Web Speech API）· 無需網路 / 不用 API key ===
+// 每個對話畫面進入時自動念出對話泡內容；user gesture 後才能播（標準瀏覽器規則）
+let lilyVoiceReady = false;
+function unlockLilyVoice() {
+  if (typeof window === 'undefined' || lilyVoiceReady) return;
+  try {
+    const ping = new SpeechSynthesisUtterance('');
+    window.speechSynthesis.speak(ping);
+    lilyVoiceReady = true;
+  } catch { /* ignore */ }
+}
+function speakLily(text: string) {
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+  try {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'zh-TW';
+    u.rate = 0.92;
+    u.pitch = 1.05;
+    u.volume = 1;
+    const voices = window.speechSynthesis.getVoices();
+    const zh = voices.find(v => /zh-TW|cmn-Hant|zh-Hant/i.test(v.lang)) ||
+               voices.find(v => /zh/i.test(v.lang));
+    if (zh) u.voice = zh;
+    window.speechSynthesis.speak(u);
+  } catch { /* ignore */ }
+}
+function useLilyVoice(text: string) {
+  useEffect(() => {
+    const t = setTimeout(() => speakLily(text), 350);
+    return () => { clearTimeout(t); if (typeof window !== 'undefined') window.speechSynthesis.cancel(); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+}
 import {
   MessageCircle, Phone, PhoneOff, Menu, BarChart3, Pill, Search, Briefcase,
   Thermometer, Users, Radio, User, Mic, Video as VideoIcon, VideoOff,
@@ -448,11 +483,12 @@ function LiquidButton({ children, color, big, onClick }: { children: React.React
 
 // ===== Screens =====
 function ScreenStandby({ time, onWake }: { time: string; onWake: () => void }) {
+  const wakeWithVoice = () => { unlockLilyVoice(); onWake(); };
   return (
     // 整個畫面可點 · 觸碰任意處或說「莉莉」喚醒、設計稿 01 對齊：
     // 上方中央 logo / 左上溫濕度 / 右上 wifi · 中央大時鐘 · 時鐘下日期 · 再下方圓 mic 鈕含「點我喚醒」膠囊
     <div
-      onClick={onWake}
+      onClick={wakeWithVoice}
       style={{ position: 'absolute', inset: 0, color: T.paper, cursor: 'pointer' }}
     >
       {/* === 左上 · 溫濕度 + 適合保存 === */}
@@ -521,7 +557,7 @@ function ScreenStandby({ time, onWake }: { time: string; onWake: () => void }) {
         </div>
         {/* mic 喚醒大圓鈕 · 中央下方 ~48px gap */}
         <button
-          onClick={(e) => { e.stopPropagation(); onWake(); }}
+          onClick={(e) => { e.stopPropagation(); unlockLilyVoice(); onWake(); }}
           aria-label="點我喚醒"
           style={{
             marginTop: 56,
@@ -593,6 +629,7 @@ function ScreenAriaHere() {
 }
 
 function ScreenNudge() {
+  useLilyVoice('阿姨，您今天活動量不太夠。要不要出去走走？今天再走一千步，身體比較不會活動量太低喔。');
   return (
     <>
       <div style={{ position: 'absolute', top: '32%', left: 60 }}>
@@ -642,6 +679,7 @@ function ScreenEngage() {
 }
 
 function ScreenHealth() {
+  useLilyVoice('早安王阿姨，昨晚睡得怎麼樣？');
   return (
     <>
       <div style={{ position: 'absolute', top: '30%', left: 60 }}>
@@ -772,6 +810,7 @@ function ScreenCompanionConfirm({ onConfirm, onCancel }: { onConfirm: () => void
 
 // === 07 · 陪伴聊天 · 計時中 · 對齊設計稿（紅色小圓 stop icon + 計時中 chip） ===
 function ScreenCompanion({ onEnd }: { onEnd: () => void }) {
+  useLilyVoice('阿姨，我們聊聊天好嗎？想聊什麼都可以，我陪您。');
   return (
     <>
       <div style={{ position: 'absolute', top: 80, right: 32, width: 296 }}>
@@ -862,6 +901,7 @@ function ScreenCompanion({ onEnd }: { onEnd: () => void }) {
 }
 
 function ScreenMedication() {
+  useLilyVoice('早安王阿姨，該吃藥囉。配藥槽已經準備好兩顆，慢慢來。');
   return (
     <>
       <div style={{ position: 'absolute', top: '30%', left: 60 }}>
