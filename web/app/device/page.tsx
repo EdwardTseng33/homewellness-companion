@@ -96,12 +96,13 @@ function moodToTint(mood: string) {
 }
 
 // 每個說話畫面用對應的單一段預錄影片（含 lip-sync + 自然女聲）
-// 還沒生影片的畫面暫用靜態 portrait
 function screenToBg(s: ScreenId): { type: 'img' | 'video'; src: string } | null {
   if (s === 'standby' || s === 'goodnight' || s === 'family-call' || s === 'reflect') return null;
-  // 02 莉莉在 — Edward 生好的講話影片
   if (s === 'aria-here') return { type: 'video', src: '/lily/voice/02-aria-here.mp4' };
-  // 其餘 03 / 05 / 07 / 08 等影片生好後再接 · 暫用靜態 portrait
+  if (s === 'nudge') return { type: 'video', src: '/lily/voice/03-nudge.mp4' };
+  if (s === 'companion') return { type: 'video', src: '/lily/voice/07-companion.mp4' };
+  if (s === 'medication') return { type: 'video', src: '/lily/voice/08-medication.mp4' };
+  // 05 健康關心 等影片生好再接 · 其他畫面（10 menu / companion-confirm）用靜態 portrait
   return { type: 'img', src: '/lily/lily-portrait.png' };
 }
 
