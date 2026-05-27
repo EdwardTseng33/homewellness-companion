@@ -30,6 +30,8 @@ const T = {
   red: '#D85A55',
   paper: '#eaddc7',
   muted: '#9B8E80',
+  navy: '#5A7A8A',
+  violet: '#7C5CFC',
 } as const;
 
 // type 保留 12 個（避免大量 compile error）但 SCREENS 只列設計稿有的 8 個
@@ -301,7 +303,7 @@ function EndCallBtn({ icon, size = 56, onClick }: { icon: React.ReactNode; size?
       aria-label="結束"
       style={{
         width: size, height: size, borderRadius: '50%',
-        background: 'rgba(216,90,85,0.88)',
+        background: 'rgba(216,90,85,1.0)',
         backdropFilter: 'blur(24px) saturate(180%)',
         WebkitBackdropFilter: 'blur(24px) saturate(180%)',
         border: '1px solid rgba(255,255,255,0.18)',
@@ -371,14 +373,14 @@ function GlassChip({ children, primary = false, icon, onClick }: { children: Rea
         padding: icon ? '10px 18px 10px 14px' : '10px 20px',
         background: primary
           ? 'linear-gradient(155deg, rgba(143,168,151,0.92) 0%, rgba(122,148,130,0.86) 60%, rgba(95,122,104,0.88) 100%)'
-          : 'rgba(255,253,248,0.78)',
+          : 'transparent',
         color: primary ? '#fff' : T.ink,
         backdropFilter: 'blur(14px) saturate(140%)',
         WebkitBackdropFilter: 'blur(14px) saturate(140%)',
         borderRadius: 999,
         border: primary
           ? '1px solid rgba(255,255,255,0.22)'
-          : '1px solid rgba(122,148,130,0.32)',
+          : '1px solid rgba(31,27,23,0.15)',
         fontFamily: '"Noto Serif TC", "Newsreader", serif',
         fontSize: 17, fontWeight: 500,
         letterSpacing: '0.02em',
@@ -543,6 +545,17 @@ function ScreenStandby({ time, onWake }: { time: string; onWake: () => void }) {
             點我喚醒
           </span>
         </button>
+        <div style={{
+          marginTop: 12,
+          fontFamily: '"Noto Serif TC", serif',
+          fontStyle: 'italic',
+          fontSize: 14, fontWeight: 400,
+          color: 'rgba(255,253,248,0.55)',
+          letterSpacing: '0.04em',
+          textAlign: 'center',
+        }}>
+          或語音呼叫「莉莉在嘛 」
+        </div>
       </div>
     </div>
   );
@@ -807,7 +820,7 @@ function ScreenCompanion({ onEnd }: { onEnd: () => void }) {
           移除原本的「陪伴中 · 00:08」中央字幕（資訊已在右上面板）· 不疊在臉上 */}
       <div style={{
         position: 'absolute',
-        bottom: 80, left: '50%',
+        bottom: 50, left: '50%',
         transform: 'translateX(-50%)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
       }}>
@@ -829,10 +842,10 @@ function ScreenCompanion({ onEnd }: { onEnd: () => void }) {
         </button>
         <span style={{
           fontFamily: '"Noto Serif TC", serif',
-          fontSize: 14, fontWeight: 500,
+          fontSize: 14, fontWeight: 600,
           color: '#fff',
-          letterSpacing: '0.04em',
-          textShadow: '0 2px 8px rgba(0,0,0,0.6)',
+          letterSpacing: '0.06em',
+          textShadow: '0 2px 6px rgba(0,0,0,0.85), 0 1px 2px rgba(0,0,0,0.6)',
         }}>
           結束陪伴
         </span>
@@ -953,10 +966,10 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
         transform: 'translateX(-50%)',
         display: 'flex', gap: 18, alignItems: 'center',
       }}>
-        <CircleBtn iconOnly size={52} icon={<Mic size={22} strokeWidth={2} color="#fff" />} />
-        <CircleBtn iconOnly size={52} icon={<VideoOff size={22} strokeWidth={2} color="#fff" />} />
-        <CircleBtn iconOnly size={52} icon={<MessageCircle size={22} strokeWidth={2} color="#fff" />} />
-        <EndCallBtn icon={<PhoneOff size={26} strokeWidth={2.2} color="#fff" />} size={62} onClick={onEnd} />
+        <CircleBtn iconOnly size={56} icon={<Mic size={22} strokeWidth={2} color="#fff" />} />
+        <CircleBtn iconOnly size={56} icon={<VideoOff size={22} strokeWidth={2} color="#fff" />} />
+        <CircleBtn iconOnly size={56} icon={<MessageCircle size={22} strokeWidth={2} color="#fff" />} />
+        <EndCallBtn icon={<PhoneOff size={26} strokeWidth={2.2} color="#fff" />} size={56} onClick={onEnd} />
       </div>
 
       {/* 左側 VOLUME · 對齊設計稿 09（+/- 按鈕 + 直立棒 + 小圓滑塊） */}
@@ -1001,7 +1014,7 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
           <div style={{
             position: 'absolute', left: '50%', transform: 'translate(-50%, 50%)',
             bottom: (volume * 10) + '%',
-            width: 18, height: 18, borderRadius: '50%',
+            width: 24, height: 24, borderRadius: '50%',
             background: '#fff',
             boxShadow: '0 4px 10px rgba(0,0,0,0.45), 0 0 0 1px rgba(0,0,0,0.10)',
           }} />
@@ -1028,14 +1041,14 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
 function ScreenMenu({ onPick }: { onPick: (s: ScreenId) => void }) {
   type Item = { label: string; sub: string; voice: string; icon: React.ReactNode; tint: string; screen?: ScreenId };
   const items: Item[] = [
-    { label: '健康報告', sub: '每週 · 月 · 季', voice: "說『健康』", icon: <BarChart3 size={26} strokeWidth={1.6} />, tint: T.amber },
+    { label: '健康報告', sub: '每週 · 月 · 季', voice: "說『健康』", icon: <BarChart3 size={26} strokeWidth={1.6} />, tint: T.sage },
     { label: '今日用藥', sub: '18:00 · 剩 1 顆', voice: "說『吃藥』", icon: <Pill size={26} strokeWidth={1.6} />, tint: T.amber, screen: 'medication' },
-    { label: '藥箱監測', sub: '血壓藥剩 6 天', voice: "說『藥箱』", icon: <Search size={26} strokeWidth={1.6} />, tint: T.sage },
+    { label: '藥箱監測', sub: '血壓藥剩 6 天', voice: "說『藥箱』", icon: <Search size={26} strokeWidth={1.6} />, tint: T.roseDeep },
     { label: '環境感測', sub: '25° · 濕度 58%', voice: "說『環境』", icon: <Thermometer size={26} strokeWidth={1.6} />, tint: T.sage },
-    { label: '聯絡家人', sub: '聯絡 · 觸發狀態', voice: "說『家人』", icon: <Users size={26} strokeWidth={1.6} />, tint: T.roseDeep, screen: 'family-call' },
-    { label: '陪伴聊天', sub: '角色 · 充值 · 剩 90 分', voice: "說『陪伴』", icon: <MessageCircle size={26} strokeWidth={1.6} />, tint: T.amber, screen: 'companion' },
-    { label: '連線裝置', sub: 'Wi-Fi · 藍芽 · 手錶', voice: "說『裝置』", icon: <Radio size={26} strokeWidth={1.6} />, tint: T.sage },
-    { label: '個人資料', sub: '名稱 · 年齡 · 體態', voice: "說『我的』", icon: <User size={26} strokeWidth={1.6} />, tint: T.rose },
+    { label: '聯絡家人', sub: '聯絡 · 觸發狀態', voice: "說『家人』", icon: <Users size={26} strokeWidth={1.6} />, tint: T.amber, screen: 'family-call' },
+    { label: '陪伴聊天', sub: '角色 · 充值 · 剩 90 分', voice: "說『陪伴』", icon: <MessageCircle size={26} strokeWidth={1.6} />, tint: T.roseDeep, screen: 'companion' },
+    { label: '連線裝置', sub: 'Wi-Fi · 藍芽 · 手錶', voice: "說『裝置』", icon: <Radio size={26} strokeWidth={1.6} />, tint: T.navy },
+    { label: '個人資料', sub: '名稱 · 年齡 · 體態', voice: "說『我的』", icon: <User size={26} strokeWidth={1.6} />, tint: T.violet },
   ];
   return (
     <>
@@ -1362,7 +1375,7 @@ export default function DevicePage() {
               position: 'absolute', top: 24, left: 32,
               display: 'flex', alignItems: 'baseline', gap: 14,
               color: '#fff',
-              textShadow: '0 2px 10px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.4)',
+              textShadow: '0 3px 12px rgba(0,0,0,0.85), 0 1px 3px rgba(0,0,0,0.6)',
             }}>
               <span style={{ fontFamily: '"Newsreader", serif', fontSize: 22, fontWeight: 500, letterSpacing: '0.01em', lineHeight: 1 }}>{time}</span>
               <span style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 10, fontWeight: 600, opacity: 0.78, letterSpacing: '0.22em', lineHeight: 1 }}>室溫 24°</span>
