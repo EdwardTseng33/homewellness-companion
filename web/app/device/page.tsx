@@ -132,7 +132,7 @@ function StatusBadge({ status }: { status: 'ok' | 'warn' | 'info' }) {
   );
 }
 
-function SummaryPanel({ title, subtitle, rows }: { title: string; subtitle?: string; rows: { label: string; value: string; unit?: string; status?: 'ok' | 'warn' | 'info'; note?: string }[] }) {
+function SummaryPanel({ title, subtitle, rows, statusChip }: { title: string; subtitle?: string; rows: { label: string; value: string; unit?: string; status?: 'ok' | 'warn' | 'info'; note?: string }[]; statusChip?: { text: string; type: 'ok' | 'warn' } }) {
   return (
     <div
       style={{
@@ -146,6 +146,33 @@ function SummaryPanel({ title, subtitle, rows }: { title: string; subtitle?: str
         boxShadow: '0 12px 32px rgba(0,0,0,0.20)',
       }}
     >
+      {/* === 右上 status chip · ok = sage / warn = amber === */}
+      {statusChip && (
+        <span style={{
+          position: 'absolute', top: 14, right: 14,
+          display: 'inline-flex', alignItems: 'center', gap: 5,
+          padding: '4px 10px', borderRadius: 999,
+          background: statusChip.type === 'ok' ? T.sage : T.amber,
+          color: '#fff',
+          fontFamily: '"JetBrains Mono", monospace',
+          fontSize: 10, fontWeight: 700, letterSpacing: '0.14em',
+          boxShadow: statusChip.type === 'ok'
+            ? '0 4px 10px rgba(122,148,130,0.45), inset 0 1px 0 rgba(255,255,255,0.30)'
+            : '0 4px 10px rgba(212,113,42,0.45), inset 0 1px 0 rgba(255,255,255,0.30)',
+        }}>
+          <span style={{
+            width: 13, height: 13, borderRadius: '50%',
+            background: 'rgba(255,255,255,0.22)',
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            flexShrink: 0,
+          }}>
+            {statusChip.type === 'ok'
+              ? <Check size={9} strokeWidth={3.4} color="#fff" />
+              : <AlertTriangle size={9} strokeWidth={2.6} color="#fff" />}
+          </span>
+          {statusChip.text}
+        </span>
+      )}
       <div
         style={{
           position: 'absolute',
@@ -285,7 +312,7 @@ function EndCallBtn({ icon, size = 72, onClick }: { icon: React.ReactNode; size?
   );
 }
 
-function VoicePill({ state = 'listening' }: { state?: 'listening' | 'speaking' | 'thinking' }) {
+function VoicePill({ state = 'listening', prompt }: { state?: 'listening' | 'speaking' | 'thinking'; prompt?: string }) {
   const config = {
     listening: { color: T.roseDeep, text: '直接說、莉莉在聽' },
     speaking: { color: T.sage, text: '莉莉正在說話…' },
@@ -294,7 +321,7 @@ function VoicePill({ state = 'listening' }: { state?: 'listening' | 'speaking' |
   return (
     <div
       style={{
-        padding: '12px 24px',
+        padding: prompt ? '10px 22px 11px' : '12px 24px',
         background: 'rgba(36,28,20,0.72)',
         backdropFilter: 'blur(20px) saturate(140%)',
         WebkitBackdropFilter: 'blur(20px) saturate(140%)',
@@ -321,11 +348,74 @@ function VoicePill({ state = 'listening' }: { state?: 'listening' | 'speaking' |
           />
         ))}
       </div>
-      <span style={{
-        fontFamily: '"Noto Serif TC", serif',
-        fontSize: 17, fontWeight: 500, color: '#fff', letterSpacing: '0.02em',
-      }}>{config.text}</span>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+        <span style={{
+          fontFamily: '"Noto Serif TC", serif',
+          fontSize: 17, fontWeight: 500, color: '#fff', letterSpacing: '0.02em',
+          lineHeight: 1.2,
+        }}>{config.text}</span>
+        {prompt && (
+          <span style={{
+            fontFamily: '"JetBrains Mono", monospace',
+            fontSize: 11, fontWeight: 500,
+            color: 'rgba(255,253,248,0.62)',
+            letterSpacing: '0.04em',
+            lineHeight: 1.3,
+          }}>{prompt}</span>
+        )}
+      </div>
     </div>
+  );
+}
+
+// === GlassChip · 對話泡內兩顆 sage 玻璃膠囊選項（nudge / health / medication） ===
+// 設計稿真相：對話泡內、文字下方、橫排兩顆 sage 淡綠霧化玻璃膠囊
+function GlassChip({ children, primary = false, icon, onClick }: { children: React.ReactNode; primary?: boolean; icon?: React.ReactNode; onClick?: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        padding: icon ? '10px 18px 10px 14px' : '10px 20px',
+        background: primary
+          ? 'linear-gradient(155deg, rgba(143,168,151,0.92) 0%, rgba(122,148,130,0.86) 60%, rgba(95,122,104,0.88) 100%)'
+          : 'rgba(255,253,248,0.78)',
+        color: primary ? '#fff' : T.ink,
+        backdropFilter: 'blur(14px) saturate(140%)',
+        WebkitBackdropFilter: 'blur(14px) saturate(140%)',
+        borderRadius: 999,
+        border: primary
+          ? '1px solid rgba(255,255,255,0.22)'
+          : '1px solid rgba(122,148,130,0.32)',
+        fontFamily: '"Noto Serif TC", "Newsreader", serif',
+        fontSize: 17, fontWeight: 500,
+        letterSpacing: '0.02em',
+        cursor: 'pointer',
+        display: 'inline-flex', alignItems: 'center', gap: 6,
+        boxShadow: primary
+          ? '0 6px 16px rgba(95,122,104,0.45), inset 0 1px 0 rgba(255,255,255,0.30)'
+          : '0 4px 12px rgba(31,27,23,0.10), inset 0 1px 0 rgba(255,255,255,0.55)',
+        position: 'relative', overflow: 'hidden',
+      }}
+    >
+      <span style={{
+        position: 'absolute', top: 0, left: '14%', right: '14%', height: 1,
+        background: primary
+          ? 'linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent)'
+          : 'linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent)',
+        borderRadius: 999, pointerEvents: 'none',
+      }} />
+      {icon && (
+        <span style={{
+          width: 18, height: 18, borderRadius: '50%',
+          background: primary ? 'rgba(255,255,255,0.22)' : T.sage,
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          flexShrink: 0,
+        }}>
+          {icon}
+        </span>
+      )}
+      <span>{children}</span>
+    </button>
   );
 }
 
@@ -363,63 +453,115 @@ function LiquidButton({ children, color, big, onClick }: { children: React.React
 // ===== Screens =====
 function ScreenStandby({ time, onWake }: { time: string; onWake: () => void }) {
   return (
-    // 整個畫面可點 = 觸碰任意處或說「莉莉」喚醒 · 不放實體大按鈕
+    // 整個畫面可點 · 觸碰任意處或說「莉莉」喚醒、設計稿 01 對齊：
+    // 上方中央 logo / 左上溫濕度 / 右上 wifi · 中央大時鐘 · 時鐘下日期 · 再下方圓 mic 鈕含「點我喚醒」膠囊
     <div
       onClick={onWake}
-      style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: T.paper, cursor: 'pointer' }}
+      style={{ position: 'absolute', inset: 0, color: T.paper, cursor: 'pointer' }}
     >
-      {/* 左上角溫濕度 */}
-      <div style={{ position: 'absolute', top: 32, left: 32, display: 'flex', flexDirection: 'column', gap: 4, fontFamily: '"JetBrains Mono", monospace', fontSize: 13, letterSpacing: '0.14em', color: T.paper, opacity: 0.5 }}>
-        <span>室溫 24.2° · 濕度 58%</span>
-        <span>WIFI · 連線正常</span>
+      {/* === 左上 · 溫濕度 + 適合保存 === */}
+      <div style={{
+        position: 'absolute', top: 26, left: 32,
+        display: 'flex', alignItems: 'center', gap: 12,
+        fontFamily: '"JetBrains Mono", monospace',
+        fontSize: 11, letterSpacing: '0.18em',
+        color: T.paper, opacity: 0.62, fontWeight: 600,
+      }}>
+        <span>25°C · 58%RH</span>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+          <span style={{ width: 5, height: 5, borderRadius: '50%', background: T.sage }} />
+          適合保存
+        </span>
       </div>
-      {/* 中央 CAREON Companion logo · 待機時的品牌主軸 */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, marginBottom: 28, opacity: 0.78 }}>
+
+      {/* === 上方中央 · CAREON Companion logo === */}
+      <div style={{
+        position: 'absolute', top: 22, left: 0, right: 0,
+        display: 'flex', justifyContent: 'center', alignItems: 'baseline', gap: 8,
+        fontFamily: '"Newsreader", serif',
+        color: T.paper, opacity: 0.78,
+      }}>
+        <span style={{ fontSize: 22, fontWeight: 400, letterSpacing: '0.04em' }}>CAREON</span>
+        <span style={{ fontSize: 22, fontWeight: 400, fontStyle: 'italic', letterSpacing: '0.01em', color: T.amberSoft }}>Companion</span>
+      </div>
+
+      {/* === 右上 · 已連線 wifi === */}
+      <div style={{
+        position: 'absolute', top: 26, right: 32,
+        display: 'inline-flex', alignItems: 'center', gap: 6,
+        fontFamily: '"JetBrains Mono", monospace',
+        fontSize: 11, letterSpacing: '0.18em',
+        color: T.paper, opacity: 0.62, fontWeight: 600,
+      }}>
+        <span style={{ fontSize: 13 }}>⌃</span>
+        已連線
+      </div>
+
+      {/* === 中央 · 大時鐘 + 日期 + mic 喚醒鈕 === */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+        gap: 0,
+      }}>
+        {/* 大時鐘 */}
         <div style={{
           fontFamily: '"Newsreader", serif',
-          fontSize: 26, fontWeight: 400, letterSpacing: '0.18em',
-          color: T.amberSoft,
+          fontSize: 220, fontWeight: 300,
+          letterSpacing: '-0.04em', lineHeight: 1,
+          color: T.paper,
+          textShadow: '0 0 60px rgba(234,221,199,0.10)',
         }}>
-          CAREON
+          {time}
         </div>
+        {/* 日期 */}
         <div style={{
-          fontFamily: '"JetBrains Mono", monospace',
-          fontSize: 10, fontWeight: 500, letterSpacing: '0.42em',
-          color: T.paper, opacity: 0.5,
+          fontFamily: '"Noto Serif TC", serif',
+          fontSize: 22, fontWeight: 400,
+          marginTop: 10, opacity: 0.78,
+          color: T.paper,
+          letterSpacing: '0.04em',
         }}>
-          COMPANION
+          5 月 20 日　週二
         </div>
-      </div>
-      {/* 大時鐘 */}
-      <div style={{ fontFamily: '"Newsreader", serif', fontSize: 220, fontWeight: 300, letterSpacing: '-0.04em', lineHeight: 1, color: T.paper }}>
-        {time}
-      </div>
-      <div style={{ fontFamily: '"Noto Serif TC", serif', fontSize: 22, marginTop: 14, opacity: 0.7, color: T.paper }}>
-        5 月 26 日 · 週二 · 晚上
-      </div>
-      <div style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 11, letterSpacing: '0.34em', marginTop: 56, opacity: 0.32, color: T.amberSoft }}>
-        CAREON COMPANION · 莉莉待機中
-      </div>
-      {/* 底部極簡語音提示 · 不是按鈕 · 整個畫面都能點 */}
-      <div style={{ position: 'absolute', bottom: 48, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, opacity: 0.62 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 3, height: 14 }}>
-          {[0, 1, 2, 1, 0].map((idx, i) => (
-            <span
-              key={i}
-              style={{
-                width: 2, height: 10,
-                background: T.amberSoft,
-                borderRadius: 2,
-                animation: `wave${idx} ${1.2 + i * 0.1}s ease-in-out infinite`,
-                animationDelay: `${i * 0.1}s`,
-                transformOrigin: 'center',
-              }}
-            />
-          ))}
-        </div>
-        <span style={{ fontFamily: '"Noto Serif TC", serif', fontSize: 14, color: T.amberSoft, letterSpacing: '0.08em' }}>
-          說「莉莉」喚醒 · 或觸碰螢幕
-        </span>
+        {/* mic 喚醒大圓鈕 · 中央下方 ~48px gap */}
+        <button
+          onClick={(e) => { e.stopPropagation(); onWake(); }}
+          aria-label="點我喚醒"
+          style={{
+            marginTop: 56,
+            width: 96, height: 96, borderRadius: '50%',
+            background: 'linear-gradient(155deg, rgba(58,46,37,0.92) 0%, rgba(31,27,23,0.88) 60%, rgba(18,16,13,0.92) 100%)',
+            color: '#fff', border: 'none', cursor: 'pointer',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            gap: 4, padding: 0,
+            backdropFilter: 'blur(18px) saturate(140%)',
+            WebkitBackdropFilter: 'blur(18px) saturate(140%)',
+            boxShadow: '0 0 0 1.5px rgba(255,255,255,0.14), 0 16px 40px rgba(0,0,0,0.55), 0 4px 14px rgba(0,0,0,0.30), inset 0 2px 0 rgba(255,255,255,0.22), inset 0 -3px 8px rgba(0,0,0,0.30)',
+            position: 'relative', overflow: 'hidden',
+          }}
+        >
+          {/* 頂緣高光 */}
+          <div style={{
+            position: 'absolute', top: 1.5, left: '22%', right: '22%', height: 1.2,
+            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.72), transparent)',
+            borderRadius: 999, pointerEvents: 'none',
+          }} />
+          {/* mic icon · 上半部 */}
+          <Mic size={28} strokeWidth={2.2} color="#fff" style={{ marginTop: 6 }} />
+          {/* 內含小膠囊「點我喚醒」 · 下半部 */}
+          <span style={{
+            marginTop: 2,
+            padding: '2px 10px', borderRadius: 999,
+            background: 'rgba(0,0,0,0.40)',
+            border: '1px solid rgba(255,255,255,0.14)',
+            fontFamily: '"JetBrains Mono", monospace',
+            fontSize: 9, fontWeight: 600,
+            color: 'rgba(255,253,248,0.92)',
+            letterSpacing: '0.10em',
+          }}>
+            點我喚醒
+          </span>
+        </button>
       </div>
     </div>
   );
@@ -430,7 +572,7 @@ function ScreenAriaHere() {
     <>
       <div style={{ position: 'absolute', top: '36%', left: 60 }}>
         <GlassBubble accent={T.sage}>
-          <span style={{ display: 'block', fontFamily: '"JetBrains Mono", monospace', fontSize: 11, letterSpacing: '0.16em', fontWeight: 700, color: T.sage, marginBottom: 8 }}>
+          <span style={{ display: 'block', fontFamily: '"JetBrains Mono", monospace', fontSize: 13, letterSpacing: '0.16em', fontWeight: 700, color: T.sage, marginBottom: 10 }}>
             ● 莉莉 · 在
           </span>
           早安、王阿姨。<br />
@@ -441,6 +583,7 @@ function ScreenAriaHere() {
         <SummaryPanel
           title="今日健康"
           subtitle="TODAY · 5/26"
+          statusChip={{ text: '都正常', type: 'ok' }}
           rows={[
             { label: '血壓', value: '128/82', status: 'ok', note: '正常' },
             { label: '心跳', value: '72', unit: 'bpm', status: 'ok', note: '平穩' },
@@ -457,23 +600,25 @@ function ScreenAriaHere() {
 function ScreenNudge() {
   return (
     <>
-      <div style={{ position: 'absolute', top: '34%', left: 60 }}>
+      <div style={{ position: 'absolute', top: '32%', left: 60 }}>
         <GlassBubble accent={T.rose}>
-          <span style={{ display: 'block', fontFamily: '"JetBrains Mono", monospace', fontSize: 11, letterSpacing: '0.16em', fontWeight: 700, color: T.roseDeep, marginBottom: 8 }}>
-            ● 莉莉 · 注意提醒
+          <span style={{ display: 'block', fontFamily: '"JetBrains Mono", monospace', fontSize: 13, letterSpacing: '0.16em', fontWeight: 700, color: T.roseDeep, marginBottom: 10 }}>
+            ● 莉莉 · 活動關懷
           </span>
           阿姨、您今天<span style={{ color: T.roseDeep, fontWeight: 600 }}>活動量不太夠</span>。<br />
           要不要出去走走？今天再走 <span style={{ color: T.amber, fontWeight: 600 }}>1,000 步</span>、身體比較不會活動量太低喔。
+          {/* === 對話泡內 · 兩顆 sage 玻璃膠囊選項 === */}
+          <div style={{ display: 'flex', gap: 10, marginTop: 14 }}>
+            <GlassChip primary>好、看看</GlassChip>
+            <GlassChip>等一下</GlassChip>
+          </div>
         </GlassBubble>
-        <div style={{ display: 'flex', gap: 12, marginTop: 22 }}>
-          <LiquidButton color={T.sage}>好、看看</LiquidButton>
-          <LiquidButton>等一下</LiquidButton>
-        </div>
       </div>
       <div style={{ position: 'absolute', top: 80, right: 32 }}>
         <SummaryPanel
           title="今日活動"
           subtitle="TODAY · 5/26"
+          statusChip={{ text: '步數不足', type: 'warn' }}
           rows={[
             { label: '步數', value: '412', unit: '/ 3,000', status: 'warn', note: '步數不足' },
             { label: '心跳', value: '68', unit: 'bpm', status: 'ok' },
@@ -503,21 +648,23 @@ function ScreenHealth() {
     <>
       <div style={{ position: 'absolute', top: '30%', left: 60 }}>
         <GlassBubble accent={T.sage}>
-          <span style={{ display: 'block', fontFamily: '"JetBrains Mono", monospace', fontSize: 11, letterSpacing: '0.16em', fontWeight: 700, color: T.sage, marginBottom: 8 }}>
+          <span style={{ display: 'block', fontFamily: '"JetBrains Mono", monospace', fontSize: 13, letterSpacing: '0.16em', fontWeight: 700, color: T.sage, marginBottom: 10 }}>
             ● 莉莉 · 早晨關心
           </span>
           早安王阿姨～<br />
           <span style={{ color: T.amber, fontWeight: 600 }}>昨晚睡得怎麼樣？</span>
+          {/* === 對話泡內 · 兩顆 sage 玻璃膠囊選項 === */}
+          <div style={{ display: 'flex', gap: 10, marginTop: 14 }}>
+            <GlassChip primary>睡得好</GlassChip>
+            <GlassChip>沒睡好</GlassChip>
+          </div>
         </GlassBubble>
-        <div style={{ display: 'flex', gap: 12, marginTop: 22 }}>
-          <LiquidButton color={T.sage}>睡得好</LiquidButton>
-          <LiquidButton>沒睡好</LiquidButton>
-        </div>
       </div>
       <div style={{ position: 'absolute', top: 80, right: 32 }}>
         <SummaryPanel
           title="今早摘要"
           subtitle="TODAY · 5/26 早晨"
+          statusChip={{ text: '已啟動關懷', type: 'warn' }}
           rows={[
             { label: '睡眠', value: '6h 42m', status: 'warn', note: '稍微短' },
             { label: '感覺', value: '背酸', status: 'warn', note: '待關心' },
@@ -686,15 +833,16 @@ function ScreenMedication() {
     <>
       <div style={{ position: 'absolute', top: '30%', left: 60 }}>
         <GlassBubble accent={T.amber}>
-          <span style={{ display: 'block', fontFamily: '"JetBrains Mono", monospace', fontSize: 11, letterSpacing: '0.16em', fontWeight: 700, color: T.amber, marginBottom: 8 }}>
+          <span style={{ display: 'block', fontFamily: '"JetBrains Mono", monospace', fontSize: 13, letterSpacing: '0.16em', fontWeight: 700, color: T.amber, marginBottom: 10 }}>
             ● 莉莉 · 用藥提醒
           </span>
           早安王阿姨～<br />
           <span style={{ color: T.amber, fontWeight: 600 }}>該吃藥囉。</span><br />
-          配藥槽已準備好周顆，慢慢來。
-          <div style={{ display: 'flex', gap: 12, marginTop: 22 }}>
-            <LiquidButton color={T.sage}>✓ 我吃了</LiquidButton>
-            <LiquidButton>等 15 分</LiquidButton>
+          配藥槽已準備好兩顆，慢慢來。
+          {/* === 對話泡內 · 兩顆 sage 玻璃膠囊選項（含 ✓ icon） === */}
+          <div style={{ display: 'flex', gap: 10, marginTop: 14 }}>
+            <GlassChip primary icon={<Check size={11} strokeWidth={3.2} color="#fff" />}>我吃了</GlassChip>
+            <GlassChip>等 15 分</GlassChip>
           </div>
         </GlassBubble>
       </div>
@@ -702,6 +850,7 @@ function ScreenMedication() {
         <SummaryPanel
           title="早餐用藥"
           subtitle="TODAY · 5/26 上午"
+          statusChip={{ text: '配藥槽已出', type: 'warn' }}
           rows={[
             { label: '血壓藥', value: '1', unit: '顆 · AMLODIPINE', status: 'warn' },
             { label: '維他命 D', value: '1', unit: '顆 · 1000U', status: 'warn' },
@@ -1215,9 +1364,14 @@ export default function DevicePage() {
               <div style={{ position: 'absolute', bottom: 26, left: 26, pointerEvents: 'auto', zIndex: 5 }}>
                 <CircleBtn iconOnly size={56} icon={<MessageCircle size={24} strokeWidth={2} color="#fff" />} onClick={() => setScreen('companion')} />
               </div>
-              {/* 中央 · VoicePill */}
+              {/* 中央 · VoicePill · context-aware 副字 · 對齊設計稿 02 / 03 / 05 / 07-medication */}
               <div style={{ position: 'absolute', bottom: 36, left: '50%', transform: 'translateX(-50%)', pointerEvents: 'auto', zIndex: 5 }}>
-                <VoicePill />
+                <VoicePill prompt={(() => {
+                  if (screen === 'nudge') return '說「好、看看」或「等一下」';
+                  if (screen === 'health') return '說「睡得好」或「沒睡好」';
+                  if (screen === 'medication') return '說「我吃了」或「等一下」';
+                  return undefined;
+                })()} />
               </div>
               {/* 右下 · menu + phone 上下疊放 iconOnly 56px */}
               <div style={{ position: 'absolute', bottom: 26, right: 26, display: 'flex', flexDirection: 'column', gap: 12, pointerEvents: 'auto', zIndex: 5 }}>
