@@ -1402,11 +1402,11 @@ export default function DevicePage() {
           {bg && bg.type === 'video' && (
             <video
               key={bg.src}
-              autoPlay loop muted playsInline
+              src={bg.src}
+              autoPlay loop muted playsInline preload="auto"
+              poster="/lily/lily-portrait.png"
               style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-            >
-              <source src={bg.src} type="video/mp4" />
-            </video>
+            />
           )}
           {bg && bg.type === 'img' && (
             // eslint-disable-next-line @next/next/no-img-element
