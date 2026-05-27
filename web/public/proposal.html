@@ -1,0 +1,2272 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAREON · HomeWellness Companion · TPM 面試交付版</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500;1,9..144,600&family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400&family=Noto+Serif+TC:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-cream: #FAF6F0;
+  --bg-paper: #FFFBF5;
+  --bg-soft: #F5E6D3;
+  --bg-warm-line: #E8D6BA;
+  --bg-glow: #FDF4E3;
+  --amber: #D4712A;
+  --amber-deep: #B85A1F;
+  --amber-light: #E89B5F;
+  --amber-soft: #F0C088;
+  --cocoa: #8B4513;
+  --cocoa-deep: #5A2D0A;
+  --ink: #2A1F18;
+  --ink-soft: #4A3A2E;
+  --ink-mute: #8A7560;
+  --alert: #8B2C2C;
+  --peace: #5C7C3E;
+  --sky: #3E6B7C;
+  --serif-display: "Fraunces", "Noto Serif TC", "Georgia", serif;
+  --serif-body: "Source Serif Pro", "Fraunces", "Noto Serif TC", "Georgia", serif;
+  --serif-ch: "Noto Serif TC", "Fraunces", "Georgia", serif;
+  --mono: "Fira Code", monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--serif-body); font-size: 16px; line-height: 1.72;
+  color: var(--ink); background: var(--bg-cream);
+  font-variant-numeric: oldstyle-nums proportional-nums;
+}
+
+/* ============ NAV TOC ============ */
+nav.toc {
+  position: fixed; top: 0; left: 0; width: 240px; height: 100vh;
+  background: var(--bg-paper); border-right: 1px solid var(--bg-warm-line);
+  padding: 26px 20px; overflow-y: auto; z-index: 100;
+  font-family: var(--serif-ch); font-size: 13px;
+}
+nav.toc .logo {
+  font-family: var(--serif-display); font-style: italic; font-size: 22px;
+  color: var(--amber-deep); font-weight: 600; margin-bottom: 2px;
+}
+nav.toc .logo-zh {
+  font-family: var(--serif-ch); font-size: 13px; color: var(--cocoa);
+  letter-spacing: 0.18em; margin-bottom: 6px; font-weight: 500;
+}
+nav.toc .sub {
+  font-size: 10.5px; color: var(--ink-mute); letter-spacing: 0.16em;
+  margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--bg-warm-line);
+  text-transform: uppercase;
+}
+nav.toc ol { list-style: none; counter-reset: section; }
+nav.toc li { counter-increment: section; margin-bottom: 5px; line-height: 1.42; }
+nav.toc a {
+  color: var(--cocoa); text-decoration: none; display: block; padding: 4px 0 4px 10px;
+  border-left: 2px solid transparent; transition: all 0.2s; font-size: 12.5px;
+}
+nav.toc a:before {
+  content: counter(section, decimal-leading-zero) " · ";
+  color: var(--amber); font-family: var(--serif-display); font-style: italic;
+  font-weight: 500;
+}
+nav.toc a:hover { color: var(--amber-deep); border-left-color: var(--amber); background: var(--bg-soft); }
+nav.toc .meta {
+  margin-top: 20px; padding-top: 12px; border-top: 1px solid var(--bg-warm-line);
+  font-size: 11px; color: var(--ink-mute); line-height: 1.7;
+}
+
+/* ============ MAIN ============ */
+main { margin-left: 240px; max-width: 880px; padding: 50px 72px 100px; }
+
+/* ============ COVER · 全螢幕雙欄佈局 ============ */
+.cover {
+  /* 突破 main 的 880px 限制、佔滿整個視窗 */
+  position: relative;
+  margin-left: -312px;  /* 抵銷 main margin-left 240px + padding-left 72px */
+  margin-right: -72px;
+  margin-bottom: 80px;
+  padding: 0;
+  min-height: calc(100vh - 50px);
+  display: flex; align-items: center;
+  border-bottom: 1px solid var(--bg-warm-line);
+  background: linear-gradient(135deg, #FFFBF5 0%, #FAF6F0 100%);
+}
+.cover-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+  width: 100%; max-width: 1320px;
+  margin: 0 auto;
+  padding: 60px 80px 60px 320px; /* 左側多 padding 避開 nav */
+  align-items: center;
+}
+@media (max-width: 1100px) {
+  .cover {
+    margin-left: 0; margin-right: 0;
+    padding: 40px 0;
+  }
+  .cover-grid {
+    grid-template-columns: 1fr; gap: 36px;
+    padding: 40px 24px;
+  }
+}
+.cover-left {
+  display: flex; flex-direction: column;
+  max-width: 460px;
+}
+.cover-right {
+  display: flex; align-items: center; justify-content: center;
+  max-width: 560px;
+  margin-left: auto;
+}
+.cover .ribbon {
+  font-family: var(--serif-display); font-style: italic; font-size: 11.5px;
+  letter-spacing: 0.32em; text-transform: uppercase; color: var(--amber);
+  margin-bottom: 24px; font-weight: 500;
+}
+.cover h1 {
+  font-family: var(--serif-display); font-style: italic; font-size: 84px;
+  font-weight: 500; color: var(--cocoa-deep); letter-spacing: -0.025em;
+  line-height: 0.95; margin-bottom: 14px;
+}
+.cover .zh {
+  font-family: var(--serif-ch); font-size: 30px; font-weight: 600;
+  color: var(--amber); letter-spacing: 0.20em; margin-bottom: 28px;
+}
+.cover .tagline {
+  font-family: var(--serif-ch); font-size: 20px; color: var(--ink-soft);
+  letter-spacing: 0.06em; line-height: 1.6; margin-bottom: 30px;
+  font-weight: 500;
+}
+.cover .tagline-sub {
+  display: block;
+  font-family: var(--serif-display); font-style: italic;
+  font-size: 13px; color: var(--ink-mute);
+  letter-spacing: 0.1em; margin-top: 6px;
+  font-weight: 400;
+}
+.cover .ornament-mini {
+  color: var(--amber); margin-bottom: 18px;
+  font-size: 12px; letter-spacing: 0.3em;
+}
+.cover .meta-compact {
+  font-family: var(--serif-display); font-style: italic;
+  color: var(--ink-mute); font-size: 12.5px;
+  letter-spacing: 0.06em; margin-bottom: 20px;
+}
+.cover .meta-compact span { color: var(--cocoa); }
+.cover .interview-tag {
+  display: inline-block;
+  padding: 9px 20px;
+  background: var(--amber);
+  color: white;
+  font-family: var(--serif-display); font-style: italic;
+  font-size: 12.5px; letter-spacing: 0.18em;
+  border-radius: 22px;
+  text-transform: uppercase;
+  align-self: flex-start;
+  font-weight: 500;
+}
+.cover-hero-image {
+  margin: 0; border-radius: 14px; overflow: hidden;
+  box-shadow: 0 18px 48px -16px rgba(139,69,19,0.32),
+              0 6px 18px -8px rgba(139,69,19,0.18);
+  width: 100%;
+}
+.cover-hero-image img { width: 100%; height: auto; display: block; }
+.cover-hero-image figcaption {
+  padding: 11px 16px;
+  background: #FDF4E3;
+  font-family: var(--serif-display); font-style: italic;
+  font-size: 12px; color: var(--ink-mute);
+  letter-spacing: 0.08em; text-align: center;
+  border-top: 1px solid var(--bg-warm-line);
+}
+
+/* ============ CHAPTERS ============ */
+section.chapter {
+  margin-bottom: 72px; padding-top: 18px; scroll-margin-top: 24px;
+  page-break-inside: avoid;
+}
+section.chapter > .chapter-num {
+  font-family: var(--serif-display); font-style: italic; font-size: 50px;
+  font-weight: 500; color: var(--amber); line-height: 1; margin-bottom: 4px;
+  letter-spacing: -0.02em;
+}
+section.chapter > .eyebrow {
+  font-family: var(--serif-display); font-style: italic; font-size: 12px;
+  letter-spacing: 0.34em; text-transform: uppercase; color: var(--cocoa);
+  margin-bottom: 10px; font-weight: 500;
+}
+section.chapter > h2 {
+  font-family: var(--serif-display); font-style: italic; font-size: 36px;
+  font-weight: 500; color: var(--cocoa-deep); letter-spacing: -0.015em;
+  line-height: 1.18; margin-bottom: 8px;
+}
+section.chapter > h2 .zh {
+  font-family: var(--serif-ch); font-style: normal; font-size: 20px;
+  font-weight: 500; color: var(--cocoa); letter-spacing: 0.06em; margin-left: 12px;
+}
+section.chapter > .why-matters {
+  font-family: var(--serif-display); font-style: italic;
+  font-size: 15px; color: var(--ink-mute);
+  margin: 10px 0 4px; line-height: 1.6;
+  padding-left: 14px; border-left: 2px solid var(--amber-soft);
+}
+section.chapter > .divider {
+  width: 64px; height: 2px; background: var(--amber);
+  margin: 20px 0 28px;
+}
+section.chapter h3 {
+  font-family: var(--serif-ch); font-size: 21px; font-weight: 600;
+  color: var(--cocoa-deep); margin-top: 36px; margin-bottom: 14px;
+}
+section.chapter h4 {
+  font-family: var(--serif-display); font-style: italic; font-size: 18px;
+  font-weight: 600; color: var(--amber-deep); margin-top: 22px; margin-bottom: 10px;
+}
+section.chapter h5 {
+  font-family: var(--serif-display); font-style: italic; font-size: 12px;
+  letter-spacing: 0.22em; text-transform: uppercase; color: var(--amber);
+  margin-bottom: 8px; margin-top: 16px; font-weight: 600;
+}
+section.chapter p { margin-bottom: 14px; }
+section.chapter ul, section.chapter ol { padding-left: 24px; margin-bottom: 16px; }
+section.chapter li { margin-bottom: 6px; line-height: 1.65; }
+section.chapter strong { color: var(--amber-deep); font-weight: 600; }
+section.chapter em {
+  font-family: var(--serif-display); font-style: italic; color: var(--cocoa);
+}
+
+/* tables */
+table {
+  width: 100%; border-collapse: separate; border-spacing: 0;
+  margin: 16px 0; font-family: var(--serif-ch); font-size: 13.5px;
+  background: var(--bg-paper); border-radius: 8px; overflow: hidden;
+  box-shadow: 0 1px 2px rgba(70,40,15,0.04), 0 3px 12px rgba(70,40,15,0.06);
+}
+th {
+  background: var(--bg-soft); padding: 10px 12px; text-align: left;
+  font-family: var(--serif-display); font-style: italic; font-weight: 600;
+  color: var(--cocoa-deep); font-size: 12.5px; letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--bg-warm-line);
+}
+td {
+  padding: 9px 12px; border-bottom: 1px solid var(--bg-warm-line);
+  vertical-align: top; line-height: 1.55;
+}
+tr:last-child td { border-bottom: none; }
+tr:nth-child(even) td { background: rgba(245,230,211,0.20); }
+td strong { color: var(--amber-deep); }
+
+/* callouts */
+.callout {
+  margin: 20px 0; padding: 18px 22px;
+  background: linear-gradient(135deg, rgba(212,113,42,0.08), rgba(212,113,42,0.02));
+  border-left: 4px solid var(--amber);
+  border-radius: 0 8px 8px 0;
+}
+.callout .label {
+  font-family: var(--serif-display); font-style: italic; font-size: 11.5px;
+  letter-spacing: 0.22em; text-transform: uppercase; color: var(--amber-deep);
+  font-weight: 600; margin-bottom: 6px; display: block;
+}
+.callout p { margin-bottom: 8px; }
+.callout p:last-child { margin-bottom: 0; }
+
+.quote {
+  margin: 24px 0; padding: 22px 28px; border-left: 4px solid var(--amber);
+  background: var(--bg-paper); font-family: var(--serif-display); font-style: italic;
+  font-size: 18px; color: var(--cocoa-deep); line-height: 1.6;
+  box-shadow: 0 1px 2px rgba(70,40,15,0.04);
+  border-radius: 0 8px 8px 0;
+}
+
+/* avatar pair */
+.avatar-pair {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
+  margin: 22px 0 28px;
+}
+.avatar-card {
+  background: var(--bg-paper);
+  padding: 20px 22px;
+  border-radius: 12px;
+  border: 1px solid var(--bg-warm-line);
+  border-top: 4px solid var(--amber);
+  box-shadow: 0 4px 14px -6px rgba(139, 69, 19, 0.12);
+}
+.avatar-card.aria { border-top-color: var(--amber-light); }
+.avatar-card .a-name {
+  font-family: var(--serif-display); font-style: italic;
+  font-size: 24px; color: var(--cocoa-deep); font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.avatar-card .a-zh {
+  font-family: var(--serif-ch); font-size: 14px; color: var(--amber-deep);
+  font-weight: 500; margin-bottom: 12px; letter-spacing: 0.04em;
+}
+.avatar-card .a-spec p {
+  font-size: 13px; margin-bottom: 5px; line-height: 1.55;
+}
+.avatar-card .a-spec b {
+  font-family: var(--serif-ch); font-size: 12.5px;
+  color: var(--amber-deep); font-weight: 600;
+  margin-right: 4px;
+}
+
+/* summary grid */
+.summary-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px; margin: 22px 0;
+}
+.summary-card {
+  background: var(--bg-paper); padding: 18px; border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(70,40,15,0.06), 0 4px 14px rgba(70,40,15,0.04);
+  border-left: 4px solid var(--amber);
+}
+.summary-card .num {
+  font-family: var(--serif-display); font-style: italic; font-size: 36px;
+  font-weight: 500; color: var(--amber-deep); line-height: 1; margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+.summary-card .label {
+  font-family: var(--serif-ch); font-size: 13px; color: var(--ink-soft);
+  line-height: 1.5; font-weight: 500;
+}
+
+/* tier table */
+.tier-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 20px; margin: 24px 0 28px;
+}
+@media (max-width: 780px) { .tier-grid { grid-template-columns: 1fr; } }
+.tier-card {
+  background: var(--bg-paper);
+  padding: 28px 24px 22px;
+  border-radius: 12px;
+  border: 1px solid var(--bg-warm-line);
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.tier-card:hover { transform: translateY(-3px); box-shadow: 0 10px 24px -8px rgba(139,69,19,0.18); }
+.tier-card.recommended {
+  border-color: var(--amber);
+  border-width: 2px;
+  box-shadow: 0 8px 24px -10px rgba(212, 113, 42, 0.32);
+  background: linear-gradient(180deg, #FFFBF5 0%, #FDF4E3 100%);
+}
+.tier-card .tier-name {
+  font-family: var(--serif-ch); font-size: 16px;
+  color: var(--cocoa-deep); font-weight: 600;
+  letter-spacing: 0.06em; margin-bottom: 4px;
+}
+.tier-card .tier-price {
+  font-family: var(--serif-display); font-style: italic;
+  font-size: 32px; color: var(--amber-deep);
+  font-weight: 600; margin-bottom: 2px;
+  letter-spacing: -0.015em; line-height: 1;
+}
+.tier-card .tier-subprice {
+  font-family: var(--serif-display); font-style: italic;
+  font-size: 12px; color: var(--ink-mute);
+  letter-spacing: 0.08em; margin-bottom: 16px;
+}
+.tier-card .tier-recommend {
+  position: absolute; top: -10px; right: 12px;
+  background: var(--amber);
+  color: white;
+  font-family: var(--serif-display); font-style: italic;
+  font-size: 11px; padding: 3px 10px;
+  border-radius: 12px; letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.tier-card ul {
+  list-style: none; padding: 0; margin: 0;
+  font-family: var(--serif-ch); font-size: 12.5px;
+  color: var(--ink-soft); line-height: 1.6;
+}
+.tier-card li {
+  padding-left: 14px;
+  position: relative;
+  margin-bottom: 4px;
+}
+.tier-card li:before {
+  content: "·";
+  color: var(--amber);
+  position: absolute; left: 4px; top: -2px;
+  font-weight: 700; font-size: 16px;
+}
+
+/* edward view */
+.edward-view {
+  margin: 28px 0 0; padding: 18px 24px;
+  background: linear-gradient(135deg, rgba(212,113,42,0.08), rgba(212,113,42,0.02));
+  border-left: 4px solid var(--amber);
+  border-radius: 0 6px 6px 0;
+  font-family: var(--serif-display); font-style: italic;
+  color: var(--cocoa-deep); font-size: 15px; line-height: 1.7;
+}
+
+/* ============ THREE POINTS · 三句話卡片 ============ */
+.three-points {
+  display: grid; gap: 16px; margin: 24px 0 28px;
+}
+.point {
+  background: #FFFBF5;
+  border: 1px solid var(--bg-warm-line);
+  border-left: 4px solid var(--amber);
+  border-radius: 8px;
+  padding: 22px 26px 20px;
+  position: relative;
+  box-shadow: 0 3px 12px -6px rgba(139,69,19,0.10);
+}
+.point .point-num {
+  position: absolute; top: 18px; right: 22px;
+  font-family: var(--serif-display); font-style: italic;
+  font-size: 28px; color: var(--amber-soft);
+  font-weight: 600; letter-spacing: -0.02em;
+  line-height: 1;
+}
+.point .point-title {
+  font-family: var(--serif-ch); font-size: 17px;
+  color: var(--cocoa-deep); font-weight: 600;
+  letter-spacing: 0.04em; margin-bottom: 10px;
+  padding-right: 50px;
+}
+.point .point-body {
+  font-family: var(--serif-ch); font-size: 14.5px;
+  color: var(--ink-soft); line-height: 1.75;
+  letter-spacing: 0.02em;
+}
+.point .point-body strong {
+  color: var(--amber-deep); font-weight: 600;
+}
+.edward-view .tag {
+  font-family: var(--serif-display); font-style: italic; font-size: 11px;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--amber-deep);
+  font-weight: 600; margin-bottom: 6px; display: block;
+}
+
+/* arch diagram (text-based) */
+.arch-stack {
+  margin: 22px 0; padding: 22px 26px;
+  background: var(--bg-paper); border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(70,40,15,0.06);
+  font-family: var(--mono); font-size: 12.5px;
+  border: 1px solid var(--bg-warm-line);
+  overflow-x: auto;
+}
+.arch-stack pre {
+  font-family: var(--mono); color: var(--cocoa-deep);
+  line-height: 1.7; white-space: pre;
+}
+
+/* flow diagram */
+.flow-card {
+  background: var(--bg-paper);
+  padding: 16px 20px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border-left: 3px solid var(--amber);
+  display: flex; align-items: flex-start; gap: 14px;
+}
+.flow-card .flow-step {
+  font-family: var(--serif-display); font-style: italic;
+  font-size: 22px; color: var(--amber);
+  font-weight: 600; min-width: 28px; line-height: 1;
+}
+.flow-card .flow-body {
+  flex: 1;
+}
+.flow-card .flow-title {
+  font-family: var(--serif-ch); font-weight: 600;
+  font-size: 14px; color: var(--cocoa-deep);
+  margin-bottom: 4px;
+}
+.flow-card .flow-desc {
+  font-size: 13px; color: var(--ink-soft); line-height: 1.6;
+}
+
+/* user story */
+.user-story {
+  margin: 20px 0; padding: 20px 24px;
+  background: var(--bg-glow);
+  border-radius: 10px;
+  border-top: 3px solid var(--peace);
+}
+.user-story .story-header {
+  font-family: var(--serif-display); font-style: italic;
+  font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--peace); font-weight: 600; margin-bottom: 10px;
+}
+.user-story .story-body {
+  font-family: var(--serif-ch); font-size: 15px;
+  color: var(--cocoa-deep); line-height: 1.75; font-style: italic;
+}
+.user-story .story-body b {
+  color: var(--amber-deep); font-style: normal;
+}
+
+/* score box */
+.score-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px; margin: 18px 0 24px;
+}
+.score-box {
+  background: var(--bg-paper);
+  padding: 18px 16px;
+  border-radius: 10px;
+  text-align: center;
+  border: 1px solid var(--bg-warm-line);
+}
+.score-box .score-num {
+  font-family: var(--serif-display); font-style: italic;
+  font-size: 32px; color: var(--amber-deep);
+  font-weight: 600;
+}
+.score-box .score-total {
+  font-size: 14px; color: var(--ink-mute); font-style: italic;
+}
+.score-box .score-label {
+  font-family: var(--serif-ch); font-size: 12.5px;
+  color: var(--ink-soft); margin-top: 6px;
+  letter-spacing: 0.04em;
+}
+
+/* footer */
+footer.book-footer {
+  margin-left: 240px; padding: 38px 72px 50px;
+  border-top: 1px solid var(--bg-warm-line);
+  font-family: var(--serif-display); font-style: italic;
+  color: var(--ink-mute); font-size: 13px; line-height: 1.7;
+  text-align: center;
+}
+
+/* footnote */
+.footnote {
+  font-size: 12px; color: var(--ink-mute);
+  font-family: var(--serif-display); font-style: italic;
+  display: block; margin-top: 4px; line-height: 1.55;
+}
+sup.cite {
+  font-family: var(--serif-display); font-style: italic;
+  color: var(--amber); font-size: 10.5px; font-weight: 600;
+  padding: 0 2px;
+}
+
+/* responsive */
+@media (max-width: 1000px) {
+  nav.toc { position: static; width: 100%; height: auto; }
+  main, footer.book-footer { margin-left: 0; padding: 30px 24px; }
+  .cover h1 { font-size: 48px; }
+  .cover .zh { font-size: 28px; }
+  .avatar-pair { grid-template-columns: 1fr; }
+}
+
+/* PRINT - A4 friendly · Gate 2 修 3 升級版 */
+@media print {
+  /* 列印強制保留背景色 + 陰影（Gate 2 必修 3） */
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+  nav.toc { display: none; }
+  main, footer.book-footer { margin-left: 0; padding: 16mm 18mm; max-width: none; }
+
+  /* 中文 11.5pt → 12pt（Gate 2 必修 3 · 銀髮主題提案不該用太小字） */
+  body { font-size: 12pt; line-height: 1.55; background: white; }
+
+  .cover { min-height: auto; page-break-after: always; padding-bottom: 24mm; }
+  .cover h1 { font-size: 48pt; }
+  .cover .zh { font-size: 24pt; }
+  .cover .tagline { font-size: 14pt; }
+  section.chapter { margin-bottom: 24pt; page-break-inside: avoid; }
+  section.chapter > .chapter-num { font-size: 32pt; }
+  section.chapter > h2 { font-size: 22pt; }
+  section.chapter > h2 .zh { font-size: 14pt; }
+  section.chapter h3 { font-size: 15pt; }
+  section.chapter h4 { font-size: 13pt; }
+  .arch-stack { font-size: 9pt; padding: 12pt; }
+  .summary-card .num { font-size: 24pt; }
+  .summary-card { background: var(--bg-paper) !important; }
+  .tier-card .tier-price { font-size: 18pt; }
+  .tier-card.recommended {
+    border: 2px solid var(--amber) !important;
+    background: var(--bg-glow) !important;
+  }
+  .quote { font-size: 13pt; padding: 12pt 16pt; background: var(--bg-paper) !important; }
+  .callout, .edward-view { background: var(--bg-paper) !important; }
+  table { font-size: 10pt; }
+  th { font-size: 9.5pt; padding: 5pt 7pt; }
+  td { padding: 5pt 7pt; }
+  .avatar-pair { grid-template-columns: 1fr 1fr; gap: 10pt; }
+  .avatar-card { padding: 10pt 12pt; }
+  @page { size: A4; margin: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ NAV TOC ============ -->
+<nav class="toc">
+<div class="logo">CAREON</div>
+<div class="logo-zh">關懷在這裡</div>
+<div class="sub">TPM 面試交付版</div>
+
+<ol>
+<li><a href="#c1">執行摘要</a></li>
+<li><a href="#c2">為什麼是 CAREON</a></li>
+<li><a href="#c3">User Journey</a></li>
+<li><a href="#c4">PRD Snippet</a></li>
+<li><a href="#c5">產品架構</a></li>
+<li><a href="#c6">AI Agent 工作流</a></li>
+<li><a href="#c7">AWS 系統架構</a></li>
+<li><a href="#c8">主動觸發引擎</a></li>
+<li><a href="#c9">用藥提醒 + 異常通報</a></li>
+<li><a href="#c10">競品差異化</a></li>
+<li><a href="#c11">商業模式</a></li>
+<li><a href="#c12">為什麼是現在</a></li>
+<li><a href="#c13">MVP Demo Scope</a></li>
+<li><a href="#c14">交付清單</a></li>
+<li><a href="#c15">關鍵數據引用</a></li>
+</ol>
+
+<div class="meta">
+Castle Intelligence<br>
+Edward Tseng<br>
+2026 · 05 · 26<br>
+精簡對外交付版
+</div>
+</nav>
+
+<!-- ============ MAIN ============ -->
+<main>
+
+<!-- ============ COVER ============ -->
+<section class="cover">
+<div class="cover-grid">
+
+<div class="cover-left">
+<div class="ribbon">HOMEWELLNESS COMPANION · TPM 面試交付版</div>
+<h1>CAREON</h1>
+<div class="zh">關懷在這裡</div>
+<div class="tagline">AI 智慧身心照護 + 智能給藥機<br><span class="tagline-sub">Proactive Medication Reminder &amp; Wellness Check-in Agent<br>· AI + IoT + AWS · </span></div>
+<div class="ornament-mini">━━━ ◆ ━━━</div>
+<div class="meta-compact">
+<span>Edward Tseng</span> · <span>Castle Intelligence</span> · <span>2026.05.26</span>
+</div>
+<div class="interview-tag">Technical PM · AI &amp; IoT · 智慧健康</div>
+</div>
+
+<div class="cover-right">
+<figure class="cover-hero-image">
+<img src="images/home-pad-grandma-scene.png" alt="CAREON Companion · 居家身心照護場景" style="width:100%;height:auto;display:block;"/>
+<figcaption>CAREON Companion · 8 吋觸控 + 自動配藥槽 + 真人 AI 照護員</figcaption>
+</figure>
+</div>
+
+</div>
+</section>
+
+<!-- ============ 1 · 執行摘要 ============ -->
+<section class="chapter" id="c1">
+<div class="chapter-num">01</div>
+<div class="eyebrow">One Page</div>
+<h2>執行摘要<span class="zh">在一頁紙上看完 CAREON</span></h2>
+<div class="why-matters">CAREON 一頁紙掌握全貌：產品定位、技術骨架、商業切入點、12 個月路徑。</div>
+<div class="divider"></div>
+
+<h3>我們做的</h3>
+<p><strong>CAREON</strong>（HomeWellness Companion）是台灣團隊打造、軟硬體一體的銀髮智慧身心照護員 + 智能給藥機。透過 <strong>CAREON Companion 8 吋 Home Pad</strong>（含 8 槽自動用藥提醒槽 + 視訊鏡頭 + 麥克風 + AI）、<strong>擬人 AI 雙人格 阿康（Asher） + 小晴（Aria）</strong>（風格化 avatar 預設、寫實版進階可選）、<strong>主流配件直接綁</strong>（Apple Watch / 小米 / 雅培）、<strong>雙端 App + 親子聯絡簿</strong>，把孤獨的長者與遠距的子女、用最溫暖的方式重新連起來。</p>
+
+<h3>對齊面試題目 8 大要求</h3>
+<table>
+<thead>
+<tr><th style="width:40%">題目要求</th><th>CAREON 對應方案</th></tr>
+</thead>
+<tbody>
+<tr><td>1. 居家智慧健康硬體裝置</td><td>CAREON Companion 8 吋 Home Pad · 含自動配藥槽 + 視訊鏡頭（家人視訊通話 + 緊急 119）+ 麥克風 + 內建 AI</td></tr>
+<tr><td>2. 生理數據感測（心率 / 睡眠 / 環境）</td><td>主流穿戴整合（Apple Watch / 小米 / Garmin / 雅培）+ device PIR / 環境感測</td></tr>
+<tr><td>3. Consumer AI Agent（語音健康伴侶）</td><td>阿康 + 小晴 雙 persona · 自家 castle-voice-engine 擬人 avatar（自架 lipsync + Wav2Lip / SadTalker / Hallo 開源 stack）+ OpenAI Realtime 2 voice</td></tr>
+<tr><td>4. 主動感知用戶狀態</td><td>主動觸發引擎 4 條件：時間 / 異常 / 自適應 / 情感</td></tr>
+<tr><td>5. 健康建議 / 用藥提醒</td><td>LangGraph 8 node + Memory + 7 Tool · 配藥槽硬體 + AI 語音雙提醒</td></tr>
+<tr><td>6. 異常通報（緊急情境）</td><td>4 級升級梯度（陪聊 → App push → 電話語音 → 119）· 不誤觸發、不漏觸發</td></tr>
+<tr><td>7. User Journey + PRD Snippet</td><td>§3 完整 8 階段 journey · §4 PRD 含 user story + acceptance criteria</td></tr>
+<tr><td>8. LangChain + Memory + Tool + AWS</td><td>§6 LangGraph 8 node + §7 AWS 完整架構（IoT Core / Lambda / DynamoDB / Bedrock / Connect Health / SNS）</td></tr>
+</tbody>
+</table>
+
+<h3>CAREON 三句話講完</h3>
+<div class="three-points">
+
+<div class="point">
+<div class="point-num">01</div>
+<div class="point-title">做出來的、不是想像的</div>
+<div class="point-body">CAREON 不是新點子——是用我們既有的三塊資產組合：HealthBuy（已累積 11.5 萬下載的銀髮健康 App）+ 18 個月前我們已寫過的 CAREON 框架 + 自家上線運作中的 voice 系統。<strong>Phase 1 七成內容是現成的、三成是新做</strong>、降低開發風險。</div>
+</div>
+
+<div class="point">
+<div class="point-num">02</div>
+<div class="point-title">三件事一起做、別人都只做一半</div>
+<div class="point-body">主動關心（device 自己開口） + 擬人 AI 表情 + 自動配藥槽——這三件事<strong>全球目前沒有一台消費級居家設備同時做到</strong>。ElliQ 會主動但用光體沒臉、Hyodol 有娃娃陪伴但沒配藥、ASUS 有硬體但沒 AI 人格、美國 Hero 有配藥但不會聊天。CAREON 把這三件事<strong>整合在一台 8 吋裝置</strong>。</div>
+</div>
+
+<div class="point">
+<div class="point-num">03</div>
+<div class="point-title">政府幫我們付前 1,000 個用戶</div>
+<div class="point-body">台灣<strong>長照 3.0 智慧科技輔具補助</strong> 2026 年 7 月 1 日上路、每位 65+ 失能長者 3 年補助 <strong>NT$60,000</strong>。CAREON 對接此給付體系 = <strong>政府預算直接 cover 月費 + 硬體</strong>、第一批用戶 CAC 趨近於零、是台灣 SaaS 罕見的「政府先埋單」入場機會。</div>
+</div>
+
+</div>
+
+<div class="edward-view">
+<span class="tag">為什麼做這個</span>
+做產品的起點不是市場有多大、是我自己有一刻意識到——每天忙到沒辦法天天打電話給家裡長輩、可是又不放心。市面上沒有一個產品能在我「不打電話的時候、替我陪著她」。CAREON 想做的、就是這個<strong>替身角色</strong>。
+</div>
+</section>
+
+<!-- ============ 2 · 為什麼是 CAREON ============ -->
+<section class="chapter" id="c2">
+<div class="chapter-num">02</div>
+<div class="eyebrow">Why CAREON</div>
+<h2>為什麼是 CAREON<span class="zh">三個交集</span></h2>
+<div class="why-matters">在台灣銀髮居家照護市場、CAREON 跟 ASUS / 慈濟 / Echo Show 的根本差異 — 三個交集點同時成立。</div>
+<div class="divider"></div>
+
+<h3>交集 1 · 真實創業者、不是 PPT 提案</h3>
+<p><strong>HealthBuy</strong>：14 版迭代、115,000 下載累積、深刻理解銀髮族健康行為設計（紅黃綠燈、健康幣、不要 push、家屬代付）。<strong>castle-voice-engine v2.0.6</strong>：8 個月前自架上線的 voice 整合層、17 動畫池 + 100 lipsync + 多語言。<strong>CAREON 18 個月前框架</strong>：5 層架構 + 主動觸發引擎已寫過 PRD 級規格。<br><br>
+= 不是「畫餅」、是「7 成現成可複用」。Year 1 新做的只是「阿康 + 小晴 persona 衍生 + Home Pad 硬體層整合」。</p>
+
+<h3>交集 2 · 兩個 AI 家人、不是助理</h3>
+<p>CAREON 拒絕「卡通動畫風」與「冰冷機械感」兩個極端、選擇<strong>風格化擬人 avatar</strong>（Pixar / Memoji 級別 · 看得出是 AI 但仍有人類表情）——70 歲長者不想對著卡通熊講話、也不想對著機械金屬機器人講話、他們想對著「一個看起來像家人朋友的人」講話。<strong>刻意不走 photo-realistic</strong> 是為了避恐怖谷 + 避失智長者倫理混淆；Tier 4 高薪退休族可進階解鎖寫實版（Phase 2）。</p>
+
+<div class="avatar-pair">
+
+<div class="avatar-card">
+<div class="a-name">阿康（Asher）</div>
+<div class="a-zh">阿康 · 男 · 30 歲</div>
+<div class="a-spec">
+<p><b>聲線：</b>磁性 baritone、可靠穩重</p>
+<p><b>形象：</b>像可信任的兄長</p>
+<p><b>視覺：</b>米白針織衫、居家溫暖背景</p>
+<p><b>適合：</b>用藥提醒 / 健康數據 / 緊急介入 / 衛教</p>
+</div>
+</div>
+
+<div class="avatar-card aria">
+<div class="a-name">小晴（Aria）</div>
+<div class="a-zh">小晴 · 女 · 30 歲</div>
+<div class="a-spec">
+<p><b>聲線：</b>知性 alto、溫柔細膩</p>
+<p><b>形象：</b>像體貼的姊姊</p>
+<p><b>視覺：</b>淡粉針織衫、植栽居家背景</p>
+<p><b>適合：</b>心靈陪聊 / 情緒關懷 / 老歌懷舊</p>
+</div>
+</div>
+
+</div>
+
+<h4>為什麼 30 歲 · 不是老人聲音</h4>
+<p>多數產品犯的錯：以為長者要對著「同齡的銀髮人物」說話。實際 User Research 反過來——<strong>長者要的是「年輕家人來陪我」的感覺</strong>，像兒女 / 孫輩來探望。30 歲是「子女年齡」的視覺心錨：不會像同齡人讓他想起「我也老了」、不會像 10 歲卡通讓他覺得幼稚被冒犯、剛好是「我的兒女回來陪我」的內隱期望年齡。</p>
+
+<h3>交集 3 · 時間窗口剛好打開</h3>
+<div class="summary-grid">
+<div class="summary-card">
+<div class="num">20.06%</div>
+<div class="label">65+ 佔比<br>2025/12 超高齡社會<br>467 萬人<sup class="cite">[1]</sup></div>
+</div>
+<div class="summary-card">
+<div class="num">2026/7</div>
+<div class="label">長照 3.0 三階段<br>智慧輔具補助上路<br>NT$60K/3 年<sup class="cite">[2]</sup></div>
+</div>
+<div class="summary-card">
+<div class="num">0 個</div>
+<div class="label">全球五層完整整合<br>消費級居家設備<br>窗口期 12-18 月</div>
+</div>
+<div class="summary-card">
+<div class="num">75%</div>
+<div class="label">技術 7 成現成<br>HealthBuy + castle-voice<br>Year 1 只補硬體層</div>
+</div>
+</div>
+</section>
+
+<!-- ============ 3 · User Journey ============ -->
+<section class="chapter" id="c3">
+<div class="chapter-num">03</div>
+<div class="eyebrow">User Journey</div>
+<h2>User Journey<span class="zh">張阿嬤的一天 · 8 階段</span></h2>
+<div class="why-matters">用張阿嬤的一天 8 階段、把 CAREON 抽象功能變成可感受的具體體驗。</div>
+<div class="divider"></div>
+
+<h3>主角設定</h3>
+<p><strong>張阿嬤</strong>·76 歲·女·基隆獨居·女兒 45 歲住台北週末才回家·高血壓 + 輕度糖尿病 + 退化性關節炎·每日 4 種藥·智慧手機只用 LINE·喜歡台語覺得國語太正式。</p>
+
+<h3>一天 8 階段 User Journey</h3>
+
+<div class="flow-card">
+<div class="flow-step">1</div>
+<div class="flow-body">
+<div class="flow-title">06:30 · 起床 · device 主動早安</div>
+<div class="flow-desc">PIR 偵測起床 → CARE.AI 主動：「阿嬤早、昨晚睡 6.5 小時、有點少。今天記得多喝水喔。」（從 Apple Watch 拉睡眠數據、台語版同步）</div>
+</div>
+</div>
+
+<div class="flow-card">
+<div class="flow-step">2</div>
+<div class="flow-body">
+<div class="flow-title">08:00 · 用藥提醒 · 配藥槽 + AI 雙提醒</div>
+<div class="flow-desc">時間觸發 → 配藥槽彈出當餐藥 + CARE.AI 主動：「阿嬤、現在 8 點、降壓藥的時間了。要不要我 5 分鐘後再叫你？」（給選擇權、不催）</div>
+</div>
+</div>
+
+<div class="flow-card">
+<div class="flow-step">3</div>
+<div class="flow-body">
+<div class="flow-title">10:30 · 「我頭暈」· tool calling 讀血壓</div>
+<div class="flow-desc">用戶語音輸入「我頭暈」→ LangGraph 觸發 read_vitals(blood_pressure) → 從已綁定的藍牙血壓計（OMRON Connect / Withings BPM）讀取最新血壓 145/95、Apple Watch 顯示心率 96 → CARE.AI：「你血壓有點高、先坐下休息 10 分鐘、不要急著站起來。要不要我打給女兒？」</div>
+</div>
+</div>
+
+<div class="flow-card">
+<div class="flow-step">4</div>
+<div class="flow-body">
+<div class="flow-title">14:00 · 主動陪聊 · 情緒感測啟動</div>
+<div class="flow-desc">device 偵測：對話頻率連續 3 天下降 30% → 觸發 CARE.AI：「阿嬤、最近過得怎麼樣？想聽老歌嗎？我幫你放鳳飛飛？」（Spotify 整合）</div>
+</div>
+</div>
+
+<div class="flow-card">
+<div class="flow-step">5</div>
+<div class="flow-body">
+<div class="flow-title">18:30 · 親子聯絡簿 · App push 推送</div>
+<div class="flow-desc">device 自動生成今日健康摘要：血壓 / 用藥 / 步數 / 對話次數 / 情緒 → App push 推女兒：「媽媽今天血壓穩定、用藥準時、心情比昨天好。」</div>
+</div>
+</div>
+
+<div class="flow-card">
+<div class="flow-step">6</div>
+<div class="flow-body">
+<div class="flow-title">20:00 · 用藥再提醒 · 晚餐後藥</div>
+<div class="flow-desc">配藥槽彈出晚餐藥 + CARE.AI：「阿嬤、晚餐後的藥還沒吃。我等你 10 分鐘喔。」（10 分鐘後未取 → push 女兒）</div>
+</div>
+</div>
+
+<div class="flow-card">
+<div class="flow-step">7</div>
+<div class="flow-body">
+<div class="flow-title">22:00 · 睡前晚安 · 健康總結</div>
+<div class="flow-desc">CARE.AI：「阿嬤晚安。今天血壓有點高、明天早上記得量一次。我設好鬧鐘 6:30 叫你。」</div>
+</div>
+</div>
+
+<div class="flow-card">
+<div class="flow-step">8</div>
+<div class="flow-body">
+<div class="flow-title">03:15 · 異常情境 · 跌倒偵測 + 主動通報</div>
+<div class="flow-desc">Apple Watch 跌倒偵測觸發 + device PIR 確認 → CARE.AI 立即：「阿嬤、你還好嗎？聽得到我嗎？」→ 3 分鐘無回應 → 4 級升級：App push 推女兒 + 通知家屬 / call center · 人工確認後通報 119 + GPS 定位</div>
+</div>
+</div>
+
+<h3>對話語氣設計（Vibe Design）</h3>
+<table>
+<thead>
+<tr><th style="width:35%">原則</th><th>具體做法</th></tr>
+</thead>
+<tbody>
+<tr><td>1. 像家人 · 不像助理</td><td>用「阿嬤 / 阿公」稱呼、不用「您好 / 親愛的用戶」、台語混搭</td></tr>
+<tr><td>2. 給選擇權 · 不命令</td><td>「要不要 5 分鐘後再叫你？」不是「請吃藥」</td></tr>
+<tr><td>3. 不催不嘮叨</td><td>提醒最多 3 次、第 3 次後升級給家屬、不無限重複</td></tr>
+<tr><td>4. 解讀數據 · 不報數字</td><td>「血壓有點高」而不是「145/95 mmHg 屬於高血壓 2 級」</td></tr>
+<tr><td>5. 引導行動 · 不替醫生診斷</td><td>「先坐下休息」「要不要打給女兒」、不說「你是高血壓」</td></tr>
+<tr><td>6. 情緒先 · 任務後</td><td>偵測到負面情緒先陪聊、再回到健康提醒</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ============ 4 · PRD Snippet ============ -->
+<section class="chapter" id="c4">
+<div class="chapter-num">04</div>
+<div class="eyebrow">PRD Snippet</div>
+<h2>PRD Snippet<span class="zh">主動式健康關懷與用藥提醒</span></h2>
+<div class="why-matters">CAREON 第一代核心需求單：User Story、Acceptance Criteria、Non-goals 完整列出。</div>
+<div class="divider"></div>
+
+<h3>核心 User Story · P0</h3>
+
+<div class="user-story">
+<div class="story-header">User Story · US-001 · Proactive Care · P0</div>
+<div class="story-body">
+作為 <b>76 歲獨居張阿嬤</b>、<br>
+我希望 <b>device 能像家人一樣在我需要的時候主動關心我</b>、<br>
+這樣我就能 <b>不必記得問問題、也不會錯過用藥、緊急時有人立刻發現</b>。
+</div>
+</div>
+
+<div class="user-story">
+<div class="story-header">User Story · US-002 · Medication Reminder · P0</div>
+<div class="story-body">
+作為 <b>每日需服 4 種藥的長者</b>、<br>
+我希望 <b>device 在每餐藥時間主動提醒、且配藥槽自動彈出當餐藥</b>、<br>
+這樣我就能 <b>不必自己分藥、不會錯吃 / 漏吃、家人也能遠端確認</b>。
+</div>
+</div>
+
+<div class="user-story">
+<div class="story-header">User Story · US-003 · Emergency Detection · P0</div>
+<div class="story-body">
+作為 <b>住台北的女兒</b>、<br>
+我希望 <b>當媽媽發生跌倒 / 異常靜止 / 心率異常時、能立即收到 App push 推播</b>、<br>
+這樣我就能 <b>不必 24 小時擔心、又不會錯過真正的緊急狀況</b>。
+</div>
+</div>
+
+<h3>功能規格 · 優先級 P0 / P1</h3>
+<table>
+<thead>
+<tr><th>編號</th><th>功能</th><th>P</th><th>Acceptance Criteria</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>F-001</td>
+<td>主動觸發引擎</td>
+<td><strong>P0</strong></td>
+<td>4 種條件成立任一即觸發：時間（用藥）/ 異常（血壓 / 跌倒 / 靜止）/ 自適應（對話頻率變化）/ 情感（語音情緒）；觸發後 device 主動開口 voice + avatar 同步</td>
+</tr>
+<tr>
+<td>F-002</td>
+<td>配藥槽硬體整合</td>
+<td><strong>P0</strong></td>
+<td>MVP demo: 8 槽 prototype 2 天藥量（用於展示）; Production: <strong>28 格 weekly tray</strong>（7 天 × 4 時段）、家屬 / 藥師每週補藥一次、每格含重量 + 開蓋感測確認取藥；時間到 + AI 同步語音；10 分鐘未取觸發再提醒 + 30 分鐘未取觸發家屬通知</td>
+</tr>
+<tr>
+<td>F-003</td>
+<td>Tool Calling · read_vitals</td>
+<td><strong>P0</strong></td>
+<td>當用戶說「我頭暈 / 心悸 / 不舒服」時、自動 call read_vitals(symptom) tool 拉藍牙血壓計（OMRON / Withings）+ Apple Watch 心率 / 雅培 CGM 即時數據；3 秒內回應；異常值觸發升級流程</td>
+</tr>
+<tr>
+<td>F-004</td>
+<td>異常通報 4 級梯度</td>
+<td><strong>P0</strong></td>
+<td>L1 系統自處理（CARE.AI 陪聊）/ L2 App push 推「媽媽今天比較安靜」/ L3 push alert 子女 / L4 通知家屬 / call center · 人工確認後通報 119 + 家屬；每級觸發條件明確、不誤升級</td>
+</tr>
+<tr>
+<td>F-005</td>
+<td>親子聯絡簿（家屬 App）</td>
+<td><strong>P0</strong></td>
+<td>每日生成健康摘要（血壓 / 用藥 / 步數 / 對話 / 情緒）；App push 推送；趨勢圖；異常 alert push</td>
+</tr>
+<tr>
+<td>F-006</td>
+<td>情緒感測（基礎版）</td>
+<td>P1</td>
+<td>Whisper 語音情緒分類（中性 / 開心 / 焦慮 / 憂鬱 / 孤獨）；連續 3 天 ≥ 60% 負面對話觸發 CARE.AI 主動陪聊；連續 7 天 ≥ 60% 觸發 App push 推家屬</td>
+</tr>
+<tr>
+<td>F-007</td>
+<td>主流穿戴整合</td>
+<td>P1</td>
+<td>分 3 波收斂：<strong>Day 1</strong>（M1-3 必上）Apple HealthKit / Google Fit / 歐姆龍 OMRON Connect — cover iOS / Android / 銀髮血壓計主流；<strong>Day 30</strong>（M3-6）Oura Ring / Withings / 雅培 LibreView（CGM）— cover 科技族群 + 慢病；<strong>Day 90+</strong>（M6-9）Ultrahuman / RingConn / 倍泰 / 百略 — 備援 + 在地化。子女在 App 一鍵綁定、無需用戶手動配置。</td>
+</tr>
+<tr>
+<td>F-008</td>
+<td>雙 persona 切換</td>
+<td>P1</td>
+<td>長者 onboarding 試聽 30 秒選擇 voice persona（阿康 / 小晴）；一週後可重選；兩 persona 共用 Memory + Tool 不重複設定</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Success Metrics · 90 天目標</h3>
+<table>
+<thead>
+<tr><th>指標</th><th>基準</th><th>目標</th></tr>
+</thead>
+<tbody>
+<tr><td>用藥遵從率（adherence rate）</td><td>業界平均 50%（高齡多重用藥）</td><td><strong>≥ 75%</strong>（+25%）</td></tr>
+<tr><td>90 天留存率</td><td>健康類 app 一般 10-20%</td><td><strong>≥ 60%</strong>（對齊 Ato）</td></tr>
+<tr><td>主動觸發回應率</td><td>—</td><td><strong>≥ 70%</strong></td></tr>
+<tr><td>異常通報誤判率</td><td>—</td><td><strong>≤ 5%</strong>（不超過 1/月）</td></tr>
+<tr><td>子女 NPS</td><td>—</td><td><strong>≥ 50</strong></td></tr>
+</tbody>
+</table>
+
+<h3>Non-goals · 第一代不做（拉到 Phase 2 / 3）</h3>
+
+<h4>Phase 2（M12-24 · 第一代 PMF 驗證後啟動）</h4>
+<ul>
+<li>❌ 串接 Oura / Ultrahuman 戒指（Phase 1 走配件串接、自家不做戒指硬體）</li>
+<li>❌ 遠距視訊診療（衛福部 9 類照護對象 · 需 Class II 認證 + 醫院 BD 6-12 月）</li>
+<li>❌ 健保 FHIR 資料同步（需衛福部 / 健保署認證）</li>
+<li>❌ 智慧藥盒擴充（製藥廠合作金 + 自動補藥）</li>
+<li>❌ B2B 長照機構版（Phase 1 先做 B2C 驗證）</li>
+</ul>
+
+<h4>Phase 3（M24+ · 規模化階段）</h4>
+<ul>
+<li>❌ 全屋衛星感測器（浴室 / 廚房 / 玄關 / 多房間）</li>
+<li>❌ 視訊心理感測 AI（需 Class II 認證升級 + 隱私教育）</li>
+<li>❌ 國際版（日本 / 東南亞）</li>
+</ul>
+
+<h4>永遠不做（合規紅線）</h4>
+<ul>
+<li>❌ TFDA Class II 醫療器材認證（Phase 1 走 Class I reminder + 陪伴定位）</li>
+<li>❌ 替代醫生診斷（永遠不做、合規紅線）</li>
+<li>❌ Photo-realistic 寫實 avatar 強制全用戶（保留風格化擬人預設 · Tier 4 進階自選解鎖）</li>
+</ul>
+</section>
+
+<!-- ============ 5 · 產品架構 ============ -->
+<section class="chapter" id="c5">
+<div class="chapter-num">05</div>
+<div class="eyebrow">Product Architecture</div>
+<h2>產品架構<span class="zh">三個產品 · 不貪多</span></h2>
+<div class="why-matters">CAREON 第一代產品架構：一台主機（Companion）+ 一個 App + 一個 AI 服務（CARE.AI）三件套、收斂不貪多。</div>
+<div class="divider"></div>
+
+<h3>Phase 1 · 三個產品</h3>
+
+<table>
+<thead>
+<tr><th style="width:25%">產品</th><th>形態</th><th>定位</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CAREON Companion</strong><br>（硬體）</td>
+<td>8 吋 Home Pad · 含 8 槽自動用藥提醒槽 + 視訊鏡頭 + 麥克風陣列 + 喇叭 + PPG 心率感測 + PIR 動作 + 環境溫濕度 · <strong>家人視訊通話</strong>（子女 App 一鍵接通）+ <strong>緊急 119 視訊</strong>（救護員看現場）</td>
+<td>中央 hub · 長者面前的「家人臉」· 主動關心 + 視訊聯繫介面</td>
+</tr>
+<tr>
+<td><strong>CAREON App</strong><br>（應用）</td>
+<td>長者端（簡易大字版）+ 子女端 iOS / Android（App push 為主、LINE 可選備援）· 健康儀表板 + 親子聯絡簿 + <strong>一鍵視訊 / 語音通話爸媽</strong>（不用 LINE / 不用學 App）+ <strong>遊戲化成就 + 行銷模組</strong>（健康徽章 / 健康幣 / 家庭排行榜 / 節慶推播 / 親子健康任務 / 供應商生態抽 10-15%）· 台語介面 + 阿康小晴台語聲線 + Web Dashboard（趨勢圖 + 月度報告）</td>
+<td>家屬端 · 遠距掌握 · 不打擾的 24/7 監看</td>
+</tr>
+<tr>
+<td><strong>CARE.AI</strong><br><span style="font-family:Fraunces,serif;font-style:italic;font-size:11px;color:#8A7560;">Conversational AI for Wellness Care</span><br>（訂閱服務）</td>
+<td><strong>兩層服務模組</strong>：（A）<strong>功能互動 · 永遠免費</strong>（用藥提醒 / 健康查詢 / 緊急通報 / 視訊通話 / device 主動關心）走端側 NT$0；（B）<strong>聊天陪伴 · 訂閱計費</strong> 3 層：Free 50 分鐘 / Plus NT$699 / 150 分鐘 / Pro NT$1,299 / 300 分鐘、走雲端 Realtime 2 + Moshi 自架；阿康 + 小晴 雙 persona；主動觸發引擎</td>
+<td>智慧層 · 持續學習 · 月費收入主力</td>
+</tr>
+</tbody>
+</table>
+
+<div class="callout" style="margin-top:18px;">
+<span class="label">⭐ 兩層服務拆分 · CAREON vs 競品最大差異</span>
+<p><strong>競品（ElliQ / Echo Show / ASUS）所有 voice 對話都算進訂閱方案、用戶不敢隨便用</strong>。CAREON 刻意把「家人會幫你做的事」（提醒 / 查詢 / 急救）跟「家人陪你聊的時間」分開算 — 像保健險不會把「量體溫」也收費。</p>
+<table style="margin-top:10px;">
+<thead><tr><th>場景</th><th style="width:20%">是否計費</th><th>技術路徑</th></tr></thead>
+<tbody>
+<tr><td>「現在幾點 / 今天天氣」</td><td>❌ 免費</td><td>端側 Phi-4-mini</td></tr>
+<tr><td>「該吃藥了嗎 / 血壓多少」</td><td>❌ 免費</td><td>端側 + 健康儀表板查詢</td></tr>
+<tr><td>「找小孩 / 視訊女兒」</td><td>❌ 免費</td><td>device 撥號功能</td></tr>
+<tr><td>「我跌倒了 / 救救我」</td><td>❌ 免費</td><td>緊急永遠免費</td></tr>
+<tr><td>device 主動「該吃藥囉」「您還好嗎」</td><td>❌ 免費</td><td>主動觸發引擎 + 預錄 voice 池</td></tr>
+<tr><td><strong>「跟我聊聊 / 想說說話 / 聽我講故事」</strong></td><td>✅ 計費（聊天分鐘）</td><td>雲端 Realtime 2 / Moshi 自架</td></tr>
+<tr><td><strong>超過 30 秒的開放式對話</strong></td><td>✅ 計費</td><td>雲端 speech-to-speech</td></tr>
+</tbody>
+</table>
+<p style="margin-top:10px;">→ 用戶**永遠不擔心問用藥被扣錢**、訂閱賣的是**真正想找人陪聊的高價值時間**、CAREON 不會變成 Humane Ai Pin 的根因。</p>
+</div>
+
+<figure style="margin: 24px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+<div style="border-radius: 8px; overflow: hidden; box-shadow: 0 6px 18px -8px rgba(139,69,19,0.18);">
+<img src="images/home-pad-white.png" alt="CAREON Companion 米白款" style="width:100%;height:auto;display:block;"/>
+<div style="padding: 8px 12px; background: #FDF4E3; font-family: 'Fraunces', serif; font-style: italic; font-size: 11px; color: #8A7560; text-align: center;">米白款</div>
+</div>
+<div style="border-radius: 8px; overflow: hidden; box-shadow: 0 6px 18px -8px rgba(139,69,19,0.18);">
+<img src="images/home-pad-black.png" alt="CAREON Companion 石墨黑款" style="width:100%;height:auto;display:block;"/>
+<div style="padding: 8px 12px; background: #FDF4E3; font-family: 'Fraunces', serif; font-style: italic; font-size: 11px; color: #8A7560; text-align: center;">石墨黑款</div>
+</div>
+</figure>
+
+<figure style="margin: 24px 0; border-radius: 8px; overflow: hidden; box-shadow: 0 6px 18px -8px rgba(139,69,19,0.18);">
+<img src="images/home-pad-with-phone-app.png" alt="CAREON Companion + 子女端 App 即時同步" style="width:100%;height:auto;display:block;"/>
+<div style="padding: 8px 14px; background: #FDF4E3; font-family: 'Fraunces', serif; font-style: italic; font-size: 12px; color: #8A7560; text-align: center;">CAREON Companion × CAREON App · 雙端即時同步 · 子女遠距掌握爸媽健康</div>
+</figure>
+
+<h3>CAREON Companion BOM 拆解（Phase 1 唯一硬體）</h3>
+<table>
+<thead>
+<tr><th>元件</th><th>規格</th><th>成本（NT$）</th></tr>
+</thead>
+<tbody>
+<tr><td>螢幕</td><td>8 吋 IPS LCD 1280×800 觸控</td><td>1,200</td></tr>
+<tr><td>主板</td><td>Jetson Nano（本地 AI 推論 + 隱私）</td><td>2,100</td></tr>
+<tr><td>麥克風陣列</td><td>4 顆遠場 MEMS</td><td>350</td></tr>
+<tr><td>喇叭</td><td>2W 立體聲</td><td>200</td></tr>
+<tr><td>視訊鏡頭</td><td>1080p · 預設關閉</td><td>400</td></tr>
+<tr><td>感測器</td><td>PPG 心率 + PIR + 環境溫濕度光</td><td>650</td></tr>
+<tr><td>用藥提醒槽</td><td>8 槽自動彈出機構 + 步進馬達</td><td>1,800</td></tr>
+<tr><td>連網模組</td><td>Wi-Fi + 4G + BT 5.0</td><td>450</td></tr>
+<tr><td>外殼 + 結構件</td><td>米白款 / 石墨黑款 ABS + 矽膠墊</td><td>300</td></tr>
+<tr><td>電池</td><td>3,000 mAh（停電 4 小時備用）</td><td>200</td></tr>
+<tr><td><strong>物料總成本</strong></td><td></td><td><strong>~NT$7,650</strong></td></tr>
+<tr><td>ODM 組裝 + 良率 + 認證（NCC / FCC / TFDA Class I）</td><td></td><td>~NT$2,000</td></tr>
+<tr><td><strong>出廠成本</strong></td><td></td><td><strong>~NT$9,650</strong></td></tr>
+<tr><td>建議零售價</td><td></td><td><strong>NT$14,000-16,000</strong></td></tr>
+<tr><td>訂閱綁機（主推方案 A）</td><td>用戶綁約 24 月、零頭期</td><td><strong>NT$799 / 月 × 24 月</strong></td></tr>
+</tbody>
+</table>
+
+<div class="callout">
+<span class="label">為什麼配藥槽是關鍵差異化</span>
+<p>ASUS HealthHub Max 沒有自動配藥、Echo Show 沒有、Hyodol 沒有、ElliQ 沒有——配藥槽是 CAREON 跟所有國際競品最大的差異化、值得單獨拆解、證明我們真的會做硬體。Hero（美國）有配藥但沒 AI 真人 avatar、CAREON 是「配藥 + 真人 AI」的全球首個整合。</p>
+</div>
+</section>
+
+<!-- ============ 6 · AI Agent 工作流 ============ -->
+<section class="chapter" id="c6">
+<div class="chapter-num">06</div>
+<div class="eyebrow">AI Agent Workflow</div>
+<h2>AI Agent 工作流<span class="zh">LangGraph + Memory + 7 Tool</span></h2>
+<div class="why-matters">CARE.AI 大腦 · LangGraph 8 節點工作流 + 3 層記憶 + 7 個工具呼叫 · 從感知到回應的完整流程。</div>
+<div class="divider"></div>
+
+<h3>為什麼選 LangGraph 不是 Langflow</h3>
+<p><strong>LangGraph</strong>（程式定義）= 可審計、可測試、整合 Anthropic SDK + LangChain 生態、production-ready、可寫 unit test。<br>
+<strong>Langflow</strong>（視覺化）= 適合 prototype demo、但生產環境難 debug、版本控制差。<br>
+<strong>結論</strong>：CAREON 用 LangGraph 寫 production 版本、Langflow 只用於 demo + 對外溝通 workflow 邏輯。</p>
+
+<h3>LangGraph 工作流 · 8 個 node</h3>
+
+<div class="arch-svg" style="margin: 20px 0; padding: 24px; background: #FFFBF5; border: 1px solid var(--bg-warm-line); border-radius: 10px; box-shadow: 0 4px 12px -6px rgba(139,69,19,0.12);">
+<svg viewBox="0 0 720 580" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 720px; height: auto; font-family: 'Fraunces', 'Noto Serif TC', serif;">
+  <defs>
+    <filter id="softShadow1" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+      <feOffset dx="0" dy="2"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="720" height="580" fill="#FFFBF5"/>
+
+  <!-- Input -->
+  <rect x="220" y="20" width="280" height="44" rx="22" fill="#FDF4E3" stroke="#D4712A" stroke-width="1.5" filter="url(#softShadow1)"/>
+  <text x="360" y="48" text-anchor="middle" font-size="14" fill="#4A3A2E" font-style="italic">Sensor Input · IoT Trigger · Voice</text>
+  <line x1="360" y1="64" x2="360" y2="92" stroke="#D4712A" stroke-width="2"/>
+  <polygon points="360,98 354,88 366,88" fill="#D4712A"/>
+
+  <!-- Node 1 -->
+  <rect x="240" y="100" width="240" height="50" rx="8" fill="#D4712A" stroke="#B85A1F" stroke-width="2" filter="url(#softShadow1)"/>
+  <text x="360" y="124" text-anchor="middle" font-size="13" fill="white" font-weight="600">Node 1 · Intent Router</text>
+  <text x="360" y="140" text-anchor="middle" font-size="11" fill="white" font-style="italic">LLM 判定意圖</text>
+
+  <!-- 3 路分支 -->
+  <line x1="360" y1="150" x2="360" y2="170" stroke="#D4712A" stroke-width="2"/>
+  <line x1="120" y1="170" x2="600" y2="170" stroke="#D4712A" stroke-width="2"/>
+  <line x1="120" y1="170" x2="120" y2="195" stroke="#D4712A" stroke-width="2"/>
+  <line x1="360" y1="170" x2="360" y2="195" stroke="#D4712A" stroke-width="2"/>
+  <line x1="600" y1="170" x2="600" y2="195" stroke="#D4712A" stroke-width="2"/>
+  <text x="120" y="210" text-anchor="middle" font-size="11" fill="#8A7560" font-style="italic">Active Trigger</text>
+  <text x="360" y="210" text-anchor="middle" font-size="11" fill="#8A7560" font-style="italic">User Question</text>
+  <text x="600" y="210" text-anchor="middle" font-size="11" fill="#8A7560" font-style="italic">Emergency</text>
+
+  <!-- Node 2/3/4 -->
+  <rect x="40" y="225" width="160" height="56" rx="6" fill="#FFFBF5" stroke="#D4712A" stroke-width="1.5" filter="url(#softShadow1)"/>
+  <text x="120" y="248" text-anchor="middle" font-size="12" fill="#2A1F18" font-weight="600">Node 2 · Memory Pull</text>
+  <text x="120" y="266" text-anchor="middle" font-size="10" fill="#8A7560" font-style="italic">DynamoDB 3 層 Memory</text>
+
+  <rect x="280" y="225" width="160" height="56" rx="6" fill="#FFFBF5" stroke="#D4712A" stroke-width="1.5" filter="url(#softShadow1)"/>
+  <text x="360" y="248" text-anchor="middle" font-size="12" fill="#2A1F18" font-weight="600">Node 3 · Tool Call</text>
+  <text x="360" y="266" text-anchor="middle" font-size="10" fill="#8A7560" font-style="italic">7 Function Calling</text>
+
+  <rect x="520" y="225" width="160" height="56" rx="6" fill="#FFFBF5" stroke="#D4712A" stroke-width="1.5" filter="url(#softShadow1)"/>
+  <text x="600" y="248" text-anchor="middle" font-size="12" fill="#2A1F18" font-weight="600">Node 4 · Escalation</text>
+  <text x="600" y="266" text-anchor="middle" font-size="10" fill="#8A7560" font-style="italic">4 級升級梯度</text>
+
+  <!-- 匯流 -->
+  <line x1="120" y1="281" x2="120" y2="305" stroke="#D4712A" stroke-width="2"/>
+  <line x1="360" y1="281" x2="360" y2="305" stroke="#D4712A" stroke-width="2"/>
+  <line x1="600" y1="281" x2="600" y2="305" stroke="#D4712A" stroke-width="2"/>
+  <line x1="120" y1="305" x2="600" y2="305" stroke="#D4712A" stroke-width="2"/>
+  <line x1="360" y1="305" x2="360" y2="325" stroke="#D4712A" stroke-width="2"/>
+  <polygon points="360,331 354,321 366,321" fill="#D4712A"/>
+
+  <!-- Node 5 + 6 -->
+  <rect x="160" y="335" width="180" height="56" rx="6" fill="#FDF4E3" stroke="#D4712A" stroke-width="1.5" filter="url(#softShadow1)"/>
+  <text x="250" y="358" text-anchor="middle" font-size="12" fill="#2A1F18" font-weight="600">Node 5 · Persona</text>
+  <text x="250" y="376" text-anchor="middle" font-size="10" fill="#8A7560" font-style="italic">阿康 / 小晴 雙人設</text>
+
+  <rect x="380" y="335" width="180" height="56" rx="6" fill="#FDF4E3" stroke="#D4712A" stroke-width="1.5" filter="url(#softShadow1)"/>
+  <text x="470" y="358" text-anchor="middle" font-size="12" fill="#2A1F18" font-weight="600">Node 6 · Vibe Check</text>
+  <text x="470" y="376" text-anchor="middle" font-size="10" fill="#8A7560" font-style="italic">語氣校準 10 紀律</text>
+
+  <line x1="250" y1="391" x2="250" y2="415" stroke="#D4712A" stroke-width="2"/>
+  <line x1="470" y1="391" x2="470" y2="415" stroke="#D4712A" stroke-width="2"/>
+  <line x1="250" y1="415" x2="470" y2="415" stroke="#D4712A" stroke-width="2"/>
+  <line x1="360" y1="415" x2="360" y2="435" stroke="#D4712A" stroke-width="2"/>
+  <polygon points="360,441 354,431 366,431" fill="#D4712A"/>
+
+  <!-- Node 7 -->
+  <rect x="240" y="445" width="240" height="50" rx="8" fill="#D4712A" stroke="#B85A1F" stroke-width="2" filter="url(#softShadow1)"/>
+  <text x="360" y="466" text-anchor="middle" font-size="13" fill="white" font-weight="600">Node 7 · Response Generation</text>
+  <text x="360" y="482" text-anchor="middle" font-size="10" fill="white" font-style="italic">OpenAI Realtime 2 ⭐ / Claude 4.6 備援</text>
+
+  <line x1="360" y1="495" x2="360" y2="515" stroke="#D4712A" stroke-width="2"/>
+  <polygon points="360,521 354,511 366,511" fill="#D4712A"/>
+
+  <!-- Node 8 -->
+  <rect x="240" y="525" width="240" height="44" rx="6" fill="#FFFBF5" stroke="#D4712A" stroke-width="1.5" filter="url(#softShadow1)"/>
+  <text x="360" y="548" text-anchor="middle" font-size="12" fill="#2A1F18" font-weight="600">Node 8 · Memory Update + Logs</text>
+  <text x="360" y="563" text-anchor="middle" font-size="9" fill="#8A7560" font-style="italic">→ Realtime voice stream + 自家 avatar lipsync 輸出</text>
+</svg>
+<p style="margin-top: 12px; font-family: var(--serif-display); font-style: italic; font-size: 11.5px; color: var(--ink-mute); text-align: center;">LangGraph 8 Node 工作流 · 從 Sensor Input 到 Voice + Avatar 輸出</p>
+</div>
+
+<h3>Memory 設計 · 3 層</h3>
+<table>
+<thead>
+<tr><th style="width:25%">層</th><th>存什麼</th><th>where</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Long-term Profile</strong></td><td>長者輪廓：年齡 / 性別 / 慢性病 / 用藥表 / 子女聯絡 / 偏好 persona / 喜歡的話題 / 不愛的話題 / 老歌偏好</td><td>DynamoDB（user-profile table）</td></tr>
+<tr><td><strong>Mid-term Health Log</strong></td><td>近 30 天：血壓 / 心率 / 睡眠 / 用藥執行 / 對話頻率 / 情緒趨勢</td><td>DynamoDB（health-log table）+ S3（影音摘要）</td></tr>
+<tr><td><strong>Short-term Context</strong></td><td>當前對話 turn 上下文 + 7 天滑動視窗事件</td><td>LangGraph state（in-memory）</td></tr>
+</tbody>
+</table>
+
+<details style="margin-top:14px;border:1px solid rgba(212,113,42,0.25);border-radius:6px;padding:10px 14px;background:rgba(255,253,248,0.6);">
+<summary style="cursor:pointer;font-family:Fraunces,serif;font-size:14px;color:#D4712A;font-weight:600;">▸ Memory TypeScript schema 程式碼（節錄 · 完整版見 PROTOTYPE-spec）</summary>
+<pre style="margin-top:10px;padding:14px;background:#1F1B17;color:#EADDC7;border-radius:6px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.65;">interface UserMemory {
+  user_id: string;
+  profile: {
+    name: string;
+    age: number;
+    preferred_address: string;  // 「阿嬤」「阿公」「王太太」
+    preferred_language: 'zh-tw' | 'tw' | 'mixed';
+    chronic_conditions: string[];
+    medications: Medication[];
+    routine: { wake_time: string; sleep_time: string; meals: string[] };
+    emergency_contacts: Contact[];
+  };
+  conversation_history: ConversationTurn[];  // 最近 50 輪
+  health_trends: {
+    blood_pressure: TimeseriesEntry[];  // 30 天
+    heart_rate: TimeseriesEntry[];
+    sleep_quality: TimeseriesEntry[];
+    medication_adherence: number;  // 0-1、30 天平均
+  };
+  emotional_state: {
+    last_7d_sentiment: 'positive' | 'neutral' | 'negative';
+    loneliness_indicators: number;  // 0-100
+    last_family_call: timestamp;
+  };
+}</pre>
+</details>
+
+<h3>7 Tool / Function Calling 清單</h3>
+<table>
+<thead>
+<tr><th>Tool</th><th>用途</th><th>觸發例</th></tr>
+</thead>
+<tbody>
+<tr><td><code>read_vitals(metric)</code></td><td>拉藍牙血壓計（OMRON / Withings）+ Apple Watch 心率 + 雅培 CGM 即時數據</td><td>「我頭暈」→ read_vitals("blood_pressure")</td></tr>
+<tr><td><code>check_medication_schedule(time)</code></td><td>查當餐該吃什麼藥</td><td>08:00 觸發 → 顯示降壓藥 + 控糖藥</td></tr>
+<tr><td><code>notify_family(severity, msg)</code></td><td>App push 推家屬</td><td>連續 7 天負面情緒 → L2 通知</td></tr>
+<tr><td><code>emergency_119(condition)</code></td><td>緊急狀況通知家屬 / call center · 人工確認後通報 119 + GPS</td><td>跌倒 + 3 分鐘無回應 → L4 升級</td></tr>
+<tr><td><code>query_health_history(days, metric)</code></td><td>拉趨勢給 LLM 解讀</td><td>「我最近血壓如何」→ 拉 7 天趨勢</td></tr>
+<tr><td><code>analyze_emotion(audio)</code></td><td>Whisper 語音情緒分類</td><td>每次對話自動 + 累積每日輪廓</td></tr>
+<tr><td><code>recommend_activity(profile)</code></td><td>依輪廓推薦運動 / 聊天話題 / 老歌</td><td>偵測孤獨 → 推薦聊天 + Spotify 老歌</td></tr>
+</tbody>
+</table>
+
+<details style="margin-top:14px;border:1px solid rgba(212,113,42,0.25);border-radius:6px;padding:10px 14px;background:rgba(255,253,248,0.6);">
+<summary style="cursor:pointer;font-family:Fraunces,serif;font-size:14px;color:#D4712A;font-weight:600;">▸ readVitals Tool 程式碼（ai-sdk + zod · demo/web/lib/tools.ts 已實作 · 線上可跑）</summary>
+<pre style="margin-top:10px;padding:14px;background:#1F1B17;color:#EADDC7;border-radius:6px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.65;">import { tool } from 'ai';
+import { z } from 'zod';
+
+export const readVitals = tool({
+  description: '讀取長者即時生理數據 (血壓 / 心率 / 體溫 / 血氧 / 睡眠分數)',
+  parameters: z.object({
+    metric: z
+      .enum(['blood_pressure', 'heart_rate', 'body_temp', 'spo2', 'sleep_score'])
+      .describe('要讀的生理指標'),
+  }),
+  execute: async ({ metric }) =&gt; {
+    // Mock data 100% reproducible · 同樣 input 同樣 output
+    if (metric === 'blood_pressure') {
+      return {
+        value: '145/95',
+        unit: 'mmHg',
+        trend_7d: 'stable_slightly_high',
+        normal_range: '120-140 / 80-90',
+        interpretation: '稍高於平常建議休息',
+      };
+    }
+    // ... 其他 4 個 metric（heart_rate / body_temp / spo2 / sleep_score）
+  },
+});</pre>
+</details>
+
+<h3>端側 vs 雲端 routing 決策</h3>
+<p>CAREON Companion 用 <strong>70/30 routing 策略</strong>：常見場景跑端側不上雲、複雜推理 / 情感對話才路由到雲端。下表為 6 個典型場景的判斷邏輯。</p>
+<table>
+<thead>
+<tr><th style="width:24%">場景</th><th style="width:22%">走哪</th><th>為什麼</th><th style="width:18%">latency</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Wake word</strong>（喊「阿康」）</td><td>端側 Picovoice Porcupine</td><td>&lt; 50ms 必要、不可上雲</td><td>30-50ms</td></tr>
+<tr><td>「現在幾點」「關燈」</td><td>端側 Llama / Phi-4-mini</td><td>簡單意圖、不上雲降隱私風險</td><td>200-400ms</td></tr>
+<tr><td>用藥提醒 voice</td><td>端側 TTS（Piper / Kokoro）</td><td>不需 reasoning、預錄式播報</td><td>~ 300ms</td></tr>
+<tr><td>「我頭暈」→ tool call</td><td>雲端 Bedrock Claude Sonnet 4.5</td><td>需多步推理 + tool calling</td><td>800-1500ms</td></tr>
+<tr><td>「我跟你說個故事」（情感對話）</td><td>雲端 OpenAI Realtime 2</td><td>需高品質情緒理解 + 語氣校準</td><td>300-500ms</td></tr>
+<tr><td>跌倒緊急</td><td>端側偵測 + 雲端 escalation</td><td>端側快、雲端負責 SNS / Connect Health</td><td>200ms 偵測 + 1s 通報</td></tr>
+</tbody>
+</table>
+<div class="callout">
+<span class="label">70/30 routing 帶來的成本與隱私雙紅利</span>
+<p>日常 70% 場景不上雲、<strong>雲端 cost / 用戶 / 月 &lt; NT$50</strong>；隱私敏感場景（家中對話、health 原始 audio）天然不離開家戶、合台灣個資法第 27 條與 GDPR Art. 25「Privacy by Design」精神。</p>
+</div>
+
+<h3>Safety Guardrail · 醫療安全護欄 ⭐</h3>
+<div class="callout">
+<span class="label">CAREON 永遠不做的 3 件事（合規紅線）</span>
+<ul style="margin-top:8px;">
+<li><strong>不做診斷</strong>：所有對話絕不主張「你是 XX 病」、只描述客觀數值（「你今天血壓比平常高一點」）</li>
+<li><strong>不改劑量</strong>：用藥提醒只依醫師處方執行、不建議調整用藥</li>
+<li><strong>不替代專業</strong>：所有醫療建議結尾自動加「這不是診斷、建議跟你的醫師討論」</li>
+</ul>
+<p style="margin-top:10px;">→ LangGraph 工作流中 <strong>Node 7（Response Generation）前必經 Safety Guardrail node</strong>、過濾任何含「診斷 / 病名 / 改劑量」字眼的輸出；高風險指標（BP &gt; 180 / HR &gt; 130）只觸發升級流程、不主動給建議。<em>CAREON 只做四件事：提醒、觀察、摘要、升級。醫療決策永遠回到醫師與照護者。</em></p>
+</div>
+</section>
+
+<!-- ============ 7 · AWS 系統架構 ============ -->
+<section class="chapter" id="c7">
+<div class="chapter-num">07</div>
+<div class="eyebrow">AWS Architecture</div>
+<h2>AWS 系統架構<span class="zh">IoT 裝置 ↔ AWS ↔ LangChain</span></h2>
+<div class="why-matters">CAREON 完整系統架構 · 從裝置層到 AI Agent 5 層分工、AWS / OpenAI Realtime / 自家 castle-voice-engine 各司其職。</div>
+<div class="divider"></div>
+
+<h3>架構圖（5 層 + 資料流）</h3>
+
+<div class="arch-svg" style="margin: 20px 0; padding: 24px; background: #FFFBF5; border: 1px solid var(--bg-warm-line); border-radius: 10px; box-shadow: 0 4px 12px -6px rgba(139,69,19,0.12);">
+<svg viewBox="0 0 720 540" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 720px; height: auto; font-family: 'Fraunces', 'Noto Serif TC', serif;">
+  <defs>
+    <filter id="softShadow2" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+      <feOffset dx="0" dy="2"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="720" height="540" fill="#FFFBF5"/>
+
+  <!-- Layer 5 -->
+  <rect x="40" y="20" width="640" height="60" rx="6" fill="#FDF4E3" stroke="#D4712A" stroke-width="1.5" filter="url(#softShadow2)"/>
+  <text x="50" y="40" font-size="11" fill="#D4712A" font-style="italic" letter-spacing="0.12em">LAYER 5 · INTERFACE</text>
+  <text x="50" y="60" font-size="13" fill="#2A1F18" font-weight="600">CAREON Companion 主機 · CAREON App push 推播 · Web Dashboard</text>
+  <text x="50" y="76" font-size="10" fill="#8A7560" font-style="italic">長者面前 8 吋 / 子女手機 / 家屬瀏覽器</text>
+
+  <line x1="360" y1="80" x2="360" y2="100" stroke="#D4712A" stroke-width="2" stroke-dasharray="4 3"/>
+
+  <!-- Layer 4 -->
+  <rect x="40" y="100" width="640" height="60" rx="6" fill="#D4712A" stroke="#B85A1F" stroke-width="2" filter="url(#softShadow2)"/>
+  <text x="50" y="120" font-size="11" fill="white" font-style="italic" letter-spacing="0.12em">LAYER 4 · AI AGENT · LANGGRAPH</text>
+  <text x="50" y="140" font-size="13" fill="white" font-weight="600">8 Node · 7 Tool · 3 層 Memory · 主動觸發引擎</text>
+  <text x="50" y="156" font-size="10" fill="white" font-style="italic">Persona 阿康 / 小晴 · Vibe Check 10 紀律</text>
+
+  <line x1="360" y1="160" x2="360" y2="180" stroke="#D4712A" stroke-width="2" stroke-dasharray="4 3"/>
+
+  <!-- Layer 3 · 4 service -->
+  <text x="50" y="195" font-size="11" fill="#D4712A" font-style="italic" letter-spacing="0.12em">LAYER 3 · AWS CLOUD</text>
+
+  <rect x="40" y="205" width="150" height="60" rx="6" fill="#FDF4E3" stroke="#D4712A" stroke-width="2" filter="url(#softShadow2)"/>
+  <text x="115" y="222" text-anchor="middle" font-size="12" fill="#2A1F18" font-weight="600">OpenAI Realtime 2 ⭐</text>
+  <text x="115" y="238" text-anchor="middle" font-size="10" fill="#8A7560" font-style="italic">主 voice 路徑</text>
+  <text x="115" y="252" text-anchor="middle" font-size="9" fill="#8A7560">speech-to-speech</text>
+  <text x="115" y="263" text-anchor="middle" font-size="9" fill="#8A7560">300ms 延遲</text>
+
+  <rect x="205" y="205" width="150" height="60" rx="6" fill="#FFFBF5" stroke="#D4712A" stroke-width="1.5" filter="url(#softShadow2)"/>
+  <text x="280" y="222" text-anchor="middle" font-size="12" fill="#2A1F18" font-weight="600">Bedrock Claude 4.6</text>
+  <text x="280" y="238" text-anchor="middle" font-size="10" fill="#8A7560" font-style="italic">複雜推理備援</text>
+  <text x="280" y="252" text-anchor="middle" font-size="9" fill="#8A7560">+ Lambda Tool</text>
+  <text x="280" y="263" text-anchor="middle" font-size="9" fill="#8A7560">Function Calling</text>
+
+  <rect x="370" y="205" width="150" height="60" rx="6" fill="#FFFBF5" stroke="#D4712A" stroke-width="1.5" filter="url(#softShadow2)"/>
+  <text x="445" y="225" text-anchor="middle" font-size="12" fill="#2A1F18" font-weight="600">DynamoDB</text>
+  <text x="445" y="241" text-anchor="middle" font-size="10" fill="#8A7560" font-style="italic">user-profile / health-log</text>
+  <text x="445" y="257" text-anchor="middle" font-size="9" fill="#8A7560">3 層 Memory · HIPAA</text>
+
+  <rect x="535" y="205" width="145" height="60" rx="6" fill="#FFFBF5" stroke="#D4712A" stroke-width="1.5" filter="url(#softShadow2)"/>
+  <text x="607" y="225" text-anchor="middle" font-size="12" fill="#2A1F18" font-weight="600">Connect Health</text>
+  <text x="607" y="241" text-anchor="middle" font-size="10" fill="#8A7560" font-style="italic">緊急 119 + outbound</text>
+  <text x="607" y="257" text-anchor="middle" font-size="9" fill="#8A7560">家屬呼叫 + SNS</text>
+
+  <line x1="360" y1="265" x2="360" y2="285" stroke="#D4712A" stroke-width="2" stroke-dasharray="4 3"/>
+
+  <!-- Layer 2 -->
+  <rect x="40" y="285" width="640" height="60" rx="6" fill="#FDF4E3" stroke="#D4712A" stroke-width="1.5" filter="url(#softShadow2)"/>
+  <text x="50" y="305" font-size="11" fill="#D4712A" font-style="italic" letter-spacing="0.12em">LAYER 2 · IOT TRANSPORT</text>
+  <text x="50" y="325" font-size="13" fill="#2A1F18" font-weight="600">AWS IoT Core(MQTT broker) · IoT Greengrass(Edge AI 推論 · Phase 2 可選)</text>
+  <text x="50" y="341" font-size="10" fill="#8A7560" font-style="italic">device ↔ 雲端標準協議 · 本地推論降延遲 + 保隱私</text>
+
+  <line x1="360" y1="345" x2="360" y2="365" stroke="#D4712A" stroke-width="2" stroke-dasharray="4 3"/>
+
+  <!-- Layer 1 -->
+  <rect x="40" y="365" width="640" height="80" rx="6" fill="#D4712A" stroke="#B85A1F" stroke-width="2" filter="url(#softShadow2)"/>
+  <text x="50" y="385" font-size="11" fill="white" font-style="italic" letter-spacing="0.12em">LAYER 1 · CAREON COMPANION 主機端</text>
+  <text x="50" y="405" font-size="13" fill="white" font-weight="600">Jetson Nano + Llama 3.1 8B(端側 70% 例行場景 · 不上雲)</text>
+  <text x="50" y="423" font-size="10" fill="white" font-style="italic">PIR · PPG · 麥克風陣列 · 自動配藥槽 · 1080p 鏡頭 · 8 吋觸控</text>
+  <text x="50" y="438" font-size="10" fill="white" font-style="italic">+ 自家 castle-voice-engine avatar lipsync (搭 OpenAI Realtime 2 stream / ElevenLabs 備援)</text>
+
+  <!-- 補充服務 -->
+  <text x="50" y="475" font-size="10" fill="#D4712A" font-style="italic" letter-spacing="0.1em">補充服務</text>
+  <text x="50" y="492" font-size="9.5" fill="#4A3A2E">SNS(App push 推家屬) · S3(avatar 動畫池 100+ lipsync) · CloudWatch(adherence 監控) · Cognito(家屬帳號) · Polly(備援 TTS)</text>
+</svg>
+<p style="margin-top: 12px; font-family: var(--serif-display); font-style: italic; font-size: 11.5px; color: var(--ink-mute); text-align: center;">AWS 5 層架構 · 從介面層 → AI Agent → 雲端 → IoT 傳輸 → 主機端</p>
+</div>
+
+<h3>資訊流 vs 資料流 · 兩條本質不同的路徑</h3>
+<p>面試題目同時要求「資訊流」與「資料流」、兩條本質不同、必須分開講。<strong>資訊流</strong>= 對話 / 觸發路徑（user utterance → response）、講求 latency；<strong>資料流</strong>= 健康數據路徑（device → 儲存 → 通報 → 健保署）、講求可靠 + 隱私 + 可追溯。</p>
+
+<h4>資訊流（對話 / 觸發路徑）</h4>
+<div class="arch-svg" style="margin: 16px 0 24px; padding: 22px; background: #FFFBF5; border: 1px solid var(--bg-warm-line); border-radius: 10px; box-shadow: 0 4px 12px -6px rgba(139,69,19,0.12);">
+<svg viewBox="0 0 720 380" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 720px; height: auto; font-family: Fraunces, Noto Serif TC, serif;">
+  <defs>
+    <filter id="softShadowI1" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+      <feOffset dx="0" dy="2"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="arrI1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#D4712A"/>
+    </marker>
+  </defs>
+  <rect width="720" height="380" fill="#FFFBF5"/>
+  <text x="360" y="22" text-anchor="middle" font-size="11" fill="#D4712A" font-style="italic" letter-spacing="0.12em">USER UTTERANCE → AI RESPONSE</text>
+  <text x="50" y="48" font-size="10" fill="#8A7560" font-style="italic" letter-spacing="0.08em">端側 ON-DEVICE</text>
+  <rect x="40" y="55" width="120" height="46" rx="6" fill="#D4712A" stroke="#B85A1F" stroke-width="1.5" filter="url(#softShadowI1)"/>
+  <text x="100" y="75" text-anchor="middle" font-size="11" fill="white" font-weight="600">Wake word</text>
+  <text x="100" y="91" text-anchor="middle" font-size="9" fill="white" font-style="italic">Porcupine · 30-50ms</text>
+  <line x1="160" y1="78" x2="184" y2="78" stroke="#D4712A" stroke-width="2" marker-end="url(#arrI1)"/>
+  <rect x="186" y="55" width="120" height="46" rx="6" fill="#D4712A" stroke="#B85A1F" stroke-width="1.5" filter="url(#softShadowI1)"/>
+  <text x="246" y="75" text-anchor="middle" font-size="11" fill="white" font-weight="600">STT</text>
+  <text x="246" y="91" text-anchor="middle" font-size="9" fill="white" font-style="italic">faster-whisper · 200-280ms</text>
+  <line x1="306" y1="78" x2="330" y2="78" stroke="#D4712A" stroke-width="2" marker-end="url(#arrI1)"/>
+  <rect x="332" y="55" width="130" height="46" rx="6" fill="#FDF4E3" stroke="#D4712A" stroke-width="1.5" filter="url(#softShadowI1)"/>
+  <text x="397" y="75" text-anchor="middle" font-size="11" fill="#2A1F18" font-weight="600">Intent Router</text>
+  <text x="397" y="91" text-anchor="middle" font-size="9" fill="#8A7560" font-style="italic">LangGraph · 50ms</text>
+  <line x1="462" y1="78" x2="486" y2="78" stroke="#D4712A" stroke-width="2" marker-end="url(#arrI1)"/>
+  <rect x="488" y="55" width="130" height="46" rx="6" fill="#FDF4E3" stroke="#D4712A" stroke-width="1.5" filter="url(#softShadowI1)"/>
+  <text x="553" y="75" text-anchor="middle" font-size="11" fill="#2A1F18" font-weight="600">Memory Pull</text>
+  <text x="553" y="91" text-anchor="middle" font-size="9" fill="#8A7560" font-style="italic">DynamoDB · 50ms</text>
+  <line x1="553" y1="101" x2="553" y2="120" stroke="#D4712A" stroke-width="2"/>
+  <line x1="553" y1="120" x2="100" y2="120" stroke="#D4712A" stroke-width="2"/>
+  <line x1="100" y1="120" x2="100" y2="142" stroke="#D4712A" stroke-width="2" marker-end="url(#arrI1)"/>
+  <text x="50" y="160" font-size="10" fill="#8A7560" font-style="italic" letter-spacing="0.08em">雲端 IN-CLOUD</text>
+  <rect x="40" y="167" width="140" height="46" rx="6" fill="#D4712A" stroke="#B85A1F" stroke-width="1.5" filter="url(#softShadowI1)"/>
+  <text x="110" y="187" text-anchor="middle" font-size="11" fill="white" font-weight="600">Tool Call parallel</text>
+  <text x="110" y="203" text-anchor="middle" font-size="9" fill="white" font-style="italic">Bedrock + Lambda · 600-1200ms</text>
+  <line x1="180" y1="190" x2="204" y2="190" stroke="#D4712A" stroke-width="2" marker-end="url(#arrI1)"/>
+  <rect x="206" y="167" width="130" height="46" rx="6" fill="#8B2C2C" stroke="#8B2C2C" stroke-width="1.5" filter="url(#softShadowI1)"/>
+  <text x="271" y="187" text-anchor="middle" font-size="11" fill="white" font-weight="600">Safety Guardrail</text>
+  <text x="271" y="203" text-anchor="middle" font-size="9" fill="white" font-style="italic">不診斷 / 不改劑量 · 30ms</text>
+  <line x1="336" y1="190" x2="360" y2="190" stroke="#D4712A" stroke-width="2" marker-end="url(#arrI1)"/>
+  <rect x="362" y="167" width="130" height="46" rx="6" fill="#FDF4E3" stroke="#D4712A" stroke-width="1.5" filter="url(#softShadowI1)"/>
+  <text x="427" y="187" text-anchor="middle" font-size="11" fill="#2A1F18" font-weight="600">Persona + Vibe</text>
+  <text x="427" y="203" text-anchor="middle" font-size="9" fill="#8A7560" font-style="italic">阿康 / 小晴 · 20ms</text>
+  <line x1="492" y1="190" x2="516" y2="190" stroke="#D4712A" stroke-width="2" marker-end="url(#arrI1)"/>
+  <rect x="518" y="167" width="160" height="46" rx="6" fill="#D4712A" stroke="#B85A1F" stroke-width="1.5" filter="url(#softShadowI1)"/>
+  <text x="598" y="187" text-anchor="middle" font-size="11" fill="white" font-weight="600">Response Gen</text>
+  <text x="598" y="203" text-anchor="middle" font-size="9" fill="white" font-style="italic">Realtime 2 / Claude · 300-500ms</text>
+  <line x1="598" y1="213" x2="598" y2="232" stroke="#D4712A" stroke-width="2"/>
+  <line x1="598" y1="232" x2="100" y2="232" stroke="#D4712A" stroke-width="2"/>
+  <line x1="100" y1="232" x2="100" y2="254" stroke="#D4712A" stroke-width="2" marker-end="url(#arrI1)"/>
+  <text x="50" y="272" font-size="10" fill="#8A7560" font-style="italic" letter-spacing="0.08em">端側 ON-DEVICE</text>
+  <rect x="40" y="279" width="140" height="46" rx="6" fill="#D4712A" stroke="#B85A1F" stroke-width="1.5" filter="url(#softShadowI1)"/>
+  <text x="110" y="299" text-anchor="middle" font-size="11" fill="white" font-weight="600">TTS stream</text>
+  <text x="110" y="315" text-anchor="middle" font-size="9" fill="white" font-style="italic">Realtime 2 / Fish · 300-500ms</text>
+  <line x1="180" y1="302" x2="204" y2="302" stroke="#D4712A" stroke-width="2" marker-end="url(#arrI1)"/>
+  <rect x="206" y="279" width="140" height="46" rx="6" fill="#D4712A" stroke="#B85A1F" stroke-width="1.5" filter="url(#softShadowI1)"/>
+  <text x="276" y="299" text-anchor="middle" font-size="11" fill="white" font-weight="600">Avatar lipsync</text>
+  <text x="276" y="315" text-anchor="middle" font-size="9" fill="white" font-style="italic">Wav2Lip · 60-90ms / frame</text>
+  <line x1="346" y1="302" x2="370" y2="302" stroke="#D4712A" stroke-width="2" marker-end="url(#arrI1)"/>
+  <rect x="372" y="279" width="130" height="46" rx="6" fill="#FDF4E3" stroke="#5C7C3E" stroke-width="2" filter="url(#softShadowI1)"/>
+  <text x="437" y="299" text-anchor="middle" font-size="11" fill="#2A1F18" font-weight="600">User 聽到 · 看到</text>
+  <text x="437" y="315" text-anchor="middle" font-size="9" fill="#5C7C3E" font-style="italic">end-to-end target &lt; 1.5s</text>
+  <line x1="502" y1="302" x2="526" y2="302" stroke="#D4712A" stroke-width="2" marker-end="url(#arrI1)"/>
+  <rect x="528" y="279" width="150" height="46" rx="6" fill="#FFFBF5" stroke="#D4712A" stroke-width="1.5" stroke-dasharray="4 3" filter="url(#softShadowI1)"/>
+  <text x="603" y="299" text-anchor="middle" font-size="11" fill="#2A1F18" font-weight="600">Memory Update</text>
+  <text x="603" y="315" text-anchor="middle" font-size="9" fill="#8A7560" font-style="italic">async · DynamoDB write</text>
+  <text x="360" y="355" text-anchor="middle" font-size="10" fill="#8A7560" font-style="italic">資訊流 = 對話路徑 · 端側 capture → 雲端 reason → 端側 play · 三段全程 P99 &lt; 1.5s</text>
+</svg>
+<p style="margin-top: 8px; font-family: var(--serif-display); font-style: italic; font-size: 11.5px; color: var(--ink-mute); text-align: center;">資訊流 · 從 user utterance 到回應 first audio · 每段標 latency</p>
+</div>
+
+<h4>資料流（健康數據路徑）</h4>
+<div class="arch-svg" style="margin: 16px 0 24px; padding: 22px; background: #FFFBF5; border: 1px solid var(--bg-warm-line); border-radius: 10px; box-shadow: 0 4px 12px -6px rgba(139,69,19,0.12);">
+<svg viewBox="0 0 720 460" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 720px; height: auto; font-family: Fraunces, Noto Serif TC, serif;">
+  <defs>
+    <filter id="softShadowI2" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+      <feOffset dx="0" dy="2"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="arrI2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#D4712A"/>
+    </marker>
+  </defs>
+  <rect width="720" height="460" fill="#FFFBF5"/>
+  <text x="360" y="22" text-anchor="middle" font-size="11" fill="#D4712A" font-style="italic" letter-spacing="0.12em">HEALTH SENSOR → STORAGE → ALERT → EHR</text>
+  <text x="50" y="48" font-size="10" fill="#8A7560" font-style="italic" letter-spacing="0.08em">感測層 SENSORS BLE</text>
+  <rect x="40" y="55" width="180" height="46" rx="6" fill="#FDF4E3" stroke="#D4712A" stroke-width="1.5" filter="url(#softShadowI2)"/>
+  <text x="130" y="75" text-anchor="middle" font-size="11" fill="#2A1F18" font-weight="600">OMRON BP / Apple Watch</text>
+  <text x="130" y="91" text-anchor="middle" font-size="9" fill="#8A7560" font-style="italic">藍牙血壓計 · 心率 · 睡眠</text>
+  <rect x="230" y="55" width="160" height="46" rx="6" fill="#FDF4E3" stroke="#D4712A" stroke-width="1.5" filter="url(#softShadowI2)"/>
+  <text x="310" y="75" text-anchor="middle" font-size="11" fill="#2A1F18" font-weight="600">雅培 CGM</text>
+  <text x="310" y="91" text-anchor="middle" font-size="9" fill="#8A7560" font-style="italic">連續血糖 · 每 5 分一筆</text>
+  <rect x="400" y="55" width="280" height="46" rx="6" fill="#FDF4E3" stroke="#D4712A" stroke-width="1.5" filter="url(#softShadowI2)"/>
+  <text x="540" y="75" text-anchor="middle" font-size="11" fill="#2A1F18" font-weight="600">PIR · 麥克風陣列 · 配藥槽感測</text>
+  <text x="540" y="91" text-anchor="middle" font-size="9" fill="#8A7560" font-style="italic">動作 / 跌倒 / adherence 事件</text>
+  <line x1="360" y1="101" x2="360" y2="125" stroke="#D4712A" stroke-width="2" marker-end="url(#arrI2)"/>
+  <rect x="200" y="128" width="320" height="46" rx="6" fill="#D4712A" stroke="#B85A1F" stroke-width="2" filter="url(#softShadowI2)"/>
+  <text x="360" y="148" text-anchor="middle" font-size="12" fill="white" font-weight="600">Companion 主機 · Jetson edge aggregator</text>
+  <text x="360" y="164" text-anchor="middle" font-size="9" fill="white" font-style="italic">本地 buffer + 異常偵測 + MQTT publish · &lt; 150ms</text>
+  <line x1="360" y1="174" x2="360" y2="198" stroke="#D4712A" stroke-width="2" marker-end="url(#arrI2)"/>
+  <rect x="160" y="201" width="400" height="46" rx="6" fill="#D4712A" stroke="#B85A1F" stroke-width="2" filter="url(#softShadowI2)"/>
+  <text x="360" y="221" text-anchor="middle" font-size="12" fill="white" font-weight="600">AWS IoT Core MQTT broker → Kinesis Firehose</text>
+  <text x="360" y="237" text-anchor="middle" font-size="9" fill="white" font-style="italic">device 認證 mTLS · 流式入口 · 150-200ms round-trip</text>
+  <line x1="360" y1="247" x2="360" y2="265" stroke="#D4712A" stroke-width="2"/>
+  <line x1="120" y1="265" x2="600" y2="265" stroke="#D4712A" stroke-width="2"/>
+  <line x1="120" y1="265" x2="120" y2="285" stroke="#D4712A" stroke-width="2" marker-end="url(#arrI2)"/>
+  <line x1="360" y1="265" x2="360" y2="285" stroke="#D4712A" stroke-width="2" marker-end="url(#arrI2)"/>
+  <line x1="600" y1="265" x2="600" y2="285" stroke="#D4712A" stroke-width="2" marker-end="url(#arrI2)"/>
+  <rect x="40" y="290" width="160" height="60" rx="6" fill="#FFFBF5" stroke="#D4712A" stroke-width="1.5" filter="url(#softShadowI2)"/>
+  <text x="120" y="310" text-anchor="middle" font-size="11" fill="#2A1F18" font-weight="600">DynamoDB</text>
+  <text x="120" y="325" text-anchor="middle" font-size="9" fill="#8A7560" font-style="italic">即時 health-log</text>
+  <text x="120" y="340" text-anchor="middle" font-size="9" fill="#8A7560" font-style="italic">TTL 90 天 · KMS 加密</text>
+  <rect x="280" y="290" width="160" height="60" rx="6" fill="#FFFBF5" stroke="#D4712A" stroke-width="1.5" filter="url(#softShadowI2)"/>
+  <text x="360" y="310" text-anchor="middle" font-size="11" fill="#2A1F18" font-weight="600">S3 + Glue ETL</text>
+  <text x="360" y="325" text-anchor="middle" font-size="9" fill="#8A7560" font-style="italic">長期日誌 · SSE-KMS</text>
+  <text x="360" y="340" text-anchor="middle" font-size="9" fill="#8A7560" font-style="italic">→ Athena query 趨勢</text>
+  <rect x="520" y="290" width="160" height="60" rx="6" fill="#8B2C2C" stroke="#8B2C2C" stroke-width="1.5" filter="url(#softShadowI2)"/>
+  <text x="600" y="310" text-anchor="middle" font-size="11" fill="white" font-weight="600">Lambda 異常偵測</text>
+  <text x="600" y="325" text-anchor="middle" font-size="9" fill="white" font-style="italic">BP &gt; 180 · HR &gt; 130</text>
+  <text x="600" y="340" text-anchor="middle" font-size="9" fill="white" font-style="italic">→ alert trigger</text>
+  <line x1="120" y1="350" x2="120" y2="370" stroke="#D4712A" stroke-width="2"/>
+  <line x1="600" y1="350" x2="600" y2="370" stroke="#D4712A" stroke-width="2"/>
+  <line x1="120" y1="370" x2="600" y2="370" stroke="#D4712A" stroke-width="2"/>
+  <line x1="360" y1="370" x2="360" y2="388" stroke="#D4712A" stroke-width="2" marker-end="url(#arrI2)"/>
+  <rect x="100" y="391" width="240" height="46" rx="6" fill="#FDF4E3" stroke="#D4712A" stroke-width="2" filter="url(#softShadowI2)"/>
+  <text x="220" y="411" text-anchor="middle" font-size="11" fill="#2A1F18" font-weight="600">Connect Health · FHIR API</text>
+  <text x="220" y="427" text-anchor="middle" font-size="9" fill="#8A7560" font-style="italic">健保署電子病歷整合 · Phase 2</text>
+  <rect x="380" y="391" width="240" height="46" rx="6" fill="#D4712A" stroke="#B85A1F" stroke-width="2" filter="url(#softShadowI2)"/>
+  <text x="500" y="411" text-anchor="middle" font-size="11" fill="white" font-weight="600">SNS / Connect outbound</text>
+  <text x="500" y="427" text-anchor="middle" font-size="9" fill="white" font-style="italic">App push · 電話通知家屬</text>
+</svg>
+<p style="margin-top: 8px; font-family: var(--serif-display); font-style: italic; font-size: 11.5px; color: var(--ink-mute); text-align: center;">資料流 · 健康感測 → 邊緣聚合 → AWS 儲存 / 異常偵測 → EHR + 通報家屬</p>
+</div>
+
+<h3>端到端 latency budget</h3>
+<p>把資訊流每一段拆開、給預算上限 + castle-voice-engine 實測值對照。<strong>P99 目標 &lt; 1.5s</strong>（user utter → first audio）。</p>
+<table>
+<thead>
+<tr><th style="width:48%">段</th><th style="width:22%">預算</th><th>實測（castle-voice-engine）</th></tr>
+</thead>
+<tbody>
+<tr><td>Wake word 偵測（端側）</td><td>&lt; 50ms</td><td>30-50ms</td></tr>
+<tr><td>STT（faster-whisper large-v3 / Jetson）</td><td>&lt; 300ms</td><td>200-280ms</td></tr>
+<tr><td>IoT MQTT round-trip（device → IoT Core → Lambda）</td><td>&lt; 200ms</td><td>150-200ms</td></tr>
+<tr><td>LLM tool calling（Bedrock Claude Sonnet 4.5）</td><td>&lt; 800ms</td><td>600-1200ms（first token）</td></tr>
+<tr><td>TTS streaming（OpenAI Realtime / Fish Speech）</td><td>&lt; 300ms</td><td>300-500ms</td></tr>
+<tr><td>Avatar lipsync（Wav2Lip / MuseTalk）</td><td>&lt; 100ms（per frame）</td><td>60-90ms</td></tr>
+<tr><td><strong>總端到端</strong>（user utter → 回應 first audio）</td><td><strong>&lt; 1.5s</strong></td><td><strong>1.0-1.8s</strong></td></tr>
+</tbody>
+</table>
+<div class="callout">
+<span class="label">對比傳統 3 層拆分</span>
+<p>STT → LLM → TTS 串接架構端到端常達 <strong>3-4 秒</strong>（每段都要等上一段完成）。CAREON 透過 <strong>端側 wake word + Realtime 2 unified speech-to-speech + GPU lipsync 並行</strong>、將 P99 壓到 1.5s 內、貼近真人對話節奏。</p>
+</div>
+
+
+<h3>資料流（用藥提醒情境）</h3>
+
+<div class="flow-card">
+<div class="flow-step">1</div>
+<div class="flow-body">
+<div class="flow-title">時間觸發</div>
+<div class="flow-desc">device 本地 cron 08:00 → IoT Greengrass 啟動 LangGraph workflow → check_medication_schedule(time="08:00")</div>
+</div>
+</div>
+
+<div class="flow-card">
+<div class="flow-step">2</div>
+<div class="flow-body">
+<div class="flow-title">Memory 拉取</div>
+<div class="flow-desc">DynamoDB 拉「張阿嬤 · 早餐藥 · 降壓藥 + 控糖藥」+ 歷史 adherence rate</div>
+</div>
+</div>
+
+<div class="flow-card">
+<div class="flow-step">3</div>
+<div class="flow-body">
+<div class="flow-title">Persona + Vibe 生成回應</div>
+<div class="flow-desc">CARE.AI → Vibe check（給選擇權 + 不催）→ <strong>OpenAI Realtime 2</strong>（主路徑 · speech-to-speech · 300ms）直接生成 voice 流：「阿嬤、現在 8 點、降壓藥的時間了。要不要我 5 分鐘後再叫你？」· 複雜推理時備援切 Bedrock Claude 4.6 + Lambda Tool</div>
+</div>
+</div>
+
+<div class="flow-card">
+<div class="flow-step">4</div>
+<div class="flow-body">
+<div class="flow-title">硬體 + 軟體雙提醒</div>
+<div class="flow-desc">配藥槽自動彈出當餐藥（步進馬達）+ <strong>OpenAI Realtime 2 voice stream</strong> + <strong>自家 castle-voice-engine avatar lipsync</strong> · 端側 300-500ms 內完成（傳統 3 層架構需 1.5s）</div>
+</div>
+</div>
+
+<div class="flow-card">
+<div class="flow-step">5</div>
+<div class="flow-body">
+<div class="flow-title">用戶回應 + Memory 更新</div>
+<div class="flow-desc">10 分鐘內取藥 → S3 log + DynamoDB adherence +1；未取藥 → 再提醒一次 + 30 分鐘未取觸發 notify_family L2</div>
+</div>
+</div>
+
+<h3>為什麼選這 6 個 AWS 核心服務</h3>
+<table>
+<thead>
+<tr><th>服務</th><th>為什麼</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>IoT Core</strong></td><td>MQTT broker、device 端 → 雲端的標準 IoT 協議、原生支援百萬 device</td></tr>
+<tr><td><strong>IoT Greengrass</strong></td><td>edge AI 推論、本地處理降延遲 + 保隱私（語音不上雲）</td></tr>
+<tr><td><strong>Bedrock (Claude)</strong></td><td>多模型支援 + 醫療場景優化 + 數據主權（vs 直接呼叫 OpenAI）</td></tr>
+<tr><td><strong>Lambda</strong></td><td>Tool functions serverless 跑、按用量付、不養 server</td></tr>
+<tr><td><strong>DynamoDB</strong></td><td>低延遲 NoSQL、Memory 三層儲存、HIPAA-eligible</td></tr>
+<tr><td><strong>Connect Health</strong></td><td>2026 GA、緊急情境家屬 outbound call、整合 119 流程</td></tr>
+</tbody>
+</table>
+
+<h3>雲端隱私 4 件套</h3>
+<p>銀髮照護資料屬個資法第 6 條「特種個資」（健康 / 醫療類）、雲端必須有 defense-in-depth。CAREON 用 4 層機制：</p>
+<div class="tier-grid">
+<div class="tier-card">
+<div class="tier-name">1 · VPC 私有子網</div>
+<div class="tier-subprice">PRIVATE NETWORKING</div>
+<ul>
+<li>IoT Core / DynamoDB / Bedrock 全走 VPC Endpoint</li>
+<li>流量不經 public internet</li>
+<li>避免中間人攻擊與流量竊聽</li>
+</ul>
+</div>
+<div class="tier-card">
+<div class="tier-name">2 · KMS CMK 加密</div>
+<div class="tier-subprice">ENCRYPTION AT REST</div>
+<ul>
+<li>DynamoDB at-rest 加密用 customer-managed key</li>
+<li>S3 SSE-KMS · 物件級加密</li>
+<li>Key rotation 90 天 · 自動輪替</li>
+</ul>
+</div>
+<div class="tier-card">
+<div class="tier-name">3 · IAM least privilege</div>
+<div class="tier-subprice">FINE-GRAINED AUTHZ</div>
+<ul>
+<li>每個 Lambda function 獨立 role</li>
+<li>跨 service 用 STS assume-role · 短期憑證</li>
+<li>零 wildcard / 零 admin role</li>
+</ul>
+</div>
+<div class="tier-card">
+<div class="tier-name">4 · TLS 1.3 + mTLS</div>
+<div class="tier-subprice">ENCRYPTION IN TRANSIT</div>
+<ul>
+<li>所有 in-transit 強制 TLS 1.3</li>
+<li>device → IoT Core 雙向 mTLS 認證</li>
+<li>裝置憑證可吊銷 · 失竊機可遠端封鎖</li>
+</ul>
+</div>
+</div>
+<div class="callout">
+<span class="label">合規對齊</span>
+<p>對齊 <strong>台灣個資法第 27 條</strong>（資料安全維護計畫）+ <strong>GDPR Art. 25</strong>（Privacy by Design）+ <strong>HIPAA HITECH</strong>（DynamoDB / S3 為 HIPAA-eligible 服務）。device 端原始 voice 預設不上雲、上雲前去識別化（移除 PII tag）。</p>
+</div>
+
+<h3>災備 / DR · 業務連續性</h3>
+<p><strong>Phase 1 多 region 配置</strong>：ap-northeast-1（Tokyo · 主）+ ap-southeast-1（Singapore · 熱備）active-passive 架構。DynamoDB Global Tables 跨 region 即時複寫、CloudFront edge cache 全球節點。</p>
+<table>
+<thead>
+<tr><th style="width:34%">項目</th><th>目標</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>RPO</strong>（資料丟失上限）</td><td>&lt; 5 min</td></tr>
+<tr><td><strong>RTO</strong>（恢復服務上限）</td><td>&lt; 30 min</td></tr>
+<tr><td>device 離線 graceful degradation</td><td>24 小時本地降級運作（用藥提醒 / 緊急鈴照常）</td></tr>
+<tr><td>雲端單 region 故障</td><td>30 分鐘內 DNS 切換到熱備 · 用戶端無感</td></tr>
+</tbody>
+</table>
+<div class="callout">
+<span class="label">監控 5 個關鍵 SLO</span>
+<p><strong>CloudWatch Logs + Metrics</strong> 收：tool call success rate / TTS latency p99 / Bedrock token cost per session / adherence event lag / family notification delivery rate；<strong>X-Ray</strong> 跨服務 trace · 一條 user utterance 從 STT 到 TTS 完整 timeline；<strong>CloudWatch Alarms</strong> → PagerDuty + Slack 即時通報。任一 SLO 超標、值班工程師 5 分鐘內收到 alert。</p>
+</div>
+
+
+</section>
+
+<!-- ============ 8 · 主動觸發引擎 ============ -->
+<section class="chapter" id="c8">
+<div class="chapter-num">08</div>
+<div class="eyebrow">Proactive Engine</div>
+<h2>主動觸發引擎<span class="zh">2026 PMF 最大差異點</span></h2>
+<div class="why-matters">CAREON 跟 ChatGPT 等被動問答 AI 最大差異 — 主動感知用戶狀態並先開口。Ato 用同樣機制做到 60% 留存（業界 3 倍）。</div>
+<div class="divider"></div>
+
+<h3>4 種觸發條件</h3>
+
+<table>
+<thead>
+<tr><th style="width:18%">條件</th><th>觸發例</th><th>系統動作</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. 時間</strong></td>
+<td>08:00 / 12:30 / 18:30 / 21:00 用藥時間</td>
+<td>配藥槽彈出 + CARE.AI 主動：「阿嬤、降壓藥的時間了。」</td>
+</tr>
+<tr>
+<td><strong>2. 異常</strong></td>
+<td>血壓 &gt; 160 / 心率 &gt; 110 持續 5 分 / 跌倒 / 靜止 &gt; 2 小時</td>
+<td>CARE.AI 立即：「阿嬤、你血壓有點高、先坐下休息」+ 必要時升級家屬</td>
+</tr>
+<tr>
+<td><strong>3. 自適應</strong></td>
+<td>對話頻率連 3 天 &lt; baseline 70% / 主動回應率 &lt; 50%</td>
+<td>CARE.AI 主動：「阿嬤、最近過得怎麼樣？想聽老歌嗎？」</td>
+</tr>
+<tr>
+<td><strong>4. 情感</strong></td>
+<td>語音情緒 60%+ 屬負面 / 連續 5 天活力指標下降</td>
+<td>L1 CARE.AI 陪聊 → L2 App push 推女兒「媽媽今天比較安靜」</td>
+</tr>
+</tbody>
+</table>
+
+<h3>為什麼這是 2026 PMF 最大差異點</h3>
+<table>
+<thead>
+<tr><th>競品</th><th>主動觸發</th><th>擬人 avatar</th><th>自動配藥</th><th>缺什麼</th></tr>
+</thead>
+<tbody>
+<tr><td>Ato（美國）</td><td>✅</td><td>❌</td><td>❌</td><td>無 avatar · 無配藥</td></tr>
+<tr><td>ElliQ（美國/以色列）</td><td>✅</td><td>❌（光體）</td><td>❌</td><td>無 avatar · 無配藥</td></tr>
+<tr><td>Hyodol（韓國）</td><td>✅</td><td>❌（布偶）</td><td>❌</td><td>無 avatar · 無配藥</td></tr>
+<tr><td>ASUS HealthHub Max（台灣）</td><td>❌</td><td>❌</td><td>❌</td><td>無主動 · 無 AI 人格 · 無配藥</td></tr>
+<tr><td>Hero（美國）</td><td>有限</td><td>❌</td><td>✅</td><td>無 avatar · 無 voice 對話</td></tr>
+<tr><td>Echo Show + Alexa Together</td><td>有限</td><td>❌</td><td>❌</td><td>無主動 · 無 avatar · 無配藥</td></tr>
+<tr><td><strong>CAREON Companion</strong></td><td><strong>✅</strong></td><td><strong>✅</strong>（風格化 / 寫實可選）</td><td><strong>✅</strong></td><td><strong>三層整合首個</strong></td></tr>
+</tbody>
+</table>
+
+<div class="callout">
+<span class="label">數據佐證</span>
+<p>Ato 平均用戶 82 歲、留存率 60%（業界健康類 app 一般 10-20% 的 3 倍）<sup class="cite">[3]</sup>——驗證主動觸發在銀髮市場是真實 PMF 訊號。CAREON 在 Ato 基礎上多加擬人 avatar + 自動配藥兩層、預期同水準甚至更高留存。</p>
+</div>
+</section>
+
+<!-- ============ 9 · 用藥提醒 + 異常通報 ============ -->
+<section class="chapter" id="c9">
+<div class="chapter-num">09</div>
+<div class="eyebrow">Core Use Case</div>
+<h2>用藥提醒 + 異常通報<span class="zh">兩個 P0 核心場景</span></h2>
+<div class="why-matters">CAREON 第一代兩個 P0 核心場景 · 用藥提醒（90% 用戶日常）+ 異常通報（10% 但決定信任）。</div>
+<div class="divider"></div>
+
+<h3>場景 A · 用藥提醒（每日 4 次重複場景）</h3>
+
+<h4>痛點</h4>
+<p>銀髮族多重用藥 adherence 全球 50%（每 2 顆藥就 1 顆沒按時吃）<sup class="cite">[4]</sup>、是 $3,000 億成本問題。傳統解法：人工分藥盒（家屬週末分藥）、手機 app 提醒（老人不會用）、護理師訪視（成本高）。</p>
+
+<h4>CAREON 解法</h4>
+<ol>
+<li><strong>硬體</strong>：MVP 8 槽 prototype（2 天展示）/ Production <strong>28 格 weekly tray</strong>（7 天 × 4 時段）、家屬 / 藥師每週補藥一次、每格搭配重量 + 開蓋感測確認取藥</li>
+<li><strong>時間觸發</strong>：08:00 / 12:30 / 18:30 / 21:00 配藥槽自動彈出當餐藥</li>
+<li><strong>AI 同步</strong>：CARE.AI 主動語音 + avatar 出現：「阿嬤、降壓藥的時間了。要不要我 5 分鐘後再叫你？」</li>
+<li><strong>確認</strong>：用戶取藥 → 重量感測器確認 → DynamoDB adherence +1</li>
+<li><strong>未取流程</strong>：10 分鐘未取 → 再提醒 1 次；30 分鐘未取 → notify_family L2 App push 推子女</li>
+</ol>
+
+<h4>守住法規 · 不踩 TFDA Class II 線</h4>
+<ul>
+<li>產品文案明標「依醫師處方提醒、非自動配藥、非處方執行」</li>
+<li>配藥動作由藥師 / 家屬完成、device 只「提醒 + 彈出」</li>
+<li>定位 Class I（風險最低）、上市時間 2-3 個月、Class II 則需 12-18 個月臨床</li>
+</ul>
+
+<h3>場景 B · 異常通報 4 級升級梯度</h3>
+
+<table>
+<thead>
+<tr><th>等級</th><th>觸發條件</th><th>系統動作</th><th>家屬感受</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>L1</strong></td>
+<td>對話頻率變化 / 輕度情緒波動</td>
+<td>CARE.AI 主動陪聊、無對外通知</td>
+<td>無感（系統自處理）</td>
+</tr>
+<tr>
+<td><strong>L2</strong></td>
+<td>連續 7 天負面情緒 / adherence 連 3 天 &lt; 70%</td>
+<td>App push 推「媽媽今天比較安靜、要不要打電話？」</td>
+<td>溫和提醒、非 alert</td>
+</tr>
+<tr>
+<td><strong>L3</strong></td>
+<td>血壓 &gt; 180 / 心率 &gt; 130 / 連 5 天活力下降</td>
+<td>push notification + alert sound「過去 3 天活力下降、建議致電」</td>
+<td>明確警示、子女需回應</td>
+</tr>
+<tr>
+<td><strong>L4</strong></td>
+<td>跌倒 + 3 分鐘無回應 / 異常靜止 &gt; 4 小時 / 用戶主動呼救</td>
+<td>高優先 App push + 自動電話通知所有家屬 + call center outbound · 2 分鐘無人確認 → 人工確認後通報 119、附 GPS 定位 + 最近生命徵象 + 事件摘要</td>
+<td>緊急 escalation、第一時間到場</td>
+</tr>
+</tbody>
+</table>
+
+<div class="callout">
+<span class="label">為什麼是 4 級不是 1 級</span>
+<p>系統警示「媽媽有自殺傾向」但實際是當天心情普通低落——若家屬被誤觸發 3 次以上、會喪失對系統的信任。<strong>4 級升級梯度的核心是「不誤觸發、不漏觸發」</strong>：L1 處理 80% 場景（系統自己 cover）、L4 留給真緊急的 1-2% 場景。多訊號交叉比對 + 7 天 baseline 對照 + 用戶 / 家屬可設定敏感度（保守 / 標準 / 積極）。</p>
+</div>
+
+<h3>場景 C · TFDA 認證路徑 + 法規風險管理</h3>
+<p>CAREON 法規風險管理 · TFDA Class I 路徑（Phase 1）vs Class II 升級（Phase 2）+ 3 道法規防線。</p>
+
+<h4>Phase 1 走 Class I（非醫療器材路徑）· 上市時間 2-3 個月</h4>
+<table>
+<thead>
+<tr><th>項目</th><th>內容</th><th>時程</th></tr>
+</thead>
+<tbody>
+<tr><td>產品定位</td><td>「用藥提醒 + 陪伴」非「自動配藥」<br>「健康追蹤儀表板」非「診斷工具」</td><td>—</td></tr>
+<tr><td>文案守線</td><td>device 文宣不提「診斷 / 治療 / 預防疾病」字眼<br>配藥槽明標「依醫師處方提醒、由藥師 / 家屬預先放置」</td><td>產品上市前完成</td></tr>
+<tr><td>食藥署 pre-submission</td><td>跟 TFDA 顧問 + 醫療律師做 pre-submission meeting、取得「非醫材」釋義函</td><td>M3-4</td></tr>
+<tr><td>NCC + FCC 認證</td><td>無線通訊（Wi-Fi / 4G / BT）標準電信認證</td><td>M5-6 · NT$50-80 萬</td></tr>
+<tr><td>BSMI 商品檢驗</td><td>強制性產品安全認證</td><td>M5-6 · NT$10-20 萬</td></tr>
+<tr><td>Phase 1 上市</td><td>非醫材定位、走標準消費電子通路 + 長照科技輔具補助</td><td>M9-12</td></tr>
+</tbody>
+</table>
+
+<h4>Phase 2 才考慮升 Class II（中度風險醫療器材）· 12-18 個月臨床</h4>
+<table>
+<thead>
+<tr><th>升級條件</th><th>對應動作</th></tr>
+</thead>
+<tbody>
+<tr><td>產品延伸到「視訊心理感測 + 遠距診療」</td><td>必須 Class II（牽涉診斷判讀）</td></tr>
+<tr><td>跟健保署談給付項目</td><td>必須 Class II（保險給付前提）</td></tr>
+<tr><td>跟醫院 / 衛福部合作 pilot</td><td>必須 Class II（醫療器材使用許可）</td></tr>
+<tr><td>時程</td><td>產品檢測 6-9 個月 + 臨床試驗 3-6 個月 + 食藥署審查 3-6 個月 = 12-18 個月</td></tr>
+<tr><td>預算</td><td>NT$300-500 萬（含臨床合作金）</td></tr>
+</tbody>
+</table>
+
+<h4>3 道法規防線（同時運作）</h4>
+<ul>
+<li><strong>個資法 + 醫療法雙重</strong>：健康資料分流、醫病視訊資料由醫院端儲存（Phase 2）、CAREON 只當管道</li>
+<li><strong>醫病責任切割</strong>：合約明寫「CAREON = 通訊平台、醫師負診斷責任」（學 LINE 醫病 + 健保署遠距通訊規範）</li>
+<li><strong>用戶授權分層</strong>：鏡頭預設關閉、健康資料分享需明確同意、所有 AI 對話可下載 / 刪除</li>
+</ul>
+
+<div class="callout">
+<span class="label">為什麼不一開始就 Class II</span>
+<p>Phase 1 priority 是上市跟驗證 PMF、不是醫療等級。走 Class I 上市快 6-12 個月、用「提醒 + 陪伴」定位剛好避開 Class II 紅線。Phase 2 確認 PMF 後才砸 NT$300-500 萬升 Class II——這是新創資源配置的紀律、不是技術問題。</p>
+</div>
+</section>
+
+<!-- ============ 10 · 競品差異化 ============ -->
+<section class="chapter" id="c10">
+<div class="chapter-num">10</div>
+<div class="eyebrow">Competition</div>
+<h2>競品差異化<span class="zh">為什麼是 CAREON · 不是 ASUS / 慈濟 / Echo Show</span></h2>
+<div class="why-matters">CAREON 跟 6 大競品（Ato / ElliQ / Hyodol / ASUS / Hero / Echo Show）的核心差異 — 三層整合首個。</div>
+<div class="divider"></div>
+
+<h3>6 維競品對照</h3>
+<table>
+<thead>
+<tr><th>競品</th><th>主動觸發</th><th>擬人 avatar</th><th>台語 / 中文深度</th><th>健保整合</th><th>配藥槽</th><th>長照補助通路</th></tr>
+</thead>
+<tbody>
+<tr><td>Ato（美 voice 對標）</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
+<tr><td>ElliQ（B2G 標竿）</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td><td>美國有 · 台灣未進</td></tr>
+<tr><td>Hyodol（韓國分發模式）</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td><td>韓國有 · 台灣未進</td></tr>
+<tr><td>DUIX（中國 avatar 技術 · 純 API 提供商）</td><td>—</td><td>✅</td><td>部分</td><td>❌</td><td>❌</td><td>❌（純技術提供商 · 不可被綁定）</td></tr>
+<tr><td>ASUS HealthHub Max（最直接競品）</td><td>❌</td><td>❌</td><td>✅</td><td>部分</td><td>❌</td><td>機構通路有</td></tr>
+<tr><td>慈濟 + 仁寶 + 智齡 Jubo</td><td>❌</td><td>❌</td><td>✅</td><td>部分</td><td>❌</td><td>B2B 機構 ✅</td></tr>
+<tr><td>Hero（美國配藥垂直）</td><td>有限</td><td>❌</td><td>❌</td><td>❌</td><td>✅</td><td>❌</td></tr>
+<tr><td>Echo Show + Alexa Together</td><td>有限</td><td>❌</td><td>弱</td><td>❌</td><td>❌</td><td>❌</td></tr>
+<tr><td><strong>CAREON Companion</strong></td><td><strong>✅</strong></td><td><strong>✅</strong></td><td><strong>✅</strong></td><td><strong>✅</strong></td><td><strong>✅</strong></td><td><strong>2026/Q3 申請</strong></td></tr>
+</tbody>
+</table>
+
+<h3>5 條真護城河</h3>
+<ol>
+<li><strong>健保 FHIR + 製藥廠 LOI</strong>：本地化合規通路、國際品牌進不來</li>
+<li><strong>CAREON 18 個月前框架</strong>：5 層架構 + 主動觸發引擎已寫過 PRD 級規格、不從零做</li>
+<li><strong>HealthBuy 14 版 know-how</strong>：銀髮族健康行為設計（紅黃綠燈 / 健康幣 / 不要 push / 家屬代付）</li>
+<li><strong>castle-voice-engine v2.0.6</strong>：8 個月自架 voice 整合層、阿康 + 小晴 是這層的衍生 persona</li>
+<li><strong>長照 3.0 補助通路</strong>：2026/Q3 申請智慧科技輔具資格認定、Year 1 政府通路零 CAC 入口</li>
+</ol>
+
+<h3>定價對標（國際 11 家 vs CAREON 5 層）</h3>
+<table>
+<thead>
+<tr><th>產品</th><th>月費</th><th>一次性</th><th>對 CAREON 意義</th></tr>
+</thead>
+<tbody>
+<tr><td>ElliQ（美）</td><td>$59 / NT$1,800</td><td>$249</td><td>CAREON Plus NT$699 便宜 65%</td></tr>
+<tr><td>Hero（美 配藥）</td><td>$29.99-44.99</td><td>$0</td><td>CAREON 配藥 + AI 整合更強</td></tr>
+<tr><td>MedMinder（美）</td><td>$50 / NT$1,500</td><td>$0</td><td>CAREON 較親民</td></tr>
+<tr><td>Alexa Together（美）</td><td>$20 / NT$600</td><td>$249（Echo Show）</td><td>純軟、無 avatar、無配藥</td></tr>
+<tr><td>Replika Pro</td><td>$19.99 / NT$600</td><td>$0</td><td>純軟、無硬體、不適合銀髮</td></tr>
+<tr><td><strong>CAREON Plus</strong></td><td><strong>NT$699</strong></td><td><strong>NT$0（綁機）或 NT$13-15K（買斷）</strong></td><td>主力層、長照補助 NT$1,666 可 cover</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ============ 11 · 商業模式 ============ -->
+<section class="chapter" id="c11">
+<div class="chapter-num">11</div>
+<div class="eyebrow">Business Model</div>
+<h2>商業模式<span class="zh">3 層訂閱 + 4 購機 + 長照補助</span></h2>
+<div class="why-matters">CAREON 12 個月 GTM 完整路徑 · 3 層訂閱 + 4 種購機方案 + 長照 3.0 補助對接。</div>
+<div class="divider"></div>
+
+<h3>CARE.AI 聊天訂閱 · 3 層 freemium（極簡）</h3>
+
+<div class="callout" style="margin-bottom:18px; background: linear-gradient(135deg, rgba(212,113,42,0.10), rgba(212,113,42,0.02));">
+<span class="label">⭐ 核心定價邏輯 · CAREON 不收功能費</span>
+<p><strong>所有功能性 voice 對話（用藥提醒、健康查詢、緊急通報、視訊通話、device 主動關心）永遠免費、不限次</strong>。訂閱費**只算「真正想跟 AI 聊聊」的開放式對話時間**——像保健險不會把「量體溫」也收費。下方分鐘數 = **聊天分鐘**、不是「所有 voice」。</p>
+</div>
+
+<div class="tier-grid">
+<div class="tier-card">
+<div class="tier-name">Free</div>
+<div class="tier-price">NT$0</div>
+<div class="tier-subprice">買機自帶</div>
+<ul>
+<li><strong>50 分鐘聊天</strong> / 月</li>
+<li>✅ 功能互動 <strong>無限免費</strong></li>
+<li>✅ 阿康 ↔ 小晴 雙人格切換</li>
+<li>✅ App 親子聯絡簿（不限次）</li>
+<li>✅ 配件健康數據儀表板</li>
+</ul>
+</div>
+
+<div class="tier-card recommended">
+<div class="tier-recommend">主力</div>
+<div class="tier-name">Plus</div>
+<div class="tier-price">NT$699</div>
+<div class="tier-subprice">/ 月</div>
+<ul>
+<li><strong>150 分鐘聊天</strong> / 月</li>
+<li>✅ 含 Free 全部</li>
+<li>✅ 月度健康摘要 PDF</li>
+<li>✅ 進階心理感測 + 情緒趨勢</li>
+</ul>
+</div>
+
+<div class="tier-card">
+<div class="tier-name">Pro</div>
+<div class="tier-price">NT$1,299</div>
+<div class="tier-subprice">/ 月</div>
+<ul>
+<li><strong>300 分鐘聊天</strong> / 月</li>
+<li>✅ 含 Plus 全部</li>
+<li>✅ 多人帳號（2 長者 + 4 子女）</li>
+<li>✅ 跨家庭 dashboard</li>
+</ul>
+</div>
+</div>
+
+<p style="font-family:Fraunces,serif;font-style:italic;font-size:13.5px;color:#8A7560;margin-top:14px;text-align:center;line-height:1.7;">超用收費：聊天分鐘超用 <strong>NT$5 / 分鐘</strong> add-on（防止單一重度用戶拖垮 unit economics）<br><strong>功能互動永遠不算錢</strong>：用藥提醒、健康查詢、緊急通報、視訊通話、主動觸發、自動配藥槽。 — <strong>訂閱賣的是陪伴時間、不賣功能</strong>。</p>
+
+<h3>AI 算力 6 大防爆機制</h3>
+<div class="why-matters">LLM token 是現金流殺手。我們用 6 道閘門把單戶月成本壓在 NT$50 以內、unit economics 不會爆。</div>
+
+<div class="tier-grid" style="margin-top:14px;">
+<div class="tier-card">
+<div class="tier-name" style="font-size:16px;">① 月配額</div>
+<p style="font-size:13.5px;color:#5A4F46;line-height:1.6;margin:0;">Free 50 / Plus 150 / Pro 300 分鐘聊天上限、用完就停（不偷扣）</p>
+</div>
+<div class="tier-card">
+<div class="tier-name" style="font-size:16px;">② 超用 add-on</div>
+<p style="font-size:13.5px;color:#5A4F46;line-height:1.6;margin:0;">超用 NT$5 / 分鐘可加買、防止單一重度用戶拖垮獲利</p>
+</div>
+<div class="tier-card">
+<div class="tier-name" style="font-size:16px;">③ 端側先擋（70%）</div>
+<p style="font-size:13.5px;color:#5A4F46;line-height:1.6;margin:0;">日常 70% 場景走端側 Llama Phi-4-mini · 不上雲、cost = 0</p>
+</div>
+<div class="tier-card">
+<div class="tier-name" style="font-size:16px;">④ 主動觸發上限</div>
+<p style="font-size:13.5px;color:#5A4F46;line-height:1.6;margin:0;">device 主動關心每天上限 6 次、避免無止盡 token 燒</p>
+</div>
+<div class="tier-card">
+<div class="tier-name" style="font-size:16px;">⑤ 視訊按次計</div>
+<p style="font-size:13.5px;color:#5A4F46;line-height:1.6;margin:0;">家屬視訊通話獨立計次（非聊天分鐘）、Phase 1 不超 4 次/月</p>
+</div>
+<div class="tier-card">
+<div class="tier-name" style="font-size:16px;">⑥ P99 監控自動 throttle</div>
+<p style="font-size:13.5px;color:#5A4F46;line-height:1.6;margin:0;">CloudWatch 監控 token cost / session、異常自動限流 + alarm</p>
+</div>
+</div>
+
+<h3>4 種購機方案</h3>
+<table>
+<thead>
+<tr><th>方案</th><th>一次性</th><th>月費</th><th>適合</th><th>預期分布</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>A · 訂閱綁機 24 月（主推）</strong></td><td>NT$0</td><td>NT$799 / 月</td><td>一般家庭 · 像電信買手機</td><td><strong>50%</strong></td></tr>
+<tr><td>B · 買斷</td><td>NT$14-16K</td><td>NT$499（Plus）</td><td>喜歡買斷的人</td><td>15%</td></tr>
+<tr><td><strong>C · 長照 3.0 補助對接</strong></td><td>補助 cover</td><td>補助 cover</td><td>65+ 通過失能評估</td><td><strong>30%</strong></td></tr>
+<tr><td>D · 機構 B2B</td><td>機構大量採購</td><td>機構月授權</td><td>日照中心 / 居服機構</td><td>5%</td></tr>
+</tbody>
+</table>
+
+<div class="callout">
+<span class="label">為什麼訂閱綁機是主推</span>
+<p><strong>「Home Pad NT$14,000 一次性 + 月費 NT$499」</strong> = 用戶看到第一筆大錢直接卻步<br>
+<strong>「每月 NT$799、24 個月後機子歸你」</strong> = 一杯咖啡多一點、心理門檻低 90%<br>
+心理門檻設計來自電信業 25 年的客戶教育——這是台灣消費者最熟悉的硬體入手模式。</p>
+</div>
+
+<h3>Year 1-3 預估</h3>
+<table>
+<thead>
+<tr><th>年</th><th>用戶數</th><th>訂閱年營收</th><th>硬體年營收</th><th>製藥廠</th><th>總</th></tr>
+</thead>
+<tbody>
+<tr><td>Y1（2026 H2-2027 H1）</td><td>1,000 戶</td><td>NT$4.4M</td><td>NT$3M</td><td>NT$1M</td><td><strong>NT$8.4M</strong></td></tr>
+<tr><td>Y2</td><td>5,000 戶</td><td>NT$22M</td><td>NT$8M</td><td>NT$5M</td><td><strong>NT$35M（損益平衡）</strong></td></tr>
+<tr><td>Y3</td><td>15,000 戶</td><td>NT$66M</td><td>NT$15M</td><td>NT$15M</td><td><strong>NT$96M（健康獲利）</strong></td></tr>
+</tbody>
+</table>
+
+<div class="callout" style="margin-top:16px; background: linear-gradient(135deg, rgba(122,148,130,0.10), rgba(122,148,130,0.02));">
+<span class="label">Y1 ARPU 算式 · 防面試官追問</span>
+<p style="line-height:1.8;">Y1 1,000 戶分布：<strong>A 訂閱綁機 50%（NT$799/月）+ B 買斷 15%（NT$499/月）+ C 長照補助 30%（補助 cover、不入訂閱）+ D 機構 5%</strong>。<br>
+<strong>訂閱戶 ARPU</strong>（A + B = 650 戶）= (500 × NT$799 + 150 × NT$499) / 650 ≈ <strong>NT$729 / 月</strong><br>
+<strong>全戶 ARPU</strong>（含補助戶分母 1,000）= NT$4.4M / 12 / 1,000 ≈ <strong>NT$367 / 月</strong><br>
+兩個指標對照 healthtech SaaS 業界：Whoop ~NT$500 / Oura ~NT$350 / ElliQ ~NT$1,500 → CAREON 訂閱戶 ARPU 中段、Y2 規模化後可往 Plus / Pro 拉。</p>
+</div>
+
+<h3>募資路徑</h3>
+<p>天使輪 <strong>NT$1,500-2,000 萬</strong>（國發基金）→ Pre-A <strong>NT$5,000 萬 - 1 億</strong>（Year 2 損益平衡達標後）→ A 輪 <strong>NT$3-5 億</strong>（Year 3 規模化）</p>
+</section>
+
+<!-- ============ 12 · 為什麼是現在（已併入 §2 · 留結語 quote）============ -->
+<section class="chapter" id="c12">
+<div class="chapter-num">12</div>
+<div class="eyebrow">Why Now</div>
+<h2>為什麼是現在<span class="zh">三個信號同時到位</span></h2>
+<div class="divider"></div>
+
+<p>政策、人口、技術三個信號同時到位（詳見 §2 交集 3 時間窗口）：</p>
+<ul>
+<li><strong>政策</strong>：長照 3.0 第三階段 2026/7/1 上路、智慧科技輔具補助 NT$60,000 / 3 年 / 人、預估受益 74.5 萬人<sup class="cite">[2]</sup></li>
+<li><strong>人口</strong>：2025/12 進入超高齡社會、65+ 佔 20.06% / 467 萬人、失能 92 萬<sup class="cite">[1]</sup></li>
+<li><strong>競品缺口</strong>：全球「擬人 avatar + 即時 voice + 主動觸發 + 自動配藥 + IoT」5 層整合的消費級居家設備未上市、窗口期估 12-18 個月</li>
+</ul>
+
+<div class="quote">
+我們不是在猜測市場準備好了——而是在政策、人口、技術三個信號同時到位的這個窗口期、用「7 成現成資產 + 3 成新做」的最低風險方式、把銀髮 AI 居家照護市場的第一個 PMF 灘頭堡拿下來。
+</div>
+</section>
+
+<!-- ============ 13 · MVP Demo Scope ============ -->
+<section class="chapter" id="c13">
+<div class="chapter-num">13</div>
+<div class="eyebrow">MVP Demo</div>
+<h2>MVP Demo Scope<span class="zh">3 分鐘跑完核心閉環</span></h2>
+<div class="why-matters">CAREON MVP 3 分鐘完整跑核心閉環 · 證明 5 件事 · 主動觸發 / 工具呼叫 / 記憶讀取 / 安全護欄 / 家屬升級。</div>
+<div class="divider"></div>
+
+<h3>Demo 場景劇本（3 分鐘）</h3>
+<table>
+<thead>
+<tr><th style="width:8%">Step</th><th style="width:24%">展示內容</th><th>對應評分點</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>1</strong></td><td>晨間用藥提醒（08:00 觸發）</td><td>主動觸發 / IoT 事件 / Tool: <code>check_medication_schedule("08:00")</code></td></tr>
+<tr><td><strong>2</strong></td><td>用戶輸入「我今天頭有點暈」</td><td>User journey / 銀髮口語理解</td></tr>
+<tr><td><strong>3</strong></td><td>Agent 呼叫 <code>read_vitals("blood_pressure")</code></td><td>Function Calling · 從 OMRON / Withings 拉 145/95</td></tr>
+<tr><td><strong>4</strong></td><td>Agent 讀取記憶「張阿嬤有高血壓、早餐藥未確認」</td><td>3 層 Memory: Long-term profile + Mid-term log</td></tr>
+<tr><td><strong>5</strong></td><td>Safety Guardrail 過濾 → 溫暖回覆（不診斷）</td><td>醫療安全護欄 + 阿嬤聽得懂的語氣</td></tr>
+<tr><td><strong>6</strong></td><td>若數據持續異常 → 呼叫 <code>notify_family(severity="L2")</code></td><td>4 級升級邏輯 / Escalation Workflow</td></tr>
+</tbody>
+</table>
+
+<h3>Demo · 設計稿 8 畫面實機</h3>
+<div class="callout" style="margin-top:14px;">
+<span class="label">主 Live Demo URL · 點此進入</span>
+<p style="margin-top:10px;">
+<a href="https://web-one-kohl-15.vercel.app/device" target="_blank" rel="noopener" style="display:inline-block;font-family:'Fira Code',monospace;font-size:15px;color:var(--amber-deep);background:#FDF4E3;padding:12px 18px;border-radius:6px;text-decoration:underline;font-weight:600;">https://web-one-kohl-15.vercel.app/device</a>
+</p>
+<p style="margin-top:12px;line-height:1.7;">CAREON Companion 8 吋 1280×800 裝置 POC · 8 畫面 1:1 對齊 Anthropic Design 設計稿 · 莉莉 + 兒子大華 + 王阿姨真實照片 + 玻璃語言 + 語音優先 + 按鈕輔助。</p>
+</div>
+
+<h3>面試現場 3 分 30 秒劇本</h3>
+<table>
+<thead>
+<tr><th style="width:14%">時段</th><th>動作 + 講什麼</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>0:00–0:45</strong><br>開場 45 秒</td><td>滑前 4 畫面（01 待機 → 02 莉莉在 → 03 主動關懷 → 05 健康關心）。「我們做的不是一支 app、是一面會說話的窗。」</td></tr>
+<tr><td><strong>0:45–2:30</strong><br>核心場景 105 秒</td><td>跳 07 陪伴聊天 + 08 用藥 + 09 家人視訊 · 講主動觸發 + 兩顆膠囊選項 + 配藥槽 + 真實兒子大華視訊</td></tr>
+<tr><td><strong>2:30–3:00</strong><br>邊界意識 30 秒</td><td>滑 10 選單 · 講 4 級異常升級 + 主動觸發每日上限 + 8 個磁磚 + 左下緊急聯絡（紅）</td></tr>
+<tr><td><strong>3:00–3:30</strong><br>收尾 30 秒</td><td>「8 個月在做的不是 PPT、是 production」· QR code（裝置 URL + castle-voice-engine v2.0.6）· 邀面試官手機掃</td></tr>
+</tbody>
+</table>
+
+<h3>核心場景 · 6 步工具呼叫鏈（08 用藥 + 02 健康追問）</h3>
+<div class="why-matters">「我頭暈」單一輸入觸發 6 步工具鏈、Safety Guardrail 過濾、家屬升級 — 對應評分要求的 Memory + Tool Calling + 醫療安全護欄全套。</div>
+<pre style="background:#2A1F18; color:#F5E6D3; padding:18px 22px; border-radius:8px; font-family:'Fira Code',monospace; font-size:12.5px; line-height:1.7; overflow-x:auto;">
+[08:00 Trigger · IoT 排程]
+Tool: check_medication_schedule("08:00")
+Result: 早餐藥 = 降壓藥 A + 控糖藥 B、adherence_today = pending
+
+[User: 我今天頭有點暈]
+Tool: read_vitals("blood_pressure")
+Source: OMRON Connect (Bluetooth) + Apple Watch (HR)
+Result: BP 145/95 mmHg @ 08:32、HR 96 bpm
+
+Tool: query_health_history(days=7, metric="blood_pressure")
+Result: 7-day avg = 138/88、today 145/95 = +5% above baseline
+
+[Safety Guardrail check]
+Pass: 不主張病名、不改劑量、附「這不是診斷」
+
+[Agent Response · 透過 02 莉莉在 對話泡呈現]
+"阿嬤、我看到你剛剛量到的血壓比平常高一點。
+ 你先坐著休息、不要馬上站起來、也先喝一點水。
+ 這不是診斷、但我會幫你記下來。
+ 要不要我順手通知女兒、讓她知道你今天有點不舒服？"
+
+[User: 好]
+Tool: notify_family(severity="L2",
+       msg="媽媽今天頭暈、BP 145/95（高於 7 天均值）、已建議休息、請稍晚關心")
+Result: App push delivered to 女兒</pre>
+</section>
+
+<!-- ============ 14 · Deliverables ============ -->
+<section class="chapter" id="c14">
+<div class="chapter-num">14</div>
+<div class="eyebrow">Deliverables</div>
+<h2>產品交付清單<span class="zh">可展示 · 可試用 · 可上手</span></h2>
+<div class="divider"></div>
+
+<h3>5 份交付 · 點藍字直接連結</h3>
+
+<div style="display:flex;flex-direction:column;gap:14px;margin-top:14px;">
+
+<div style="background:#FFFBF5;border:1px solid var(--bg-warm-line);border-radius:10px;padding:18px 22px;">
+<div style="font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--cocoa-deep);margin-bottom:6px;">1 · 產品提案</div>
+<div style="font-size:14.5px;line-height:1.7;color:var(--ink-soft);">本份 CAREON-INTERVIEW-PROPOSAL（HTML / PDF 可印）· 含執行摘要 + 12 章節 + Footnote</div>
+</div>
+
+<div style="background:#FFFBF5;border:1px solid var(--bg-warm-line);border-radius:10px;padding:18px 22px;">
+<div style="font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--cocoa-deep);margin-bottom:6px;">2 · MVP Demo · 8 畫面裝置 POC（已上線）</div>
+<div style="margin:10px 0;"><a href="https://web-one-kohl-15.vercel.app/device" target="_blank" rel="noopener" style="font-family:'Fira Code',monospace;font-size:14px;color:var(--amber-deep);text-decoration:underline;font-weight:600;">https://web-one-kohl-15.vercel.app/device</a></div>
+<div style="font-size:14.5px;line-height:1.7;color:var(--ink-soft);">CAREON Companion 8 吋 1280×800 裝置 POC · 1:1 對齊 Anthropic Design 設計稿 · 莉莉 / 兒子大華 / 王阿姨真實照片 + 玻璃語言 + 語音優先。主路 <code style="background:var(--bg-soft);padding:1px 6px;border-radius:3px;font-size:13px;">/</code> 自動轉跳裝置 POC。</div>
+</div>
+
+<div style="background:#FFFBF5;border:1px solid var(--bg-warm-line);border-radius:10px;padding:18px 22px;">
+<div style="font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--cocoa-deep);margin-bottom:6px;">3 · castle-voice-engine（自架 voice / avatar · 已上線 8 個月）</div>
+<div style="margin:10px 0;"><a href="https://edwardt0303--castle-voice-engine-fastapi-app.modal.run/" target="_blank" rel="noopener" style="font-family:'Fira Code',monospace;font-size:14px;color:var(--amber-deep);text-decoration:underline;font-weight:600;">https://edwardt0303--castle-voice-engine-fastapi-app.modal.run/</a></div>
+<div style="font-size:14.5px;line-height:1.7;color:var(--ink-soft);">自架 voice + avatar 整合層 · 17 動畫池 + 100 lipsync + 多語連續記憶 · v2.0.6 production。</div>
+</div>
+
+<div style="background:#FFFBF5;border:1px solid var(--bg-warm-line);border-radius:10px;padding:18px 22px;">
+<div style="font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--cocoa-deep);margin-bottom:6px;">4 · GitHub 程式庫</div>
+<div style="margin:10px 0;"><a href="https://github.com/EdwardTseng33/homewellness-companion" target="_blank" rel="noopener" style="font-family:'Fira Code',monospace;font-size:14px;color:var(--amber-deep);text-decoration:underline;font-weight:600;">https://github.com/EdwardTseng33/homewellness-companion</a></div>
+<div style="font-size:14.5px;line-height:1.7;color:var(--ink-soft);">公開可 clone · 含 8 畫面裝置 POC 程式碼 / 5 個 Tool 實作 / Memory schema / system prompt / 設計 token。</div>
+</div>
+
+<div style="background:#FFFBF5;border:1px solid var(--bg-warm-line);border-radius:10px;padding:18px 22px;">
+<div style="font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--cocoa-deep);margin-bottom:6px;">5 · 完整產品規劃 v3</div>
+<div style="margin:10px 0;"><a href="https://web-one-kohl-15.vercel.app/proposal-v3.html" target="_blank" rel="noopener" style="font-family:'Fira Code',monospace;font-size:14px;color:var(--amber-deep);text-decoration:underline;font-weight:600;">https://web-one-kohl-15.vercel.app/proposal-v3.html</a></div>
+<div style="font-size:14.5px;line-height:1.7;color:var(--ink-soft);">完整 v3 提案 · 含商業模式 / 競品深度 / 補助路徑 / 5 大功能 / 18 月 framework。</div>
+</div>
+
+<div style="background:#FFFBF5;border:1px solid var(--bg-warm-line);border-radius:10px;padding:18px 22px;">
+<div style="font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--cocoa-deep);margin-bottom:6px;">6 · 市場調研報告 v2</div>
+<div style="margin:10px 0;"><a href="https://web-one-kohl-15.vercel.app/market-research.html" target="_blank" rel="noopener" style="font-family:'Fira Code',monospace;font-size:14px;color:var(--amber-deep);text-decoration:underline;font-weight:600;">https://web-one-kohl-15.vercel.app/market-research.html</a></div>
+<div style="font-size:14.5px;line-height:1.7;color:var(--ink-soft);">Sophie 評分 95 / 100 · 4 競品深度 · 台灣銀髮市場 4,673,155 人 · 6 條依據。</div>
+</div>
+
+</div>
+
+<h3>程式庫結構 · 裝置 POC 主檔</h3>
+<pre style="background:#FFFBF5; border:1px solid var(--bg-warm-line); padding:18px 22px; border-radius:8px; font-family:'Fira Code',monospace; font-size:12.5px; line-height:1.7; color:var(--cocoa-deep);">
+homewellness-companion/
+├── README.md                       · 安裝 + 訪問步驟
+├── app/
+│   ├── page.tsx                    · 主路自動轉跳 /device
+│   └── device/page.tsx             · 8 畫面裝置 POC（1300+ 行 React + lucide icons）
+├── public/
+│   ├── lily/                       · 莉莉真實照片 + 4 段 mp4 動態
+│   │   ├── lily-portrait.png       · Aria Here / 主動關懷 / 健康關心 / 用藥 背景
+│   │   ├── lily-talking.mp4        · 陪伴聊天 lip-sync 動態
+│   │   ├── lily-greeting.mp4       · 健康關心 動態
+│   │   └── lily-listening.mp4      · 用藥提醒 動態
+│   └── family/
+│       ├── dahua-son.png           · 兒子大華真實照片（家人視訊背景）
+│       └── wang-aunt.png           · 王阿姨真實照片（PIP 自拍框）
+├── lib/
+│   └── tools.ts                    · 5 個 Function Calling 實作（read_vitals / check_medication_schedule / query_health_history / notify_family / emergency_119）
+└── (其他 mock data / system prompt / memory schema)</pre>
+
+<h3>跑 Demo 命令（本機 fallback）</h3>
+<pre style="background:#2A1F18; color:#F5E6D3; padding:14px 20px; border-radius:6px; font-family:'Fira Code',monospace; font-size:12.5px; line-height:1.6;">
+git clone https://github.com/EdwardTseng33/homewellness-companion.git
+cd homewellness-companion
+npm install
+npm run dev    # → http://localhost:3000</pre>
+</section>
+
+<!-- ============ 15 · 關鍵數據引用 ============ -->
+<section class="chapter" id="c15">
+<div class="chapter-num">15</div>
+<div class="eyebrow">References</div>
+<h2>關鍵數據引用<span class="zh">Footnotes</span></h2>
+<div class="divider"></div>
+
+<h3>市場數據 · 政策 · 競品</h3>
+<p class="footnote">[1] 內政部戶政司 / Focus Taiwan, 2026-01 · 台灣 65+ 佔 20.06% / 4,673,155 人</p>
+<p class="footnote">[2] 衛福部長照司 / 行政院, 2026 · 長照 3.0 第三階段 2026/7/1 上路、智慧科技輔具補助 NT$60,000 / 3 年 / 人 · 預估受益 74.5 萬人</p>
+<p class="footnote">[3] PRWeb / Ato Care 新聞稿, 2026-04 · Ato 平均用戶 82 歲、留存率 60%（業界 3 倍）、1,300+ 台部署</p>
+<p class="footnote">[4] WHO / Adherence to Long-term Therapies, 2003 + 健保署 2024 · 銀髮族多重用藥遵從率 50-60%</p>
+<p class="footnote">[5] 國發會 2024 人口推估 · 2025/12 進入超高齡社會、2030 預估 65+ 佔 23%</p>
+<p class="footnote">[6] 經濟部標檢局 / TFDA · 醫療器材分級規範 · Class I（衛教 / 提醒）vs Class II（生理量測 / 異常通報）</p>
+
+<h3>技術與架構參考</h3>
+<p class="footnote">[7] OpenAI Realtime API, 2024-10 · GPT-4o speech-to-speech latency &lt; 320ms · Voice activity detection 內建</p>
+<p class="footnote">[8] Llama 3.1 / Phi-4-mini 端側部署 · Jetson Nano / Orin Nano 平台 · 推論 latency 200-400ms</p>
+<p class="footnote">[9] LangChain / LangGraph 文件 · State machine + Tool calling + Multi-agent orchestration</p>
+<p class="footnote">[10] AWS Bedrock + Connect Health · 2026 GA · HIPAA-eligible · FHIR R4 整合</p>
+<p class="footnote">[11] Wav2Lip (IIITH, ECCV 2020, MIT) + SadTalker (Tencent, CVPR 2023, Apache 2.0) + Hallo 2 (Fudan, 2024) + MuseTalk (Tencent, 2024, MIT) · Avatar lipsync 開源 stack</p>
+<p class="footnote">[12] Anthropic Design Directions, 2026 · Aria 即介面 · 玻璃語言 · 12 畫面狀態流動（裝置 UI 視覺參考來源）</p>
+
+<h3>城堡內部文件（深度補充）</h3>
+<p class="footnote">[13] <strong>CAREON 完整產品規劃 v3</strong>（18 月 framework + 5 大功能 + 4 商業模式 + 補助路徑）· <a href="https://web-one-kohl-15.vercel.app/proposal-v3.html" target="_blank" rel="noopener" style="color:var(--amber-deep);text-decoration:underline;">線上版</a></p>
+<p class="footnote">[14] <strong>市場調研報告 v2</strong>（Sophie 評分 95/100 · 4 競品深度 · 6 條依據）· <a href="https://web-one-kohl-15.vercel.app/market-research.html" target="_blank" rel="noopener" style="color:var(--amber-deep);text-decoration:underline;">線上版</a></p>
+<p class="footnote">[15] <strong>castle-voice-engine v2.0.6</strong>（自架 voice 整合層 · 8 個月 production）· <a href="https://edwardt0303--castle-voice-engine-fastapi-app.modal.run/" target="_blank" rel="noopener" style="color:var(--amber-deep);text-decoration:underline;">live URL</a></p>
+<p class="footnote">[16] <strong>HealthBuy 14 版 healthtech 迭代 know-how</strong>（115,000+ 下載 / 真實領域 credibility）· Edward 親述</p>
+</section>
+
+</main>
+
+<footer class="book-footer">
+CAREON · HomeWellness Companion · TPM 面試交付版<br>
+Castle Intelligence × Edward Tseng · 2026 · 05 · 26<br>
+製作支援：Sophie 蘇菲（COO / 文案）× 霍爾 Howl（CPO / 策略）× 卡西法 Calcifer（CTO / 技術）× 荒野女巫（CD / 視覺）× 馬魯克 Markl（QA）× 沙利曼 Suliman（合規）× 蕪菁頭 Turnip（用戶分析）<br>
+<br>
+<em>關懷在這裡</em>
+</footer>
+
+</body>
+</html>
