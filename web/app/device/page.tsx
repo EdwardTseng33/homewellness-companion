@@ -600,7 +600,7 @@ function ScreenAriaHere() {
   return (
     <>
       <div style={{ position: 'absolute', top: '36%', left: 60 }}>
-        <GlassBubble accent={T.sage}>
+        <GlassBubble>
           <span style={{ display: 'block', fontFamily: '"JetBrains Mono", monospace', fontSize: 13, letterSpacing: '0.16em', fontWeight: 700, color: T.sage, marginBottom: 10 }}>
             ● 莉莉 · 在
           </span>
@@ -617,8 +617,8 @@ function ScreenAriaHere() {
             { label: '血壓', value: '128/82', status: 'ok', note: '正常' },
             { label: '心跳', value: '72', unit: 'bpm', status: 'ok', note: '平穩' },
             { label: '血糖', value: '98', unit: 'mg/dL', status: 'ok', note: '正常' },
-            { label: '用藥', value: '2/3 顆', status: 'warn', note: '待提醒' },
-            { label: '睡眠', value: '6h 42m', status: 'info', note: '不足' },
+            { label: '用藥', value: '2', unit: '/3 顆', status: 'warn', note: '準時' },
+            { label: '睡眠', value: '6h 42m', status: 'ok', note: '良好' },
           ]}
         />
       </div>
@@ -630,9 +630,9 @@ function ScreenNudge({ onResolve }: { onResolve: () => void }) {
   return (
     <>
       <div style={{ position: 'absolute', top: '32%', left: 60 }}>
-        <GlassBubble accent={T.rose}>
+        <GlassBubble>
           <span style={{ display: 'block', fontFamily: '"JetBrains Mono", monospace', fontSize: 13, letterSpacing: '0.16em', fontWeight: 700, color: T.roseDeep, marginBottom: 10 }}>
-            ● 莉莉 · 活動關懷
+            ● 莉莉 · 注意到
           </span>
           阿姨、您今天<span style={{ color: T.roseDeep, fontWeight: 600 }}>活動量不太夠</span>。<br />
           要不要出去走走？今天再走 <span style={{ color: T.amber, fontWeight: 600 }}>1,000 步</span>、身體比較不會活動量太低喔。
@@ -652,7 +652,7 @@ function ScreenNudge({ onResolve }: { onResolve: () => void }) {
           subtitle="TODAY · 5/26"
           statusChip={{ text: '步數不足', type: 'warn' }}
           rows={[
-            { label: '步數', value: '412', unit: '/ 3,000', status: 'warn', note: '步數不足' },
+            { label: '步數', value: '412', unit: '/ 5,000', status: 'warn', note: '不足' },
             { label: '心跳', value: '68', unit: 'bpm', status: 'ok' },
             { label: '有氧', value: '8', unit: '/ 30 分', status: 'warn' },
           ]}
@@ -679,7 +679,7 @@ function ScreenHealth({ onResolve }: { onResolve: () => void }) {
   return (
     <>
       <div style={{ position: 'absolute', top: '30%', left: 60 }}>
-        <GlassBubble accent={T.sage}>
+        <GlassBubble>
           <span style={{ display: 'block', fontFamily: '"JetBrains Mono", monospace', fontSize: 13, letterSpacing: '0.16em', fontWeight: 700, color: T.sage, marginBottom: 10 }}>
             ● 莉莉 · 早晨關心
           </span>
@@ -699,13 +699,13 @@ function ScreenHealth({ onResolve }: { onResolve: () => void }) {
         <SummaryPanel
           title="今早摘要"
           subtitle="TODAY · 5/26 早晨"
-          statusChip={{ text: '已啟動關懷', type: 'warn' }}
+          statusChip={{ text: '已通知家屬', type: 'warn' }}
           rows={[
-            { label: '睡眠', value: '6h 42m', status: 'warn', note: '稍微短' },
-            { label: '感覺', value: '背酸', status: 'warn', note: '待關心' },
-            { label: '用藥', value: '2 顆', status: 'warn', note: '待提醒' },
+            { label: '睡眠', value: '6h 42m', status: 'warn', note: '中斷 2 次' },
+            { label: '感覺', value: '背酸 ·輕微', status: 'warn', note: '第 2 天' },
+            { label: '用藥', value: '2 顆', status: 'warn', note: '等候中' },
             { label: '血壓', value: '128/82', status: 'ok', note: '正常' },
-            { label: '心率', value: '72', unit: 'bpm', status: 'ok' },
+            { label: '心率', value: '72', unit: 'bpm', status: 'ok', note: '平穩' },
           ]}
         />
       </div>
@@ -825,7 +825,7 @@ function ScreenCompanion({ onEnd }: { onEnd: () => void }) {
           }} />
           <div style={{ marginBottom: 4 }}>
             <span style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 10, letterSpacing: '0.22em', color: T.ink3, fontWeight: 700 }}>
-              COMPANION · 10:48
+              COMPANION · 10:40
             </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
@@ -851,8 +851,9 @@ function ScreenCompanion({ onEnd }: { onEnd: () => void }) {
             <span style={{ flex: '0 0 56px', fontFamily: '"Noto Sans TC", sans-serif', fontSize: 13, fontWeight: 600, color: T.ink2 }}>剩餘</span>
             <span style={{ flex: 1, fontFamily: '"Newsreader", serif', fontSize: 22, fontWeight: 500, color: T.ink, display: 'flex', alignItems: 'baseline', gap: 4 }}>
               82
-              <span style={{ fontSize: 12, color: T.ink3 }}>分鐘 · 每分 NT$ 2</span>
+              <span style={{ fontSize: 12, color: T.ink3 }}>分鐘 / 本月</span>
             </span>
+            <span style={{ fontFamily: '"Noto Sans TC", sans-serif', fontSize: 12, fontWeight: 600, color: T.sage }}>充足</span>
           </div>
         </div>
       </div>
@@ -899,7 +900,7 @@ function ScreenMedication({ onResolve }: { onResolve: () => void }) {
   return (
     <>
       <div style={{ position: 'absolute', top: '30%', left: 60 }}>
-        <GlassBubble accent={T.amber}>
+        <GlassBubble>
           <span style={{ display: 'block', fontFamily: '"JetBrains Mono", monospace', fontSize: 13, letterSpacing: '0.16em', fontWeight: 700, color: T.amber, marginBottom: 10 }}>
             ● 莉莉 · 用藥提醒
           </span>
@@ -919,11 +920,11 @@ function ScreenMedication({ onResolve }: { onResolve: () => void }) {
       <div style={{ position: 'absolute', top: 80, right: 32 }}>
         <SummaryPanel
           title="早餐用藥"
-          subtitle="TODAY · 5/26 上午"
-          statusChip={{ text: '配藥槽已出', type: 'warn' }}
+          subtitle="TODAY · 5/20 早上 08:00"
+          statusChip={{ text: '配藥槽已出', type: 'ok' }}
           rows={[
-            { label: '血壓藥', value: '1', unit: '顆 · AMLODIPINE', status: 'warn' },
-            { label: '維他命 D', value: '1', unit: '顆 · 1000U', status: 'warn' },
+            { label: '血壓藥', value: '1', unit: '顆 · 配溫水 AMLODIPINE', status: 'warn' },
+            { label: '維他命 D', value: '1', unit: '顆 · 1000 IU', status: 'warn', note: '每日早晨' },
             { label: '存量', value: '6 天', status: 'ok', note: '下週補' },
           ]}
         />
@@ -1421,16 +1422,25 @@ export default function DevicePage() {
           {/* Mood Tint · 弱化、不擋臉 */}
           <div style={{ position: 'absolute', inset: 0, background: moodToTint(currentScreen.mood), pointerEvents: 'none', mixBlendMode: 'soft-light', opacity: 0.28 }} />
 
-          {/* Status Bar · 純文字浮在莉莉照片上、不加 chip 框 · 比照設計稿 */}
+          {/* Status Bar · 對齊設計稿：02/03 有日期、05/07/08/09 只時鐘 · 無「室溫 24°」 */}
           {screen !== 'standby' && screen !== 'goodnight' && (
             <div style={{
               position: 'absolute', top: 24, left: 32,
-              display: 'flex', alignItems: 'baseline', gap: 14,
+              display: 'flex', alignItems: 'baseline', gap: 12,
               color: '#fff',
               textShadow: '0 3px 12px rgba(0,0,0,0.85), 0 1px 3px rgba(0,0,0,0.6)',
+              zIndex: 6,
             }}>
               <span style={{ fontFamily: '"Newsreader", serif', fontSize: 22, fontWeight: 500, letterSpacing: '0.01em', lineHeight: 1 }}>{time}</span>
-              <span style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 10, fontWeight: 600, opacity: 0.78, letterSpacing: '0.22em', lineHeight: 1 }}>室溫 24°</span>
+              {(screen === 'aria-here' || screen === 'nudge') && (
+                <span style={{ fontFamily: '"Noto Sans TC", sans-serif', fontSize: 13, fontWeight: 400, opacity: 0.88, lineHeight: 1 }}>5月20日 週二</span>
+              )}
+            </div>
+          )}
+          {/* 07 陪伴聊天 右上 wifi · 對齊設計稿 */}
+          {screen === 'companion' && (
+            <div style={{ position: 'absolute', top: 24, right: 32, zIndex: 6, color: '#fff', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.5))' }}>
+              <Wifi size={18} strokeWidth={2} />
             </div>
           )}
 
