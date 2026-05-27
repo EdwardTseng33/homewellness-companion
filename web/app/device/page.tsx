@@ -235,25 +235,17 @@ function SummaryPanel({ title, subtitle, rows, statusChip }: { title: string; su
   );
 }
 
-// === CircleBtn 升級 · 新增 iconOnly 模式（暗色玻璃 · 無文字 label） ===
-// iconOnly 模式：對齊設計稿 02 / 03 / 05 / 10 底部統一暗色玻璃感的小圓鈕
-function CircleBtn({ label, sub, icon, bg, size = 72, iconOnly = false, onClick }: { label?: string; sub?: string; icon: React.ReactNode; bg?: string; size?: number; iconOnly?: boolean; onClick?: () => void }) {
-  const richBg = iconOnly
-    ? 'linear-gradient(155deg, rgba(58,46,37,0.86) 0%, rgba(31,27,23,0.80) 60%, rgba(18,16,13,0.82) 100%)'
-    : (() => {
-        const isAmber = bg === T.amber;
-        const isSage = bg === T.sage;
-        const isDark = typeof bg === 'string' && bg.includes('36,28,20');
-        if (isAmber) return 'linear-gradient(155deg, #E08A4C 0%, #D4712A 50%, #B85A1F 100%)';
-        if (isSage) return 'linear-gradient(155deg, #8FA897 0%, #7A9482 50%, #5F7A68 100%)';
-        if (isDark) return 'linear-gradient(155deg, #3A2E25 0%, #1F1B17 60%, #12100D 100%)';
-        return bg || T.glassDarkDeep;
-      })();
+// === CircleBtn 重做 · 真實霧面液態玻璃（Edward 5/27 14:07 catch）===
+// 之前是「實心立體球 + 多層 inset 高光」= 不對 · 設計稿是 frosted glass
+// 修法：半透明 + backdrop-filter blur + 細邊 + 簡單外陰影 · 沒有 inset gradient / 沒有頂緣高光膠線
+function CircleBtn({ label, sub, icon, bg, size = 56, iconOnly = false, onClick }: { label?: string; sub?: string; icon: React.ReactNode; bg?: string; size?: number; iconOnly?: boolean; onClick?: () => void }) {
+  // 全部按鈕都用同一種半透明 dark glass · 不再分 amber / sage / dark variant
+  // 看設計稿底部按鈕：背景是真實玻璃、不是純色 + gradient
   return (
     <button
       onClick={onClick}
       style={{
-        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
         background: 'transparent', border: 'none', cursor: 'pointer',
         pointerEvents: 'auto',
         padding: 0,
@@ -262,44 +254,35 @@ function CircleBtn({ label, sub, icon, bg, size = 72, iconOnly = false, onClick 
       <div
         style={{
           width: size, height: size, borderRadius: '50%',
-          background: richBg,
+          background: 'rgba(36,28,20,0.52)',
+          backdropFilter: 'blur(24px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+          border: '1px solid rgba(255,255,255,0.14)',
+          boxShadow: '0 8px 22px rgba(0,0,0,0.32)',
           color: '#fff',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          backdropFilter: iconOnly ? 'blur(18px) saturate(140%)' : 'none',
-          WebkitBackdropFilter: iconOnly ? 'blur(18px) saturate(140%)' : 'none',
-          boxShadow: iconOnly
-            ? '0 0 0 1px rgba(255,255,255,0.14), 0 12px 30px rgba(0,0,0,0.48), 0 3px 10px rgba(0,0,0,0.25), inset 0 1.5px 0 rgba(255,255,255,0.22), inset 0 -2px 6px rgba(0,0,0,0.30)'
-            : '0 0 0 1.5px rgba(255,255,255,0.18), 0 14px 36px rgba(0,0,0,0.42), 0 4px 12px rgba(0,0,0,0.25), inset 0 2px 0 rgba(255,255,255,0.32), inset 0 -3px 8px rgba(0,0,0,0.18)',
-          position: 'relative', overflow: 'hidden',
         }}
       >
-        <div
-          style={{
-            position: 'absolute', top: 1.5, left: '22%', right: '22%', height: 1.2,
-            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.72), transparent)',
-            borderRadius: 999, pointerEvents: 'none',
-          }}
-        />
         <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{icon}</span>
       </div>
       {!iconOnly && label && (
         <span style={{
           color: '#fff',
           fontFamily: '"Noto Serif TC", "Newsreader", serif',
-          fontSize: 15, fontWeight: 500,
+          fontSize: 13, fontWeight: 500,
           letterSpacing: '0.03em',
-          textShadow: '0 2px 8px rgba(0,0,0,0.7), 0 1px 2px rgba(0,0,0,0.5)',
+          textShadow: '0 2px 8px rgba(0,0,0,0.7)',
         }}>
           {label}
         </span>
       )}
       {!iconOnly && sub && (
         <span style={{
-          color: 'rgba(255,253,248,0.78)',
+          color: 'rgba(255,253,248,0.62)',
           fontFamily: '"JetBrains Mono", monospace',
-          fontSize: 10, fontWeight: 600,
-          letterSpacing: '0.18em',
-          marginTop: -6,
+          fontSize: 10, fontWeight: 500,
+          letterSpacing: '0.14em',
+          marginTop: -4,
           textShadow: '0 1px 4px rgba(0,0,0,0.6)',
         }}>
           {sub}
@@ -310,25 +293,23 @@ function CircleBtn({ label, sub, icon, bg, size = 72, iconOnly = false, onClick 
 }
 
 // === EndCallBtn · 紅色小圓結束按鈕（家人視訊 / 陪伴聊天） ===
-function EndCallBtn({ icon, size = 72, onClick }: { icon: React.ReactNode; size?: number; onClick?: () => void }) {
+function EndCallBtn({ icon, size = 56, onClick }: { icon: React.ReactNode; size?: number; onClick?: () => void }) {
+  // 紅色霧面玻璃 · 不要 gradient + 不要 inset 高光（之前 catch 切痕問題）
   return (
     <button
       onClick={onClick}
       aria-label="結束"
       style={{
         width: size, height: size, borderRadius: '50%',
-        background: 'linear-gradient(155deg, #E27772 0%, #D85A55 50%, #B83A35 100%)',
-        color: '#fff', border: 'none', cursor: 'pointer',
+        background: 'rgba(216,90,85,0.88)',
+        backdropFilter: 'blur(24px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+        border: '1px solid rgba(255,255,255,0.18)',
+        color: '#fff', cursor: 'pointer',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        position: 'relative',
-        boxShadow: '0 0 0 1.5px rgba(255,255,255,0.20), 0 14px 36px rgba(216,90,85,0.55), 0 4px 12px rgba(0,0,0,0.22), inset 0 2px 0 rgba(255,255,255,0.32), inset 0 -3px 8px rgba(0,0,0,0.18)',
+        boxShadow: '0 8px 22px rgba(216,90,85,0.42)',
       }}
     >
-      <div style={{
-        position: 'absolute', top: 1.5, left: '22%', right: '22%', height: 1.2,
-        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.78), transparent)',
-        borderRadius: 999, pointerEvents: 'none',
-      }} />
       {icon}
     </button>
   );
