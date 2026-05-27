@@ -40,8 +40,7 @@ const SCREENS: { id: ScreenId; label: string; mood: 'sage' | 'amber' | 'rose' | 
   { id: 'nudge', label: '03 · 主動關懷 Nudge', mood: 'rose' },
   { id: 'engage', label: '04 · 純語音對話 Engage', mood: 'amber' },
   { id: 'health', label: '05 · 健康關心 Check-in', mood: 'sage' },
-  { id: 'companion-confirm', label: '06 · 陪伴聊天 · 確認', mood: 'amber' },
-  { id: 'companion', label: '07 · 陪伴聊天 · 計時中', mood: 'rose' },
+  { id: 'companion', label: '06 · 陪伴聊天 · 計時中', mood: 'rose' },
   { id: 'medication', label: '08 · 用藥提醒', mood: 'amber' },
   { id: 'family-call', label: '09 · 家人視訊', mood: 'amber' },
   { id: 'menu', label: '10 · 選單', mood: 'sage' },
@@ -207,33 +206,52 @@ function CircleBtn({ label, sub, icon, bg, size = 72, onClick }: { label: string
 
 function VoicePill({ state = 'listening' }: { state?: 'listening' | 'speaking' | 'thinking' }) {
   const config = {
-    listening: { color: T.amber, text: '直接說、莉莉在聽' },
-    speaking: { color: T.sage, text: '莉莉正在說話…' },
-    thinking: { color: T.rose, text: '莉莉想一下…' },
+    listening: { color: T.amber, text: '直接說、莉莉在聽', sub: '或說「莉莉、聊聊」「找大華」「該吃藥了」' },
+    speaking: { color: T.sage, text: '莉莉正在說話…', sub: '說「等等」可以打斷' },
+    thinking: { color: T.rose, text: '莉莉想一下…', sub: '正在查藥單 / 拉血壓' },
   }[state];
   return (
     <div
       style={{
-        padding: '11px 22px',
-        background: T.glassDarkDeep,
-        backdropFilter: 'blur(14px)',
-        WebkitBackdropFilter: 'blur(14px)',
+        padding: '14px 28px',
+        background: 'rgba(36,28,20,0.78)',
+        backdropFilter: 'blur(20px) saturate(140%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(140%)',
         borderRadius: 999,
-        display: 'flex', alignItems: 'center', gap: 12,
-        fontFamily: '"Noto Sans TC", sans-serif', fontSize: 16, fontWeight: 500,
-        color: '#fff',
-        boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+        boxShadow: '0 10px 30px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.16)',
+        border: '1px solid rgba(255,255,255,0.10)',
+        minWidth: 280,
       }}
     >
-      <span
-        style={{
-          width: 10, height: 10, borderRadius: '50%',
-          background: config.color,
-          boxShadow: `0 0 12px ${config.color}`,
-          animation: 'pulse 1.6s ease-in-out infinite',
-        }}
-      />
-      {config.text}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        {/* 5 條波形動畫 · 不是靜態圓點 */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 3, height: 18 }}>
+          {[0, 1, 2, 1, 0].map((idx, i) => (
+            <span
+              key={i}
+              style={{
+                width: 3, height: 14,
+                background: config.color,
+                borderRadius: 2,
+                boxShadow: `0 0 6px ${config.color}aa`,
+                animation: `wave${idx} ${1.0 + i * 0.12}s ease-in-out infinite`,
+                animationDelay: `${i * 0.08}s`,
+                transformOrigin: 'center',
+              }}
+            />
+          ))}
+        </div>
+        <span style={{
+          fontFamily: '"Noto Serif TC", serif',
+          fontSize: 19, fontWeight: 500, color: '#fff', letterSpacing: '0.02em',
+        }}>{config.text}</span>
+      </div>
+      <span style={{
+        fontFamily: '"Noto Sans TC", sans-serif',
+        fontSize: 11, color: 'rgba(255,255,255,0.55)',
+        letterSpacing: '0.04em', marginTop: 2,
+      }}>{config.sub}</span>
     </div>
   );
 }
@@ -272,9 +290,13 @@ function LiquidButton({ children, color, big, onClick }: { children: React.React
 // ===== Screens =====
 function ScreenStandby({ time, onWake }: { time: string; onWake: () => void }) {
   return (
-    <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: T.paper }}>
+    // 整個畫面可點 = 觸碰任意處或說「莉莉」喚醒 · 不放實體大按鈕
+    <div
+      onClick={onWake}
+      style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: T.paper, cursor: 'pointer' }}
+    >
       {/* 左上角溫濕度 */}
-      <div style={{ position: 'absolute', top: 32, left: 32, display: 'flex', flexDirection: 'column', gap: 4, fontFamily: '"JetBrains Mono", monospace', fontSize: 13, letterSpacing: '0.14em', color: T.paper, opacity: 0.55 }}>
+      <div style={{ position: 'absolute', top: 32, left: 32, display: 'flex', flexDirection: 'column', gap: 4, fontFamily: '"JetBrains Mono", monospace', fontSize: 13, letterSpacing: '0.14em', color: T.paper, opacity: 0.5 }}>
         <span>室溫 24.2° · 濕度 58%</span>
         <span>WIFI · 連線正常</span>
       </div>
@@ -285,27 +307,30 @@ function ScreenStandby({ time, onWake }: { time: string; onWake: () => void }) {
       <div style={{ fontFamily: '"Noto Serif TC", serif', fontSize: 22, marginTop: 14, opacity: 0.7, color: T.paper }}>
         5 月 26 日 · 週二 · 晚上
       </div>
-      <div style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 11, letterSpacing: '0.34em', marginTop: 50, opacity: 0.4, color: T.amberSoft }}>
+      <div style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 11, letterSpacing: '0.34em', marginTop: 56, opacity: 0.32, color: T.amberSoft }}>
         CAREON COMPANION · 莉莉待機中
       </div>
-      <button
-        onClick={onWake}
-        style={{
-          marginTop: 60,
-          padding: '20px 56px',
-          background: 'transparent',
-          color: T.amberSoft,
-          border: `1px solid ${T.amberSoft}`,
-          borderRadius: 999,
-          fontFamily: '"Noto Serif TC", serif',
-          fontSize: 22,
-          fontWeight: 500,
-          cursor: 'pointer',
-          letterSpacing: '0.06em',
-        }}
-      >
-        點我喚醒 · 或說「莉莉」
-      </button>
+      {/* 底部極簡語音提示 · 不是按鈕 · 整個畫面都能點 */}
+      <div style={{ position: 'absolute', bottom: 48, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, opacity: 0.62 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 3, height: 14 }}>
+          {[0, 1, 2, 1, 0].map((idx, i) => (
+            <span
+              key={i}
+              style={{
+                width: 2, height: 10,
+                background: T.amberSoft,
+                borderRadius: 2,
+                animation: `wave${idx} ${1.2 + i * 0.1}s ease-in-out infinite`,
+                animationDelay: `${i * 0.1}s`,
+                transformOrigin: 'center',
+              }}
+            />
+          ))}
+        </div>
+        <span style={{ fontFamily: '"Noto Serif TC", serif', fontSize: 14, color: T.amberSoft, letterSpacing: '0.08em' }}>
+          說「莉莉」喚醒 · 或觸碰螢幕
+        </span>
+      </div>
     </div>
   );
 }
@@ -404,29 +429,9 @@ function ScreenHealth() {
   );
 }
 
-function ScreenCompanionConfirm({ onConfirm, onCancel }: { onConfirm: () => void; onCancel: () => void }) {
-  return (
-    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(26,22,18,0.55)', backdropFilter: 'blur(8px)' }}>
-      <div style={{ background: T.glassDeep, backdropFilter: 'blur(24px)', borderRadius: 28, padding: '40px 52px', maxWidth: 540, textAlign: 'center', boxShadow: '0 20px 60px rgba(0,0,0,0.4)' }}>
-        <div style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 11, letterSpacing: '0.22em', fontWeight: 700, color: T.amber, marginBottom: 14 }}>
-          ● 陪伴聊天 · 計費確認
-        </div>
-        <div style={{ fontFamily: '"Noto Serif TC", serif', fontSize: 28, color: T.ink, marginBottom: 18, fontWeight: 500 }}>
-          要跟莉莉聊聊嗎？
-        </div>
-        <div style={{ fontFamily: '"Noto Sans TC", sans-serif', fontSize: 17, color: T.ink2, lineHeight: 1.6, marginBottom: 28 }}>
-          這個會用到你的聊天時間
-          <br />
-          <span style={{ color: T.amber, fontWeight: 600 }}>本月還剩 90 分鐘</span> · 每分鐘 NT$2
-        </div>
-        <div style={{ display: 'flex', gap: 14, justifyContent: 'center' }}>
-          <LiquidButton onClick={onCancel}>等一下</LiquidButton>
-          <LiquidButton color={T.amber} big onClick={onConfirm}>開始聊聊</LiquidButton>
-        </div>
-      </div>
-    </div>
-  );
-}
+// 已移除 ScreenCompanionConfirm · 按 Edward 5/27 指令簡化操作
+// 點「陪伴聊天」或語音說「聊聊」 = 直接進入計時、不需中間確認彈窗
+// 計費規則（NT$2/分、本月剩 82 分）改放在 ScreenCompanion 內角落小字
 
 function ScreenCompanion({ onEnd }: { onEnd: () => void }) {
   return (
@@ -665,7 +670,7 @@ function ScreenMenu({ onPick }: { onPick: (s: ScreenId) => void }) {
     { label: '藥箱監測', icon: <Search size={28} strokeWidth={1.6} />, tint: T.sage },
     { label: '環境感測', icon: <Thermometer size={28} strokeWidth={1.6} />, tint: T.sage },
     { label: '聯絡家人', icon: <Users size={28} strokeWidth={1.6} />, tint: T.rose, screen: 'family-call' },
-    { label: '陪伴聊天', icon: <MessageCircle size={28} strokeWidth={1.6} />, tint: T.rose, screen: 'companion-confirm' },
+    { label: '陪伴聊天', icon: <MessageCircle size={28} strokeWidth={1.6} />, tint: T.rose, screen: 'companion' },
     { label: '連線裝置', icon: <Radio size={28} strokeWidth={1.6} />, tint: T.amber },
     { label: '個人資料', icon: <User size={28} strokeWidth={1.6} />, tint: T.sage },
   ];
@@ -888,7 +893,6 @@ export default function DevicePage() {
           {screen === 'nudge' && <ScreenNudge />}
           {screen === 'engage' && <ScreenEngage />}
           {screen === 'health' && <ScreenHealth />}
-          {screen === 'companion-confirm' && <ScreenCompanionConfirm onConfirm={() => setScreen('companion')} onCancel={() => setScreen('aria-here')} />}
           {screen === 'companion' && <ScreenCompanion onEnd={() => setScreen('aria-here')} />}
           {screen === 'medication' && <ScreenMedication />}
           {screen === 'family-call' && <ScreenFamilyCall onEnd={() => setScreen('aria-here')} />}
@@ -897,14 +901,27 @@ export default function DevicePage() {
           {screen === 'goodnight' && <ScreenGoodnight time={time} />}
 
           {/* Bottom Floating Buttons */}
-          {screen !== 'standby' && screen !== 'goodnight' && screen !== 'menu' && screen !== 'family-call' && screen !== 'companion-confirm' && (
-            <div style={{ position: 'absolute', bottom: 26, left: 26, right: 26, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', pointerEvents: 'none' }}>
-              <CircleBtn label="陪伴聊天" sub="剩 82 分" icon={<MessageCircle size={28} strokeWidth={1.8} color="#fff" />} bg={T.amber} onClick={() => setScreen('companion-confirm')} />
-              <VoicePill />
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'flex-end', pointerEvents: 'auto' }}>
-                <CircleBtn label="呼叫家人" icon={<Phone size={22} strokeWidth={1.8} color="#fff" />} bg={T.sage} size={56} onClick={() => setScreen('family-call')} />
-                <CircleBtn label="選單" icon={<Menu size={22} strokeWidth={1.8} color="#fff" />} bg="rgba(36,28,20,0.78)" size={56} onClick={() => setScreen('menu')} />
-              </div>
+          {/* 底部 = 語音優先、按鈕極簡 · 中央 VoicePill 主視覺 / 右下選單最小化 */}
+          {screen !== 'standby' && screen !== 'goodnight' && screen !== 'menu' && screen !== 'family-call' && (
+            <div style={{ position: 'absolute', bottom: 32, left: 0, right: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', pointerEvents: 'none' }}>
+              <div style={{ pointerEvents: 'auto' }}><VoicePill /></div>
+              <button
+                onClick={() => setScreen('menu')}
+                aria-label="選單"
+                style={{
+                  position: 'absolute', right: 32, bottom: 0,
+                  width: 44, height: 44, borderRadius: '50%',
+                  background: 'rgba(36,28,20,0.55)',
+                  backdropFilter: 'blur(14px) saturate(140%)',
+                  WebkitBackdropFilter: 'blur(14px) saturate(140%)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  cursor: 'pointer', pointerEvents: 'auto',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: '0 4px 14px rgba(0,0,0,0.3)',
+                }}
+              >
+                <Menu size={18} strokeWidth={1.8} color="#fff" />
+              </button>
             </div>
           )}
 
