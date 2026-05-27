@@ -41,7 +41,8 @@ const SCREENS: { id: ScreenId; label: string; mood: 'sage' | 'amber' | 'rose' | 
   { id: 'nudge', label: '03 · 主動關懷 Nudge', mood: 'rose' },
   { id: 'engage', label: '04 · 純語音對話 Engage', mood: 'amber' },
   { id: 'health', label: '05 · 健康關心 Check-in', mood: 'sage' },
-  { id: 'companion', label: '06 · 陪伴聊天 · 計時中', mood: 'rose' },
+  { id: 'companion-confirm', label: '06 · 陪伴聊天 · 確認', mood: 'rose' },
+  { id: 'companion', label: '07 · 陪伴聊天 · 計時中', mood: 'rose' },
   { id: 'medication', label: '08 · 用藥提醒', mood: 'amber' },
   { id: 'family-call', label: '09 · 家人視訊', mood: 'amber' },
   { id: 'menu', label: '10 · 選單', mood: 'sage' },
@@ -62,6 +63,7 @@ function moodToTint(mood: string) {
 function screenToBg(s: ScreenId): { type: 'img' | 'video'; src: string } | null {
   if (s === 'standby' || s === 'goodnight' || s === 'family-call' || s === 'reflect') return null;
   if (s === 'engage' || s === 'companion') return { type: 'video', src: '/lily/lily-talking.mp4' };
+  if (s === 'companion-confirm') return { type: 'img', src: '/lily/lily-portrait.png' };
   // 其餘畫面（含 menu）用 lily-portrait.png 靜態
   return { type: 'img', src: '/lily/lily-portrait.png' };
 }
@@ -295,6 +297,23 @@ function ScreenStandby({ time, onWake }: { time: string; onWake: () => void }) {
         <span>室溫 24.2° · 濕度 58%</span>
         <span>WIFI · 連線正常</span>
       </div>
+      {/* 中央 CAREON Companion logo · 待機時的品牌主軸 */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, marginBottom: 28, opacity: 0.78 }}>
+        <div style={{
+          fontFamily: '"Newsreader", serif',
+          fontSize: 26, fontWeight: 400, letterSpacing: '0.18em',
+          color: T.amberSoft,
+        }}>
+          CAREON
+        </div>
+        <div style={{
+          fontFamily: '"JetBrains Mono", monospace',
+          fontSize: 10, fontWeight: 500, letterSpacing: '0.42em',
+          color: T.paper, opacity: 0.5,
+        }}>
+          COMPANION
+        </div>
+      </div>
       {/* 大時鐘 */}
       <div style={{ fontFamily: '"Newsreader", serif', fontSize: 220, fontWeight: 300, letterSpacing: '-0.04em', lineHeight: 1, color: T.paper }}>
         {time}
@@ -383,15 +402,13 @@ function ScreenNudge() {
 }
 
 function ScreenEngage() {
+  // 純語音 TTS · 設計稿明定無文字 transcript · 只有中央音頻 bar 動畫
   return (
     <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 32 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         {[10, 18, 26, 14, 22, 32, 16, 20, 28, 12, 24, 18, 26, 14, 20].map((h, i) => (
           <span key={i} style={{ width: 6, height: h * 2, borderRadius: 3, background: T.amber, opacity: 0.65 + (i % 3) * 0.1, animation: `wave${i % 3} 1.2s ease-in-out infinite` }} />
         ))}
-      </div>
-      <div style={{ fontFamily: '"Noto Serif TC", serif', fontSize: 26, color: '#fff', textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>
-        莉莉正在說話…
       </div>
     </div>
   );
@@ -424,9 +441,96 @@ function ScreenHealth() {
   );
 }
 
-// 已移除 ScreenCompanionConfirm · 按 Edward 5/27 指令簡化操作
-// 點「陪伴聊天」或語音說「聊聊」 = 直接進入計時、不需中間確認彈窗
-// 計費規則（NT$2/分、本月剩 82 分）改放在 ScreenCompanion 內角落小字
+// 06 · 陪伴聊天 · 進入確認彈窗（5/27 還原 · 對齊 DESIGN_NOTES）
+function ScreenCompanionConfirm({ onConfirm, onCancel }: { onConfirm: () => void; onCancel: () => void }) {
+  return (
+    <>
+      {/* 背景遮罩 · 莉莉照片透出 */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: 'rgba(31,27,23,0.38)',
+        backdropFilter: 'blur(3px)',
+        WebkitBackdropFilter: 'blur(3px)',
+      }} />
+      {/* 中央玻璃確認卡 */}
+      <div style={{
+        position: 'absolute', top: '50%', left: '50%',
+        transform: 'translate(-50%, -52%)',
+        width: 460,
+        background: T.glassDeep,
+        backdropFilter: 'blur(20px) saturate(140%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(140%)',
+        borderRadius: 28,
+        padding: '32px 36px',
+        boxShadow: '0 24px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.55)',
+        border: '1px solid rgba(255,255,255,0.4)',
+      }}>
+        {/* 頂緣高光 */}
+        <div style={{
+          position: 'absolute', top: 0, left: 16, right: 16, height: 1,
+          background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent)',
+          borderRadius: 999,
+        }} />
+        {/* mono 標籤 */}
+        <span style={{
+          display: 'block',
+          fontFamily: '"JetBrains Mono", monospace',
+          fontSize: 11, letterSpacing: '0.22em',
+          fontWeight: 700, color: T.rose,
+          marginBottom: 12,
+        }}>
+          ● 陪伴聊天 · 確認進入
+        </span>
+        {/* 主問句 */}
+        <div style={{
+          fontFamily: '"Newsreader", "Noto Serif TC", serif',
+          fontSize: 28, fontWeight: 500,
+          color: T.ink, lineHeight: 1.35,
+          letterSpacing: '-0.01em',
+          marginBottom: 18,
+        }}>
+          要跟莉莉聊聊嗎？
+        </div>
+        {/* 副說明 · 費率 + 額度 */}
+        <div style={{
+          fontFamily: '"Noto Serif TC", serif',
+          fontSize: 17, color: T.ink2, lineHeight: 1.6,
+          marginBottom: 28,
+        }}>
+          本月還剩 <span style={{ color: T.amber, fontWeight: 600 }}>82 分鐘</span> · 每分鐘 <span style={{ color: T.amber, fontWeight: 600 }}>NT$ 2</span>
+        </div>
+        {/* 兩鈕 · 等一下（次要）+ 開始聊聊（主要 amber） */}
+        <div style={{ display: 'flex', gap: 14 }}>
+          <button onClick={onCancel} style={{
+            flex: 1, padding: '15px 24px',
+            background: 'rgba(31,27,23,0.06)',
+            color: T.ink, border: '1px solid rgba(31,27,23,0.10)',
+            borderRadius: 999,
+            fontFamily: '"Noto Serif TC", serif',
+            fontSize: 17, fontWeight: 500,
+            cursor: 'pointer',
+            letterSpacing: '0.02em',
+          }}>
+            等一下
+          </button>
+          <button onClick={onConfirm} style={{
+            flex: 1.2, padding: '15px 24px',
+            background: `linear-gradient(135deg, ${T.amber} 0%, #B85F1F 100%)`,
+            color: '#fff', border: 'none',
+            borderRadius: 999,
+            fontFamily: '"Noto Serif TC", serif',
+            fontSize: 17, fontWeight: 600,
+            cursor: 'pointer',
+            letterSpacing: '0.02em',
+            boxShadow: `0 10px 24px ${T.amber}66, inset 0 1px 0 rgba(255,255,255,0.25)`,
+          }}>
+            開始聊聊
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
 
 function ScreenCompanion({ onEnd }: { onEnd: () => void }) {
   return (
@@ -648,6 +752,39 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
         </button>
       </div>
 
+      {/* 左側直立式音量條 · 通話音量 8 格 · 對齊 DESIGN_NOTES L83 */}
+      <div style={{
+        position: 'absolute', top: '50%', left: 36,
+        transform: 'translateY(-50%)',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
+      }}>
+        <span style={{
+          fontFamily: '"JetBrains Mono", monospace',
+          fontSize: 10, letterSpacing: '0.20em',
+          color: 'rgba(255,253,248,0.62)', fontWeight: 700,
+          writingMode: 'vertical-rl', textOrientation: 'mixed',
+          transform: 'rotate(180deg)',
+        }}>VOLUME · 6 / 10</span>
+        <div style={{
+          width: 8, height: 220, borderRadius: 6,
+          background: 'rgba(36,28,20,0.45)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          padding: 4,
+          display: 'flex', flexDirection: 'column-reverse', gap: 3,
+          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.10)',
+          border: '1px solid rgba(255,255,255,0.10)',
+        }}>
+          {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => (
+            <span key={i} style={{
+              flex: 1, borderRadius: 2,
+              background: i < 6 ? T.amber : 'rgba(255,253,248,0.12)',
+              boxShadow: i < 6 ? `0 0 6px ${T.amber}77` : 'none',
+            }} />
+          ))}
+        </div>
+      </div>
+
       {/* Demo placeholder note */}
       <div style={{
         position: 'absolute', bottom: 28, left: 32,
@@ -665,7 +802,7 @@ function ScreenMenu({ onPick }: { onPick: (s: ScreenId) => void }) {
     { label: '藥箱監測', icon: <Search size={26} strokeWidth={1.6} />, tint: T.sage },
     { label: '環境感測', icon: <Thermometer size={26} strokeWidth={1.6} />, tint: T.sage },
     { label: '聯絡家人', icon: <Users size={26} strokeWidth={1.6} />, tint: T.rose, screen: 'family-call' },
-    { label: '陪伴聊天', icon: <MessageCircle size={26} strokeWidth={1.6} />, tint: T.rose, screen: 'companion' },
+    { label: '陪伴聊天', icon: <MessageCircle size={26} strokeWidth={1.6} />, tint: T.rose, screen: 'companion-confirm' },
     { label: '連線裝置', icon: <Radio size={26} strokeWidth={1.6} />, tint: T.amber },
     { label: '個人資料', icon: <User size={26} strokeWidth={1.6} />, tint: T.sage },
   ];
@@ -808,6 +945,29 @@ function ScreenReflect() {
           </div>
         ))}
       </div>
+      {/* 可傳給家人按鈕 · 對齊 DESIGN_NOTES L89 */}
+      <div style={{ marginTop: 28, display: 'flex', gap: 12, alignItems: 'center' }}>
+        <button
+          onClick={() => alert('（demo）今日回顧已分享給兒子大華')}
+          style={{
+            padding: '13px 26px',
+            background: `linear-gradient(135deg, ${T.sage} 0%, #62806A 100%)`,
+            color: '#fff', border: 'none',
+            borderRadius: 999,
+            fontFamily: '"Noto Serif TC", serif',
+            fontSize: 16, fontWeight: 500,
+            letterSpacing: '0.04em',
+            cursor: 'pointer',
+            boxShadow: `0 8px 22px ${T.sage}66, inset 0 1px 0 rgba(255,255,255,0.25)`,
+            display: 'flex', alignItems: 'center', gap: 8,
+          }}
+        >
+          <Users size={18} strokeWidth={1.8} />傳給家人
+        </button>
+        <span style={{ fontFamily: 'Inter, sans-serif', fontSize: 12, color: T.ink3, letterSpacing: '0.04em' }}>
+          兒子 · 大華 收到 LINE 摘要
+        </span>
+      </div>
     </div>
   );
 }
@@ -822,8 +982,26 @@ function ScreenGoodnight({ time }: { time: string }) {
         晚安、王阿姨。明天見。
       </div>
       <div style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 11, letterSpacing: '0.32em', color: T.red, marginTop: 80, opacity: 0.55 }}>
-        SOS 緊急按鈕 · 長按 3 秒
+        長按 3 秒 · 緊急聯絡
       </div>
+      {/* SOS 實體按鈕 · 底部唯一互動 · 對齊 DESIGN_NOTES L90「只留 SOS」*/}
+      <button
+        onClick={() => alert('（demo）SOS 已啟動 · 真實版長按 3 秒會撥出緊急聯絡')}
+        aria-label="SOS 緊急聯絡"
+        style={{
+          position: 'absolute', bottom: 48, left: '50%',
+          transform: 'translateX(-50%)',
+          width: 84, height: 84, borderRadius: '50%',
+          background: `radial-gradient(circle at 32% 28%, #E97570 0%, ${T.red} 60%, #A03832 100%)`,
+          color: '#fff', border: 'none', cursor: 'pointer',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontFamily: '"Newsreader", serif',
+          fontSize: 22, fontWeight: 600, letterSpacing: '0.16em',
+          boxShadow: `0 16px 40px ${T.red}55, inset 0 2px 0 rgba(255,255,255,0.28), 0 0 0 2px rgba(216,90,85,0.18)`,
+        }}
+      >
+        SOS
+      </button>
     </div>
   );
 }
@@ -969,6 +1147,12 @@ export default function DevicePage() {
           {screen === 'nudge' && <ScreenNudge />}
           {screen === 'engage' && <ScreenEngage />}
           {screen === 'health' && <ScreenHealth />}
+          {screen === 'companion-confirm' && (
+            <ScreenCompanionConfirm
+              onConfirm={() => setScreen('companion')}
+              onCancel={() => setScreen('aria-here')}
+            />
+          )}
           {screen === 'companion' && <ScreenCompanion onEnd={() => setScreen('aria-here')} />}
           {screen === 'medication' && <ScreenMedication />}
           {screen === 'family-call' && <ScreenFamilyCall onEnd={() => setScreen('aria-here')} />}
@@ -980,7 +1164,7 @@ export default function DevicePage() {
           {/* 底部 4 元素 · 比照設計稿（DESIGN_NOTES L100-104）：
               左下「陪伴聊天 amber 72px」+ 中央 VoicePill + 右下底「呼叫家人 sage 56px」+ 右下上「選單 56px」
               語音優先 + 按鈕並排輔助、VoicePill 仍中央主視覺 */}
-          {screen !== 'standby' && screen !== 'goodnight' && screen !== 'menu' && screen !== 'family-call' && (
+          {screen !== 'standby' && screen !== 'goodnight' && screen !== 'menu' && screen !== 'family-call' && screen !== 'companion-confirm' && (
             <div style={{ position: 'absolute', bottom: 26, left: 26, right: 26, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', pointerEvents: 'none' }}>
               {/* 左下 · 陪伴聊天 amber 72px 含「剩 82 分」副字 */}
               <CircleBtn
@@ -988,7 +1172,7 @@ export default function DevicePage() {
                 sub="剩 82 分"
                 icon={<MessageCircle size={28} strokeWidth={1.8} color="#fff" />}
                 bg={T.amber}
-                onClick={() => setScreen('companion')}
+                onClick={() => setScreen('companion-confirm')}
               />
               {/* 中央 · VoicePill 主視覺（語音優先） */}
               <div style={{ pointerEvents: 'auto', marginBottom: 8 }}><VoicePill /></div>
