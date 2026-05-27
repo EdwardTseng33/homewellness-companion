@@ -1005,47 +1005,49 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
         />
       </div>
 
-      {/* 底部 4 顆按鈕 · 對齊設計稿：mic / camera-off / chat / 紅小圓 phone（無斜線）· 前三顆淺灰玻璃 */}
+      {/* 底部 4 顆按鈕 · 對齊設計稿：mic / camera-off / chat / 紅小圓 phone（無斜線）· 前三顆米白色實心鈕（不吃底色） */}
       <div style={{
         position: 'absolute', bottom: 60, left: '50%',
         transform: 'translateX(-50%)',
         display: 'flex', gap: 18, alignItems: 'center',
       }}>
-        <CircleBtn iconOnly size={56} bg="rgba(255,255,255,0.22)" icon={<Mic size={22} strokeWidth={2} color="#fff" />} />
-        <CircleBtn iconOnly size={56} bg="rgba(255,255,255,0.22)" icon={<VideoOff size={22} strokeWidth={2} color="#fff" />} />
-        <CircleBtn iconOnly size={56} bg="rgba(255,255,255,0.22)" icon={<MessageCircle size={22} strokeWidth={2} color="#fff" />} />
+        <button aria-label="麥克風" style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(248,244,236,0.92)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 22px rgba(0,0,0,0.18)' }}>
+          <Mic size={22} strokeWidth={2} color="#3A332C" />
+        </button>
+        <button aria-label="關閉鏡頭" style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(248,244,236,0.92)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 22px rgba(0,0,0,0.18)' }}>
+          <VideoOff size={22} strokeWidth={2} color="#3A332C" />
+        </button>
+        <button aria-label="文字訊息" style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(248,244,236,0.92)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 22px rgba(0,0,0,0.18)' }}>
+          <MessageCircle size={22} strokeWidth={2} color="#3A332C" />
+        </button>
         <EndCallBtn icon={<Phone size={26} strokeWidth={2.2} color="#fff" />} size={56} onClick={onEnd} />
       </div>
 
-      {/* 左側 VOLUME · 對齊設計稿 09（+/- 按鈕 + 直立棒 + 小圓滑塊） */}
+      {/* 左側 VOLUME · 對齊設計稿 09（+/- 按鈕 + 直立棒 + 小圓滑塊）· 米白實心、不吃底色 */}
       <div style={{
         position: 'absolute', top: '50%', left: 28,
         transform: 'translateY(-50%)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
-        background: 'rgba(255,253,248,0.20)',
-        backdropFilter: 'blur(14px) saturate(140%)',
-        WebkitBackdropFilter: 'blur(14px) saturate(140%)',
+        background: 'rgba(248,244,236,0.92)',
         padding: '12px 8px',
         borderRadius: 36,
-        border: '1px solid rgba(255,255,255,0.32)',
-        boxShadow: '0 12px 32px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.20)',
+        boxShadow: '0 12px 32px rgba(0,0,0,0.28)',
       }}>
         <button
           onClick={() => setVolume(v => Math.min(10, v + 1))}
           aria-label="音量加"
           style={{
             width: 32, height: 32, borderRadius: '50%',
-            background: 'rgba(255,255,255,0.10)',
-            border: '1px solid rgba(255,255,255,0.18)',
+            background: 'transparent', border: 'none',
             cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: '#fff',
+            color: '#3A332C',
           }}
         >
           <Plus size={16} strokeWidth={2.4} />
         </button>
         <div style={{
           width: 6, height: 160, borderRadius: 4,
-          background: 'rgba(255,255,255,0.14)',
+          background: 'rgba(58,51,44,0.10)',
           position: 'relative',
           margin: '4px 0',
         }}>
@@ -1054,14 +1056,13 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
             height: (volume * 10) + '%',
             background: 'linear-gradient(180deg, #E08A4C 0%, #D4712A 100%)',
             borderRadius: 4,
-            boxShadow: '0 0 8px rgba(212,113,42,0.6)',
           }} />
           <div style={{
             position: 'absolute', left: '50%', transform: 'translate(-50%, 50%)',
             bottom: (volume * 10) + '%',
-            width: 24, height: 24, borderRadius: '50%',
+            width: 22, height: 22, borderRadius: '50%',
             background: '#fff',
-            boxShadow: '0 4px 10px rgba(0,0,0,0.45), 0 0 0 1px rgba(0,0,0,0.10)',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.08)',
           }} />
         </div>
         <button
@@ -1069,10 +1070,9 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
           aria-label="音量"
           style={{
             width: 32, height: 32, borderRadius: '50%',
-            background: 'rgba(255,255,255,0.10)',
-            border: '1px solid rgba(255,255,255,0.18)',
+            background: 'transparent', border: 'none',
             cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: '#fff',
+            color: '#3A332C',
           }}
         >
           <Volume2 size={14} strokeWidth={2} />
