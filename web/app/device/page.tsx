@@ -209,52 +209,44 @@ function CircleBtn({ label, sub, icon, bg, size = 72, onClick }: { label: string
 
 function VoicePill({ state = 'listening' }: { state?: 'listening' | 'speaking' | 'thinking' }) {
   const config = {
-    listening: { color: T.amber, text: '直接說、莉莉在聽', sub: '或說「莉莉、聊聊」「找大華」「該吃藥了」' },
-    speaking: { color: T.sage, text: '莉莉正在說話…', sub: '說「等等」可以打斷' },
-    thinking: { color: T.rose, text: '莉莉想一下…', sub: '正在查藥單 / 拉血壓' },
+    listening: { color: T.amber, text: '直接說、莉莉在聽' },
+    speaking: { color: T.sage, text: '莉莉正在說話…' },
+    thinking: { color: T.rose, text: '莉莉想一下…' },
   }[state];
   return (
     <div
       style={{
-        padding: '14px 28px',
-        background: 'rgba(36,28,20,0.78)',
+        padding: '12px 24px',
+        background: 'rgba(36,28,20,0.72)',
         backdropFilter: 'blur(20px) saturate(140%)',
         WebkitBackdropFilter: 'blur(20px) saturate(140%)',
         borderRadius: 999,
-        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
-        boxShadow: '0 10px 30px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.16)',
-        border: '1px solid rgba(255,255,255,0.10)',
-        minWidth: 280,
+        display: 'flex', alignItems: 'center', gap: 12,
+        boxShadow: '0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.14)',
+        border: '1px solid rgba(255,255,255,0.08)',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        {/* 5 條波形動畫 · 不是靜態圓點 */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 3, height: 18 }}>
-          {[0, 1, 2, 1, 0].map((idx, i) => (
-            <span
-              key={i}
-              style={{
-                width: 3, height: 14,
-                background: config.color,
-                borderRadius: 2,
-                boxShadow: `0 0 6px ${config.color}aa`,
-                animation: `wave${idx} ${1.0 + i * 0.12}s ease-in-out infinite`,
-                animationDelay: `${i * 0.08}s`,
-                transformOrigin: 'center',
-              }}
-            />
-          ))}
-        </div>
-        <span style={{
-          fontFamily: '"Noto Serif TC", serif',
-          fontSize: 19, fontWeight: 500, color: '#fff', letterSpacing: '0.02em',
-        }}>{config.text}</span>
+      {/* 5 條波形動畫 · 不是靜態圓點 */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 3, height: 16 }}>
+        {[0, 1, 2, 1, 0].map((idx, i) => (
+          <span
+            key={i}
+            style={{
+              width: 3, height: 12,
+              background: config.color,
+              borderRadius: 2,
+              boxShadow: `0 0 6px ${config.color}aa`,
+              animation: `wave${idx} ${1.0 + i * 0.12}s ease-in-out infinite`,
+              animationDelay: `${i * 0.08}s`,
+              transformOrigin: 'center',
+            }}
+          />
+        ))}
       </div>
       <span style={{
-        fontFamily: '"Noto Sans TC", sans-serif',
-        fontSize: 11, color: 'rgba(255,255,255,0.55)',
-        letterSpacing: '0.04em', marginTop: 2,
-      }}>{config.sub}</span>
+        fontFamily: '"Noto Serif TC", serif',
+        fontSize: 17, fontWeight: 500, color: '#fff', letterSpacing: '0.02em',
+      }}>{config.text}</span>
     </div>
   );
 }
@@ -957,22 +949,17 @@ export default function DevicePage() {
           {/* Mood Tint · 弱化、不擋臉 */}
           <div style={{ position: 'absolute', inset: 0, background: moodToTint(currentScreen.mood), pointerEvents: 'none', mixBlendMode: 'soft-light', opacity: 0.6 }} />
 
-          {/* Status Bar · 加玻璃 chip 讓時間在莉莉臉上清晰可讀 · 強保險 textDecoration none */}
+          {/* Status Bar · 純文字浮在莉莉照片上、不加 chip 框 · 比照設計稿 */}
           {screen !== 'standby' && screen !== 'goodnight' && (
             <div style={{
-              position: 'absolute', top: 22, left: 28,
+              position: 'absolute', top: 22, left: 32,
               display: 'flex', flexDirection: 'column', gap: 2,
-              padding: '8px 14px',
-              background: 'rgba(36,28,20,0.32)',
-              backdropFilter: 'blur(14px) saturate(140%)',
-              WebkitBackdropFilter: 'blur(14px) saturate(140%)',
-              borderRadius: 12,
               color: '#fff',
               textDecoration: 'none',
-              boxShadow: '0 4px 14px rgba(0,0,0,0.18)',
+              textShadow: '0 2px 12px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.4)',
             }}>
-              <span style={{ fontFamily: '"Newsreader", serif', fontSize: 28, fontWeight: 500, letterSpacing: '-0.01em', textDecoration: 'none', lineHeight: 1.1 }}>{time}</span>
-              <span style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 11, opacity: 0.88, fontWeight: 500, letterSpacing: '0.06em', textDecoration: 'none' }}>5/26 週二 · 室溫 24° · 📶</span>
+              <span style={{ fontFamily: '"Newsreader", serif', fontSize: 30, fontWeight: 500, letterSpacing: '-0.01em', textDecoration: 'none', lineHeight: 1.1 }}>{time}</span>
+              <span style={{ fontFamily: 'Inter, "Noto Sans TC", sans-serif', fontSize: 13, opacity: 0.92, fontWeight: 500, letterSpacing: '0.02em', textDecoration: 'none' }}>5/26 週二 · 室溫 24°</span>
             </div>
           )}
 
@@ -1025,24 +1012,30 @@ export default function DevicePage() {
             </div>
           )}
 
-          {/* Dev Panel toggle */}
-          {!devOpen && (
-            <button
-              onClick={() => setDevOpen(true)}
-              style={{
-                position: 'absolute', bottom: 12, right: 12, width: 36, height: 36, borderRadius: '50%',
-                background: T.glassDarkDeep, color: T.amber, fontFamily: '"JetBrains Mono", monospace', fontSize: 12, fontWeight: 700,
-                border: '1px solid rgba(212,113,42,0.4)', cursor: 'pointer', opacity: 0.6, zIndex: 50,
-              }}
-              title="開發者面板 · 按 D 切換"
-            >
-              D
-            </button>
-          )}
-
-          {/* Dev Panel */}
+          {/* Dev Panel · 仍在裝置框內顯示（佔右側） */}
           {devOpen && <DevPanel currentScreen={screen} onSelect={setScreen} onClose={() => setDevOpen(false)} />}
         </div>
+
+        {/* D 鈕移到裝置框外 · 不污染窗景 · 按 D 鍵也可切換 */}
+        {!devOpen && (
+          <button
+            onClick={() => setDevOpen(true)}
+            style={{
+              position: 'fixed', top: 20, right: 20,
+              width: 38, height: 38, borderRadius: '50%',
+              background: 'rgba(255,255,255,0.06)',
+              color: 'rgba(255,253,248,0.45)',
+              fontFamily: '"JetBrains Mono", monospace', fontSize: 12, fontWeight: 700,
+              border: '1px solid rgba(255,255,255,0.10)',
+              cursor: 'pointer', zIndex: 100,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              letterSpacing: '0.02em',
+            }}
+            title="開發者面板 · 按 D 切換 / 演示用"
+          >
+            D
+          </button>
+        )}
       </div>
     </>
   );
