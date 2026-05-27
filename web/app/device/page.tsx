@@ -1349,6 +1349,9 @@ export default function DevicePage() {
   const [screen, setScreen] = useState<ScreenId>('standby');
   const [devOpen, setDevOpen] = useState(false);
   const [time, setTime] = useState('20:25');
+  // 講話影片播完一次後切到 idle 待機動態（眨眼、輕呼吸）· 不再 loop 講話內容
+  const [talkingDone, setTalkingDone] = useState(false);
+  useEffect(() => { setTalkingDone(false); }, [screen]);
 
   useEffect(() => {
     const update = () => {
@@ -1371,7 +1374,11 @@ export default function DevicePage() {
 
   // fallback to SCREENS[0] when screen state holds a removed ID (engage/confirm/reflect/goodnight) — protects against undefined.mood crash
   const currentScreen = SCREENS.find(s => s.id === screen) ?? SCREENS[0];
-  const bg = screenToBg(screen);
+  const rawBg = screenToBg(screen);
+  // 講話影片播完一次後切到 idle 待機動態 · 不再重複講話內容
+  const bg = rawBg && rawBg.type === 'video' && talkingDone
+    ? { type: 'video' as const, src: '/lily/voice/lily-idle-web.mp4' }
+    : rawBg;
 
   return (
     <>
@@ -1395,13 +1402,18 @@ export default function DevicePage() {
           }}
         >
           {/* Lifestyle 真人照片 / 說話 mp4 背景 · 比照設計稿
-              video 不 mute · 影片本身就是莉莉的聲音 · standby wake click 已 unlock autoplay-with-audio */}
+              講話影片不 loop、播完 onEnded 切到 idle 待機動態（眨眼、輕呼吸）
+              idle 才 loop · standby wake click 已 unlock autoplay-with-audio */}
           {bg && bg.type === 'video' && (
             <video
               key={bg.src}
               src={bg.src}
-              autoPlay loop playsInline preload="auto"
+              autoPlay
+              loop={bg.src.includes('lily-idle')}
+              playsInline
+              preload="auto"
               poster="/lily/lily-portrait.png"
+              onEnded={() => setTalkingDone(true)}
               style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
             />
           )}
