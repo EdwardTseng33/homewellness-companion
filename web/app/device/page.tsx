@@ -1290,7 +1290,7 @@ function DevPanel({ currentScreen, onSelect, onClose }: { currentScreen: ScreenI
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
           <button onClick={() => onSelect('nudge')} style={{ padding: '8px', background: 'rgba(229,191,184,0.15)', color: T.rose, border: '1px solid rgba(229,191,184,0.3)', borderRadius: 8, fontSize: 12, cursor: 'pointer', fontFamily: 'Inter' }}>PIR 觸發</button>
           <button onClick={() => onSelect('medication')} style={{ padding: '8px', background: 'rgba(212,113,42,0.15)', color: T.amberSoft, border: '1px solid rgba(212,113,42,0.3)', borderRadius: 8, fontSize: 12, cursor: 'pointer', fontFamily: 'Inter' }}>用藥時間</button>
-          <button onClick={() => onSelect('engage')} style={{ padding: '8px', background: 'rgba(212,113,42,0.15)', color: T.amberSoft, border: '1px solid rgba(212,113,42,0.3)', borderRadius: 8, fontSize: 12, cursor: 'pointer', fontFamily: 'Inter' }}>語音輸入</button>
+          <button onClick={() => onSelect('companion')} style={{ padding: '8px', background: 'rgba(212,113,42,0.15)', color: T.amberSoft, border: '1px solid rgba(212,113,42,0.3)', borderRadius: 8, fontSize: 12, cursor: 'pointer', fontFamily: 'Inter' }}>語音輸入</button>
           <button onClick={() => onSelect('family-call')} style={{ padding: '8px', background: 'rgba(122,148,130,0.15)', color: T.sageSoft, border: '1px solid rgba(122,148,130,0.3)', borderRadius: 8, fontSize: 12, cursor: 'pointer', fontFamily: 'Inter' }}>家人來電</button>
         </div>
       </div>
@@ -1299,7 +1299,7 @@ function DevPanel({ currentScreen, onSelect, onClose }: { currentScreen: ScreenI
         <div style={{ fontFamily: '"Noto Sans TC", sans-serif', fontSize: 12, color: T.ink3, lineHeight: 1.6 }}>
           CAREON Companion · POC v0.1<br />
           AI 智慧身心照護 + 智能給藥機<br />
-          12 畫面 · 暗色玻璃 · Newsreader<br />
+          8 畫面 · 暗色玻璃 · Newsreader<br />
           Lily mp4 動態 avatar<br />
           基於 Anthropic Design Directions
         </div>
@@ -1333,7 +1333,8 @@ export default function DevicePage() {
     return () => window.removeEventListener('keydown', handler);
   }, []);
 
-  const currentScreen = SCREENS.find(s => s.id === screen)!;
+  // fallback to SCREENS[0] when screen state holds a removed ID (engage/confirm/reflect/goodnight) — protects against undefined.mood crash
+  const currentScreen = SCREENS.find(s => s.id === screen) ?? SCREENS[0];
   const bg = screenToBg(screen);
 
   return (
