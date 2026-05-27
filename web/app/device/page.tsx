@@ -60,16 +60,16 @@ function moodToTint(mood: string) {
   return 'rgba(0,0,0,0)';
 }
 
-// 比照 Anthropic Design 設計稿：每個畫面背景是靜態 lifestyle 真人照片（不是 mp4）
-// 只有「說話」場景（engage / companion）才用 mp4 做嘴型對嘴
+// 莉莉「在跟你說話」的畫面用 lily-talking.mp4（動態錄影、嘴型有動）
+// 其餘畫面（待機 / 沉默 / 選單）用靜態 portrait
 // 選單 menu 設計稿也是莉莉在背景 + 玻璃磁磚浮上（窗景哲學）
 function screenToBg(s: ScreenId): { type: 'img' | 'video'; src: string } | null {
   if (s === 'standby' || s === 'goodnight' || s === 'family-call' || s === 'reflect') return null;
-  // companion 用清晰莉莉笑容靜態圖（設計稿 07）
-  if (s === 'engage') return { type: 'video', src: '/lily/lily-talking.mp4' };
-  if (s === 'companion') return { type: 'img', src: '/lily/lily-portrait.png' };
-  if (s === 'companion-confirm') return { type: 'img', src: '/lily/lily-portrait.png' };
-  // 其餘畫面（含 menu）用 lily-portrait.png 靜態
+  // 03 主動關懷 / 05 健康關心 / 07 陪伴聊天 / 08 用藥提醒 — 莉莉正在說話、用 mp4
+  if (s === 'nudge' || s === 'health' || s === 'companion' || s === 'medication' || s === 'engage') {
+    return { type: 'video', src: '/lily/lily-talking.mp4' };
+  }
+  // 02 莉莉在 / 10 選單 / companion-confirm — 靜止 portrait
   return { type: 'img', src: '/lily/lily-portrait.png' };
 }
 
@@ -1291,7 +1291,7 @@ function DevPanel({ currentScreen, onSelect, onClose }: { currentScreen: ScreenI
           <button onClick={() => onSelect('nudge')} style={{ padding: '8px', background: 'rgba(229,191,184,0.15)', color: T.rose, border: '1px solid rgba(229,191,184,0.3)', borderRadius: 8, fontSize: 12, cursor: 'pointer', fontFamily: 'Inter' }}>PIR 觸發</button>
           <button onClick={() => onSelect('medication')} style={{ padding: '8px', background: 'rgba(212,113,42,0.15)', color: T.amberSoft, border: '1px solid rgba(212,113,42,0.3)', borderRadius: 8, fontSize: 12, cursor: 'pointer', fontFamily: 'Inter' }}>用藥時間</button>
           <button onClick={() => onSelect('companion')} style={{ padding: '8px', background: 'rgba(212,113,42,0.15)', color: T.amberSoft, border: '1px solid rgba(212,113,42,0.3)', borderRadius: 8, fontSize: 12, cursor: 'pointer', fontFamily: 'Inter' }}>語音輸入</button>
-          <button onClick={() => onSelect('family-call')} style={{ padding: '8px', background: 'rgba(122,148,130,0.15)', color: T.sageSoft, border: '1px solid rgba(122,148,130,0.3)', borderRadius: 8, fontSize: 12, cursor: 'pointer', fontFamily: 'Inter' }}>家人來電</button>
+          <button onClick={() => onSelect('family-call')} style={{ padding: '8px', background: 'rgba(122,148,130,0.15)', color: T.sageSoft, border: '1px solid rgba(122,148,130,0.3)', borderRadius: 8, fontSize: 12, cursor: 'pointer', fontFamily: 'Inter' }}>呼叫家人</button>
         </div>
       </div>
       <div style={{ marginTop: 24, paddingTop: 18, borderTop: '1px solid rgba(255,253,248,0.1)' }}>
