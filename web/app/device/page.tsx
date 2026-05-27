@@ -813,7 +813,7 @@ function ScreenCompanion({ onEnd }: { onEnd: () => void }) {
   useLilyVoice('阿姨，我們聊聊天好嗎？想聊什麼都可以，我陪您。');
   return (
     <>
-      <div style={{ position: 'absolute', top: 80, right: 32, width: 296 }}>
+      <div style={{ position: 'absolute', bottom: 50, right: 32, width: 296 }}>
         <div style={{
           background: T.glass,
           backdropFilter: 'blur(20px) saturate(140%)',
