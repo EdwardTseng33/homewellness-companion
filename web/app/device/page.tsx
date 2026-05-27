@@ -63,7 +63,9 @@ function moodToTint(mood: string) {
 // 選單 menu 設計稿也是莉莉在背景 + 玻璃磁磚浮上（窗景哲學）
 function screenToBg(s: ScreenId): { type: 'img' | 'video'; src: string } | null {
   if (s === 'standby' || s === 'goodnight' || s === 'family-call' || s === 'reflect') return null;
-  if (s === 'engage' || s === 'companion') return { type: 'video', src: '/lily/lily-talking.mp4' };
+  // companion 用清晰莉莉笑容靜態圖（設計稿 07）
+  if (s === 'engage') return { type: 'video', src: '/lily/lily-talking.mp4' };
+  if (s === 'companion') return { type: 'img', src: '/lily/lily-portrait.png' };
   if (s === 'companion-confirm') return { type: 'img', src: '/lily/lily-portrait.png' };
   // 其餘畫面（含 menu）用 lily-portrait.png 靜態
   return { type: 'img', src: '/lily/lily-portrait.png' };
@@ -1098,7 +1100,7 @@ function ScreenMenu({ onPick }: { onPick: (s: ScreenId) => void }) {
 
       {/* 8 磁磚 4×2 grid · 中央區 · 對齊設計稿緊湊 · 留底中 VoicePill 空間 */}
       <div style={{
-        position: 'absolute', top: 92, left: 80, right: 80, bottom: 170,
+        position: 'absolute', top: 90, left: 90, right: 90, bottom: 160,
         display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gridTemplateRows: 'repeat(2, 1fr)',
         gap: 12,
       }}>
@@ -1112,7 +1114,7 @@ function ScreenMenu({ onPick }: { onPick: (s: ScreenId) => void }) {
               borderRadius: 18, padding: '20px 12px 18px',
               cursor: item.screen ? 'pointer' : 'default',
               opacity: item.screen ? 1 : 0.82,
-              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', gap: 5,
+              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8,
               boxShadow: '0 6px 18px rgba(31,27,23,0.10), inset 0 1px 0 rgba(255,255,255,0.8)',
               transition: 'transform 0.18s ease, box-shadow 0.18s ease',
               position: 'relative',
