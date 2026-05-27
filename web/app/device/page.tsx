@@ -6,9 +6,9 @@
 
 import { useState, useEffect } from 'react';
 import {
-  MessageCircle, Phone, PhoneOff, Menu, BarChart3, Pill, Search,
+  MessageCircle, Phone, PhoneOff, Menu, BarChart3, Pill, Search, Briefcase,
   Thermometer, Users, Radio, User, Mic, Video as VideoIcon, VideoOff,
-  AlertCircle, X, Check, AlertTriangle, Square, Plus, Minus,
+  AlertCircle, X, Check, AlertTriangle, Square, Plus, Minus, Wifi, Volume2,
 } from 'lucide-react';
 
 // === Design Tokens ===
@@ -901,7 +901,7 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
           position: 'absolute', inset: 0,
           width: '100%', height: '100%',
           objectFit: 'cover',
-          objectPosition: 'center 20%',
+          objectPosition: 'center 38%',
         }}
       />
 
@@ -914,24 +914,29 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
         textShadow: '0 2px 10px rgba(0,0,0,0.55)',
       }}>15:08</div>
 
-      {/* LIVE 玻璃膠囊 · 對齊設計稿 09 右上角位置 */}
+      {/* LIVE 玻璃膠囊 + wifi icon · 對齊設計稿 09 右上角 · 兩個元素並排 */}
       <div style={{
         position: 'absolute', top: 24, right: 240,
-        display: 'flex', alignItems: 'center', gap: 10,
-        padding: '8px 16px',
-        background: 'rgba(216,90,85,0.92)', color: '#fff',
-        backdropFilter: 'blur(14px) saturate(140%)',
-        WebkitBackdropFilter: 'blur(14px) saturate(140%)',
-        borderRadius: 999,
-        fontFamily: '"JetBrains Mono", monospace',
-        fontSize: 12, fontWeight: 700, letterSpacing: '0.18em',
-        boxShadow: '0 6px 20px rgba(216,90,85,0.45), inset 0 1px 0 rgba(255,255,255,0.25)',
+        display: 'flex', alignItems: 'center', gap: 12,
       }}>
-        <span style={{
-          width: 8, height: 8, borderRadius: '50%', background: '#fff',
-          animation: 'pulse 1.4s ease-in-out infinite',
-        }} />
-        LIVE · 02:14
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 10,
+          padding: '8px 16px',
+          background: 'rgba(216,90,85,0.92)', color: '#fff',
+          backdropFilter: 'blur(14px) saturate(140%)',
+          WebkitBackdropFilter: 'blur(14px) saturate(140%)',
+          borderRadius: 999,
+          fontFamily: '"JetBrains Mono", monospace',
+          fontSize: 12, fontWeight: 700, letterSpacing: '0.18em',
+          boxShadow: '0 6px 20px rgba(216,90,85,0.45), inset 0 1px 0 rgba(255,255,255,0.25)',
+        }}>
+          <span style={{
+            width: 8, height: 8, borderRadius: '50%', background: '#fff',
+            animation: 'pulse 1.4s ease-in-out infinite',
+          }} />
+          LIVE · 02:14
+        </div>
+        <Wifi size={18} strokeWidth={2} color="#fff" style={{ filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.55))' }} />
       </div>
 
       {/* PIP 玻璃框 · 王阿姨 · 右上 */}
@@ -949,15 +954,9 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
           style={{
             width: '100%', height: '100%',
             objectFit: 'cover',
-            objectPosition: 'center 15%',
+            objectPosition: 'center 30%',
           }}
         />
-        <span style={{
-          position: 'absolute', bottom: 6, left: 10,
-          color: '#fff', fontFamily: 'Inter', fontSize: 10, fontWeight: 600,
-          letterSpacing: '0.08em',
-          textShadow: '0 1px 3px rgba(0,0,0,0.7)',
-        }}>我</span>
       </div>
 
       {/* 底部 4 顆按鈕 · 對齊設計稿：mic / camera-off / chat / 紅小圓 phone-hangup */}
@@ -977,13 +976,13 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
         position: 'absolute', top: '50%', left: 28,
         transform: 'translateY(-50%)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
-        background: 'rgba(36,28,20,0.62)',
+        background: 'rgba(255,253,248,0.20)',
         backdropFilter: 'blur(14px) saturate(140%)',
         WebkitBackdropFilter: 'blur(14px) saturate(140%)',
         padding: '12px 8px',
         borderRadius: 36,
-        border: '1px solid rgba(255,255,255,0.10)',
-        boxShadow: '0 12px 32px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.10)',
+        border: '1px solid rgba(255,255,255,0.32)',
+        boxShadow: '0 12px 32px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.20)',
       }}>
         <button
           onClick={() => setVolume(v => Math.min(10, v + 1))}
@@ -1021,7 +1020,7 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
         </div>
         <button
           onClick={() => setVolume(v => Math.max(0, v - 1))}
-          aria-label="音量減"
+          aria-label="音量"
           style={{
             width: 32, height: 32, borderRadius: '50%',
             background: 'rgba(255,255,255,0.10)',
@@ -1030,7 +1029,7 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
             color: '#fff',
           }}
         >
-          <Minus size={16} strokeWidth={2.4} />
+          <Volume2 size={14} strokeWidth={2} />
         </button>
       </div>
     </>
@@ -1041,14 +1040,14 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
 function ScreenMenu({ onPick }: { onPick: (s: ScreenId) => void }) {
   type Item = { label: string; sub: string; voice: string; icon: React.ReactNode; tint: string; screen?: ScreenId };
   const items: Item[] = [
-    { label: '健康報告', sub: '每週 · 月 · 季', voice: "說『健康』", icon: <BarChart3 size={26} strokeWidth={1.6} />, tint: T.sage },
-    { label: '今日用藥', sub: '18:00 · 剩 1 顆', voice: "說『吃藥』", icon: <Pill size={26} strokeWidth={1.6} />, tint: T.amber, screen: 'medication' },
-    { label: '藥箱監測', sub: '血壓藥剩 6 天', voice: "說『藥箱』", icon: <Search size={26} strokeWidth={1.6} />, tint: T.roseDeep },
-    { label: '環境感測', sub: '25° · 濕度 58%', voice: "說『環境』", icon: <Thermometer size={26} strokeWidth={1.6} />, tint: T.sage },
-    { label: '聯絡家人', sub: '聯絡 · 觸發狀態', voice: "說『家人』", icon: <Users size={26} strokeWidth={1.6} />, tint: T.amber, screen: 'family-call' },
-    { label: '陪伴聊天', sub: '角色 · 充值 · 剩 90 分', voice: "說『陪伴』", icon: <MessageCircle size={26} strokeWidth={1.6} />, tint: T.roseDeep, screen: 'companion' },
-    { label: '連線裝置', sub: 'Wi-Fi · 藍芽 · 手錶', voice: "說『裝置』", icon: <Radio size={26} strokeWidth={1.6} />, tint: T.navy },
-    { label: '個人資料', sub: '名稱 · 年齡 · 體態', voice: "說『我的』", icon: <User size={26} strokeWidth={1.6} />, tint: T.violet },
+    { label: '健康報告', sub: '每週 · 月 · 季', voice: "說『報告』", icon: <BarChart3 size={28} strokeWidth={2} />, tint: T.sage },
+    { label: '今日用藥', sub: '18:00 · 剩 1 顆', voice: "說『吃藥』", icon: <Pill size={28} strokeWidth={2} />, tint: T.amber, screen: 'medication' },
+    { label: '藥箱監測', sub: '血壓藥剩 6 天', voice: "說『藥箱』", icon: <Briefcase size={28} strokeWidth={2} />, tint: T.amber },
+    { label: '環境感測', sub: '25° · 濕度 58%', voice: "說『環境』", icon: <Thermometer size={28} strokeWidth={2} />, tint: T.sage },
+    { label: '聯絡家人', sub: '聯絡人 · 觸發狀態', voice: "說『家人』", icon: <User size={28} strokeWidth={2} />, tint: T.roseDeep, screen: 'family-call' },
+    { label: '陪伴聊天', sub: '角色 · 充值 · 剩 90 分', voice: "說『陪伴』", icon: <MessageCircle size={28} strokeWidth={2} />, tint: T.amber, screen: 'companion' },
+    { label: '連線裝置', sub: 'Wi-Fi · 藍芽 · 手錶', voice: "說『裝置』", icon: <Radio size={28} strokeWidth={2} />, tint: T.navy },
+    { label: '個人資料', sub: '名稱 · 年齡 · 體態', voice: "說『我的資料』", icon: <User size={28} strokeWidth={2} />, tint: T.violet },
   ];
   return (
     <>
@@ -1071,7 +1070,7 @@ function ScreenMenu({ onPick }: { onPick: (s: ScreenId) => void }) {
           fontSize: 10, letterSpacing: '0.30em',
           color: 'rgba(255,253,248,0.62)', fontWeight: 700,
           textShadow: '0 2px 8px rgba(0,0,0,0.5)',
-        }}>● 莉莉 · 準備</span>
+        }}>● 莉莉 · 等您</span>
         <span style={{
           fontFamily: '"Newsreader", "Noto Serif TC", serif',
           fontSize: 30, fontWeight: 500, color: '#fff', letterSpacing: '0.02em',
