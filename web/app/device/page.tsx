@@ -939,14 +939,23 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
   return (
     <>
       {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* 背景：模糊同一張照片填滿 · 視訊通話常見技法 · 取代之前 cover zoom 把臉撐爆的問題 */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        backgroundImage: 'url(/family/dahua-son.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center 20%',
+        filter: 'blur(36px) brightness(0.88)',
+        transform: 'scale(1.15)',
+      }} />
       <img
         src="/family/dahua-son.png"
         alt="兒子 · 大華"
         style={{
           position: 'absolute', inset: 0,
           width: '100%', height: '100%',
-          objectFit: 'cover',
-          objectPosition: 'center 30%',
+          objectFit: 'contain',
+          objectPosition: 'center',
         }}
       />
 
