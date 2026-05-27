@@ -802,36 +802,40 @@ function ScreenCompanion({ onEnd }: { onEnd: () => void }) {
           </div>
         </div>
       </div>
-      {/* 中央上方 · 陪伴中字幕 · mono · 低調 */}
+      {/* 紅色結束陪伴大鈕 · 位置在莉莉胸前下方（不擋臉、不變鼻子點）
+          設計稿 07-companion：紅圓在畫面底部 1/4 · 大顆顯眼 80px · 含「結束陪伴」label 在鈕下方
+          移除原本的「陪伴中 · 00:08」中央字幕（資訊已在右上面板）· 不疊在臉上 */}
       <div style={{
-        position: 'absolute', top: '50%', left: '50%',
-        transform: 'translate(-50%, -90px)',
-        fontFamily: '"JetBrains Mono", monospace',
-        fontSize: 11, fontWeight: 600, color: 'rgba(255,253,248,0.78)',
-        letterSpacing: '0.22em',
-        textShadow: '0 2px 10px rgba(0,0,0,0.65)',
-        pointerEvents: 'none',
+        position: 'absolute',
+        bottom: 80, left: '50%',
+        transform: 'translateX(-50%)',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
       }}>
-        ● 陪伴中 · 00:08
-      </div>
-      {/* 中央 · 小巧橘紅停止鈕 56px · 對齊設計稿 07-companion */}
-      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <button
           aria-label="結束陪伴"
           onClick={onEnd}
           style={{
-            width: 56, height: 56, borderRadius: '50%',
+            width: 80, height: 80, borderRadius: '50%',
             background: 'rgba(216,90,85,0.92)',
-            backdropFilter: 'blur(20px) saturate(180%)',
-            WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-            border: '1px solid rgba(255,255,255,0.18)',
+            backdropFilter: 'blur(24px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+            border: '1px solid rgba(255,255,255,0.20)',
             color: '#fff', cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 8px 22px rgba(216,90,85,0.42)',
+            boxShadow: '0 12px 32px rgba(216,90,85,0.55), 0 4px 12px rgba(0,0,0,0.25)',
           }}
         >
-          <Square size={18} strokeWidth={0} fill="#fff" />
+          <Square size={26} strokeWidth={0} fill="#fff" />
         </button>
+        <span style={{
+          fontFamily: '"Noto Serif TC", serif',
+          fontSize: 14, fontWeight: 500,
+          color: '#fff',
+          letterSpacing: '0.04em',
+          textShadow: '0 2px 8px rgba(0,0,0,0.6)',
+        }}>
+          結束陪伴
+        </span>
       </div>
     </>
   );
