@@ -637,14 +637,16 @@ function ScreenMedication() {
 function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
   return (
     <>
-      {/* 兒子大華真實照片 · 全螢幕背景 · 設計稿規範「兒子半身照背景」 */}
+      {/* 兒子大華真實照片 · 全螢幕背景 · objectPosition top 讓臉露出來不要被裁 */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/family/dahua-son.png"
         alt="兒子 · 大華"
         style={{
           position: 'absolute', inset: 0,
-          width: '100%', height: '100%', objectFit: 'cover',
+          width: '100%', height: '100%',
+          objectFit: 'cover',
+          objectPosition: 'center 20%',
         }}
       />
 
@@ -681,7 +683,9 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
           src="/family/wang-aunt.png"
           alt="王阿姨自拍 PIP"
           style={{
-            width: '100%', height: '100%', objectFit: 'cover',
+            width: '100%', height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center 15%',
           }}
         />
         <span style={{
@@ -692,56 +696,82 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
         }}>我</span>
       </div>
 
-      {/* 底部 3 顆按鈕 · 玻璃化圓鈕 + 中央紅膠囊 */}
+      {/* 底部 3 顆按鈕 · 玻璃化 72px + 中央紅膠囊 · 跟 CircleBtn 同質感 */}
       <div style={{
-        position: 'absolute', bottom: 86, left: '50%',
+        position: 'absolute', bottom: 76, left: '50%',
         transform: 'translateX(-50%)',
-        display: 'flex', gap: 22, alignItems: 'center',
+        display: 'flex', gap: 24, alignItems: 'center',
       }}>
-        {/* Mic 玻璃圓鈕 */}
+        {/* Mic · 72px dark gradient 立體圓鈕 */}
         <button style={{
-          width: 64, height: 64, borderRadius: '50%',
-          background: 'rgba(36,28,20,0.72)',
-          backdropFilter: 'blur(20px) saturate(140%)',
-          WebkitBackdropFilter: 'blur(20px) saturate(140%)',
-          border: '1.5px solid rgba(255,255,255,0.20)',
-          boxShadow: '0 10px 28px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.20)',
+          width: 72, height: 72, borderRadius: '50%',
+          background: 'linear-gradient(155deg, #3A2E25 0%, #1F1B17 60%, #12100D 100%)',
+          color: '#fff', border: 'none',
           cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
           position: 'relative',
+          boxShadow: `
+            0 0 0 1.5px rgba(255,255,255,0.18),
+            0 14px 36px rgba(0,0,0,0.5),
+            0 4px 12px rgba(0,0,0,0.3),
+            inset 0 2px 0 rgba(255,255,255,0.28),
+            inset 0 -3px 8px rgba(0,0,0,0.25)
+          `,
         }}>
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
-            <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-            <line x1="12" y1="19" x2="12" y2="22" />
-            <line x1="8" y1="22" x2="16" y2="22" />
-          </svg>
+          {/* 頂緣 1.5px 高光 */}
+          <div style={{
+            position: 'absolute', top: 1.5, left: '20%', right: '20%', height: 1.5,
+            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent)',
+            borderRadius: 999, pointerEvents: 'none',
+          }} />
+          <Mic size={30} strokeWidth={2.2} color="#fff" />
         </button>
 
-        {/* End call 紅膠囊 */}
+        {/* End call 紅膠囊 · 加強立體感 */}
         <button onClick={onEnd} style={{
-          padding: '20px 42px', borderRadius: 999,
-          background: 'linear-gradient(135deg, #D85A55 0%, #C04540 100%)',
+          padding: '22px 46px', borderRadius: 999,
+          background: 'linear-gradient(155deg, #E27772 0%, #D85A55 50%, #B83A35 100%)',
           color: '#fff', border: 'none',
           fontFamily: '"Noto Serif TC", serif',
           fontSize: 22, fontWeight: 500, letterSpacing: '0.04em',
-          boxShadow: '0 14px 36px rgba(216,90,85,0.55), inset 0 1px 0 rgba(255,255,255,0.25)',
+          boxShadow: `
+            0 0 0 1.5px rgba(255,255,255,0.18),
+            0 16px 40px rgba(216,90,85,0.55),
+            0 4px 12px rgba(0,0,0,0.2),
+            inset 0 2px 0 rgba(255,255,255,0.32),
+            inset 0 -3px 8px rgba(0,0,0,0.18)
+          `,
           cursor: 'pointer',
-        }}>結束</button>
-
-        {/* Camera 玻璃圓鈕 */}
-        <button style={{
-          width: 64, height: 64, borderRadius: '50%',
-          background: 'rgba(36,28,20,0.72)',
-          backdropFilter: 'blur(20px) saturate(140%)',
-          WebkitBackdropFilter: 'blur(20px) saturate(140%)',
-          border: '1.5px solid rgba(255,255,255,0.20)',
-          boxShadow: '0 10px 28px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.20)',
-          cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          position: 'relative',
         }}>
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-            <circle cx="12" cy="13" r="4" />
-          </svg>
+          <div style={{
+            position: 'absolute', top: 1.5, left: '20%', right: '20%', height: 1.5,
+            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent)',
+            borderRadius: 999, pointerEvents: 'none',
+          }} />
+          結束
+        </button>
+
+        {/* Camera · 同 Mic */}
+        <button style={{
+          width: 72, height: 72, borderRadius: '50%',
+          background: 'linear-gradient(155deg, #3A2E25 0%, #1F1B17 60%, #12100D 100%)',
+          color: '#fff', border: 'none',
+          cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          position: 'relative',
+          boxShadow: `
+            0 0 0 1.5px rgba(255,255,255,0.18),
+            0 14px 36px rgba(0,0,0,0.5),
+            0 4px 12px rgba(0,0,0,0.3),
+            inset 0 2px 0 rgba(255,255,255,0.28),
+            inset 0 -3px 8px rgba(0,0,0,0.25)
+          `,
+        }}>
+          <div style={{
+            position: 'absolute', top: 1.5, left: '20%', right: '20%', height: 1.5,
+            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent)',
+            borderRadius: 999, pointerEvents: 'none',
+          }} />
+          <VideoIcon size={30} strokeWidth={2.2} color="#fff" />
         </button>
       </div>
 
