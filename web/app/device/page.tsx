@@ -271,21 +271,21 @@ function CircleBtn({ label, sub, icon, bg, size = 56, iconOnly = false, onClick 
         <span style={{
           color: '#fff',
           fontFamily: '"Noto Serif TC", "Newsreader", serif',
-          fontSize: 13, fontWeight: 500,
+          fontSize: 13, fontWeight: 600,
           letterSpacing: '0.03em',
-          textShadow: '0 2px 8px rgba(0,0,0,0.7)',
+          textShadow: '0 3px 14px rgba(0,0,0,0.95), 0 1px 3px rgba(0,0,0,0.85), 0 0 4px rgba(0,0,0,0.7)',
         }}>
           {label}
         </span>
       )}
       {!iconOnly && sub && (
         <span style={{
-          color: 'rgba(255,253,248,0.62)',
+          color: 'rgba(255,253,248,0.85)',
           fontFamily: '"JetBrains Mono", monospace',
-          fontSize: 10, fontWeight: 500,
+          fontSize: 10, fontWeight: 600,
           letterSpacing: '0.14em',
           marginTop: -4,
-          textShadow: '0 1px 4px rgba(0,0,0,0.6)',
+          textShadow: '0 2px 10px rgba(0,0,0,0.95), 0 1px 3px rgba(0,0,0,0.85)',
         }}>
           {sub}
         </span>
