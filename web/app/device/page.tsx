@@ -602,43 +602,16 @@ function ScreenMedication() {
 function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
   return (
     <>
-      {/* 暖光室內漸層背景 · 模擬兒子家中環境 */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        background: `
-          radial-gradient(ellipse at 30% 25%, rgba(248,210,165,0.45) 0%, transparent 55%),
-          radial-gradient(ellipse at 75% 70%, rgba(201,104,95,0.18) 0%, transparent 50%),
-          linear-gradient(160deg, #3D2E22 0%, #2A1F18 45%, #1F1A14 100%)
-        `,
-      }} />
-
-      {/* 兒子大華頭像 placeholder · 大圓 + 漸層 + 「華」字 + 暖光 ring */}
-      <div style={{
-        position: 'absolute', top: '50%', left: '50%',
-        transform: 'translate(-50%, -56%)',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16,
-      }}>
-        <div style={{
-          width: 220, height: 220, borderRadius: '50%',
-          background: 'linear-gradient(135deg, #E5BFB8 0%, #C9685F 60%, #A04A45 100%)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          color: '#fff',
-          fontFamily: '"Noto Serif TC", serif',
-          fontSize: 96, fontWeight: 500,
-          boxShadow: '0 24px 60px rgba(201,104,95,0.45), 0 0 0 6px rgba(255,253,248,0.08), inset 0 3px 0 rgba(255,255,255,0.25)',
-        }}>華</div>
-        <span style={{
-          color: 'rgba(255,253,248,0.92)',
-          fontFamily: '"Newsreader", "Noto Serif TC", serif',
-          fontSize: 28, fontWeight: 500, letterSpacing: '0.02em',
-          textShadow: '0 2px 8px rgba(0,0,0,0.5)',
-        }}>兒子 · 大華</span>
-        <span style={{
-          color: 'rgba(255,253,248,0.62)',
-          fontFamily: '"JetBrains Mono", monospace',
-          fontSize: 12, letterSpacing: '0.18em',
-        }}>HE PICKED UP · 02:14</span>
-      </div>
+      {/* 兒子大華真實照片 · 全螢幕背景 · 設計稿規範「兒子半身照背景」 */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/family/dahua-son.png"
+        alt="兒子 · 大華"
+        style={{
+          position: 'absolute', inset: 0,
+          width: '100%', height: '100%', objectFit: 'cover',
+        }}
+      />
 
       {/* LIVE 玻璃膠囊 · 紅脈動點 + 計時 · 在主時間 chip 旁 */}
       <div style={{
@@ -660,43 +633,28 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
         LIVE · 02:14
       </div>
 
-      {/* PIP 玻璃框 · 阿姨自己鏡頭 placeholder */}
+      {/* PIP 玻璃框 · 王阿姨真實照片自拍鏡頭 */}
       <div style={{
         position: 'absolute', top: 92, right: 32,
         width: 196, height: 138, borderRadius: 16,
         overflow: 'hidden',
-        background: 'linear-gradient(135deg, #3A2820 0%, #1F1B17 100%)',
         border: '1.5px solid rgba(255,255,255,0.22)',
         boxShadow: '0 12px 36px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.15)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        flexDirection: 'column', gap: 6,
       }}>
-        {/* 阿姨頭像 placeholder · 暖色漸層圓 + 「阿」字 */}
-        <div style={{
-          width: 54, height: 54, borderRadius: '50%',
-          background: 'linear-gradient(135deg, #E5BFB8, #C9685F)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          color: '#fff', fontFamily: '"Noto Serif TC", serif',
-          fontSize: 22, fontWeight: 500,
-          boxShadow: '0 4px 12px rgba(201,104,95,0.4)',
-        }}>阿</div>
-        <span style={{ color: 'rgba(255,255,255,0.78)', fontFamily: 'Inter', fontSize: 11, letterSpacing: '0.06em' }}>我 · 王阿姨</span>
-      </div>
-
-      {/* 中央狀態提示（不擋臉、低調） */}
-      <div style={{
-        position: 'absolute', top: 80, left: '50%',
-        transform: 'translateX(-50%)',
-        padding: '6px 16px',
-        background: 'rgba(36,28,20,0.55)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-        borderRadius: 999,
-        color: 'rgba(255,255,255,0.88)',
-        fontFamily: '"Noto Sans TC", sans-serif',
-        fontSize: 13, fontWeight: 500, letterSpacing: '0.04em',
-      }}>
-        通話中 · 兒子 · 大華
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/family/wang-aunt.png"
+          alt="王阿姨自拍 PIP"
+          style={{
+            width: '100%', height: '100%', objectFit: 'cover',
+          }}
+        />
+        <span style={{
+          position: 'absolute', bottom: 6, left: 10,
+          color: '#fff', fontFamily: 'Inter', fontSize: 10, fontWeight: 600,
+          letterSpacing: '0.08em',
+          textShadow: '0 1px 3px rgba(0,0,0,0.7)',
+        }}>我</span>
       </div>
 
       {/* 底部 3 顆按鈕 · 玻璃化圓鈕 + 中央紅膠囊 */}
@@ -785,12 +743,6 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
         </div>
       </div>
 
-      {/* Demo placeholder note */}
-      <div style={{
-        position: 'absolute', bottom: 28, left: 32,
-        fontFamily: '"JetBrains Mono", monospace', fontSize: 10,
-        color: 'rgba(255,255,255,0.55)', letterSpacing: '0.18em',
-      }}>● 示範影像 · 真實版接通兒子大華視訊</div>
     </>
   );
 }
