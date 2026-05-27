@@ -32,6 +32,9 @@ const T = {
   muted: '#9B8E80',
 } as const;
 
+// type 保留 12 個（避免大量 compile error）但 SCREENS 只列設計稿有的 8 個
+// 砍掉：04 純語音對話 / 06 陪伴聊天確認 / 11 今日回顧 / 12 晚安模式
+// 這 4 個畫面不在設計稿 · 不展示給面試官看
 type ScreenId =
   | 'standby' | 'aria-here' | 'nudge' | 'engage' | 'health'
   | 'companion-confirm' | 'companion' | 'medication'
@@ -41,15 +44,11 @@ const SCREENS: { id: ScreenId; label: string; mood: 'sage' | 'amber' | 'rose' | 
   { id: 'standby', label: '01 · 待機 Standby', mood: 'dark' },
   { id: 'aria-here', label: '02 · 莉莉在 Aria Here', mood: 'sage' },
   { id: 'nudge', label: '03 · 主動關懷 Nudge', mood: 'rose' },
-  { id: 'engage', label: '04 · 純語音對話 Engage', mood: 'amber' },
   { id: 'health', label: '05 · 健康關心 Check-in', mood: 'sage' },
-  { id: 'companion-confirm', label: '06 · 陪伴聊天 · 確認', mood: 'rose' },
-  { id: 'companion', label: '07 · 陪伴聊天 · 計時中', mood: 'rose' },
+  { id: 'companion', label: '07 · 陪伴聊天', mood: 'rose' },
   { id: 'medication', label: '08 · 用藥提醒', mood: 'amber' },
   { id: 'family-call', label: '09 · 家人視訊', mood: 'amber' },
   { id: 'menu', label: '10 · 選單', mood: 'sage' },
-  { id: 'reflect', label: '11 · 今日回顧', mood: 'sage' },
-  { id: 'goodnight', label: '12 · 晚安模式', mood: 'dark' },
 ];
 
 function moodToTint(mood: string) {
@@ -858,12 +857,12 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
 function ScreenMenu({ onPick }: { onPick: (s: ScreenId) => void }) {
   type Item = { label: string; sub: string; voice: string; icon: React.ReactNode; tint: string; screen?: ScreenId };
   const items: Item[] = [
-    { label: '健康報告', sub: '每週 · 月 · 季', voice: "說『健康』", icon: <BarChart3 size={26} strokeWidth={1.6} />, tint: T.amber, screen: 'reflect' },
+    { label: '健康報告', sub: '每週 · 月 · 季', voice: "說『健康』", icon: <BarChart3 size={26} strokeWidth={1.6} />, tint: T.amber },
     { label: '今日用藥', sub: '18:00 · 剩 1 顆', voice: "說『吃藥』", icon: <Pill size={26} strokeWidth={1.6} />, tint: T.amber, screen: 'medication' },
     { label: '藥箱監測', sub: '血壓藥剩 6 天', voice: "說『藥箱』", icon: <Search size={26} strokeWidth={1.6} />, tint: T.sage },
     { label: '環境感測', sub: '25° · 濕度 58%', voice: "說『環境』", icon: <Thermometer size={26} strokeWidth={1.6} />, tint: T.sage },
     { label: '聯絡家人', sub: '聯絡 · 觸發狀態', voice: "說『家人』", icon: <Users size={26} strokeWidth={1.6} />, tint: T.roseDeep, screen: 'family-call' },
-    { label: '陪伴聊天', sub: '角色 · 充值 · 剩 90 分', voice: "說『陪伴』", icon: <MessageCircle size={26} strokeWidth={1.6} />, tint: T.amber, screen: 'companion-confirm' },
+    { label: '陪伴聊天', sub: '角色 · 充值 · 剩 90 分', voice: "說『陪伴』", icon: <MessageCircle size={26} strokeWidth={1.6} />, tint: T.amber, screen: 'companion' },
     { label: '連線裝置', sub: 'Wi-Fi · 藍芽 · 手錶', voice: "說『裝置』", icon: <Radio size={26} strokeWidth={1.6} />, tint: T.sage },
     { label: '個人資料', sub: '名稱 · 年齡 · 體態', voice: "說『我的』", icon: <User size={26} strokeWidth={1.6} />, tint: T.roseDeep },
   ];
@@ -1197,32 +1196,24 @@ export default function DevicePage() {
             </div>
           )}
 
-          {/* Screen Content */}
+          {/* Screen Content · 只 render 設計稿有的 8 個畫面 */}
+          {/* 砍掉：04 純語音 / 06 確認彈窗 / 11 今日回顧 / 12 晚安模式 — 都不在設計稿 */}
           {screen === 'standby' && <ScreenStandby time={time} onWake={() => setScreen('aria-here')} />}
           {screen === 'aria-here' && <ScreenAriaHere />}
           {screen === 'nudge' && <ScreenNudge />}
-          {screen === 'engage' && <ScreenEngage />}
           {screen === 'health' && <ScreenHealth />}
-          {screen === 'companion-confirm' && (
-            <ScreenCompanionConfirm
-              onConfirm={() => setScreen('companion')}
-              onCancel={() => setScreen('aria-here')}
-            />
-          )}
           {screen === 'companion' && <ScreenCompanion onEnd={() => setScreen('aria-here')} />}
           {screen === 'medication' && <ScreenMedication />}
           {screen === 'family-call' && <ScreenFamilyCall onEnd={() => setScreen('aria-here')} />}
           {screen === 'menu' && <ScreenMenu onPick={setScreen} />}
-          {screen === 'reflect' && <ScreenReflect />}
-          {screen === 'goodnight' && <ScreenGoodnight time={time} />}
 
           {/* === 底部 3 顆 iconOnly 暗色玻璃圓鈕 + 中央 VoicePill · 對齊設計稿 02 / 03 / 05 主畫面 === */}
           {/* 左下 1 顆 chat / 中央 VoicePill / 右下兩顆上下疊（X·返回 + phone·家人）— 注意：menu 鈕在主畫面但右下顯示為 X*/}
-          {screen !== 'standby' && screen !== 'goodnight' && screen !== 'menu' && screen !== 'family-call' && screen !== 'companion-confirm' && screen !== 'companion' && (
+          {screen !== 'standby' && screen !== 'menu' && screen !== 'family-call' && screen !== 'companion' && (
             <>
-              {/* 左下 · 陪伴聊天 iconOnly 56px */}
+              {/* 左下 · 陪伴聊天 iconOnly 56px · 直接進計時、不確認 */}
               <div style={{ position: 'absolute', bottom: 26, left: 26, pointerEvents: 'auto', zIndex: 5 }}>
-                <CircleBtn iconOnly size={56} icon={<MessageCircle size={24} strokeWidth={2} color="#fff" />} onClick={() => setScreen('companion-confirm')} />
+                <CircleBtn iconOnly size={56} icon={<MessageCircle size={24} strokeWidth={2} color="#fff" />} onClick={() => setScreen('companion')} />
               </div>
               {/* 中央 · VoicePill */}
               <div style={{ position: 'absolute', bottom: 36, left: '50%', transform: 'translateX(-50%)', pointerEvents: 'auto', zIndex: 5 }}>
