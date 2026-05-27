@@ -55,12 +55,13 @@ function moodToTint(mood: string) {
   return 'rgba(0,0,0,0)';
 }
 
-function screenToVideo(s: ScreenId) {
+// 比照 Anthropic Design 設計稿：每個畫面背景是靜態 lifestyle 真人照片（不是 mp4）
+// 只有「說話」場景（engage / companion）才用 mp4 做嘴型對嘴
+function screenToBg(s: ScreenId): { type: 'img' | 'video'; src: string } | null {
   if (s === 'standby' || s === 'goodnight' || s === 'family-call' || s === 'menu' || s === 'reflect') return null;
-  if (s === 'engage' || s === 'companion') return '/lily/lily-talking.mp4';
-  if (s === 'health' || s === 'nudge') return '/lily/lily-greeting.mp4';
-  if (s === 'medication') return '/lily/lily-listening.mp4';
-  return '/lily/lily-idle.mp4';
+  if (s === 'engage' || s === 'companion') return { type: 'video', src: '/lily/lily-talking.mp4' };
+  // 其餘畫面用 lily-portrait.png 靜態（跟設計稿一致）
+  return { type: 'img', src: '/lily/lily-portrait.png' };
 }
 
 const FONTS_LINK = (
@@ -842,7 +843,7 @@ export default function DevicePage() {
   }, []);
 
   const currentScreen = SCREENS.find(s => s.id === screen)!;
-  const videoSrc = screenToVideo(screen);
+  const bg = screenToBg(screen);
 
   return (
     <>
@@ -865,19 +866,28 @@ export default function DevicePage() {
             boxShadow: '0 60px 120px rgba(0,0,0,0.6), 0 0 0 8px #2A201A, 0 0 0 10px #14100D',
           }}
         >
-          {/* Lily Video Background */}
-          {videoSrc && (
+          {/* Lifestyle 真人照片 / 說話 mp4 背景 · 比照設計稿 */}
+          {bg && bg.type === 'video' && (
             <video
-              key={videoSrc}
+              key={bg.src}
               autoPlay loop muted playsInline
-              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.96) saturate(1.05)' }}
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
             >
-              <source src={videoSrc} type="video/mp4" />
+              <source src={bg.src} type="video/mp4" />
             </video>
           )}
+          {bg && bg.type === 'img' && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={bg.src}
+              src={bg.src}
+              alt="Lily"
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+          )}
 
-          {/* Mood Tint */}
-          <div style={{ position: 'absolute', inset: 0, background: moodToTint(currentScreen.mood), pointerEvents: 'none', mixBlendMode: 'overlay' }} />
+          {/* Mood Tint · 弱化、不擋臉 */}
+          <div style={{ position: 'absolute', inset: 0, background: moodToTint(currentScreen.mood), pointerEvents: 'none', mixBlendMode: 'soft-light', opacity: 0.6 }} />
 
           {/* Status Bar (top-left time + date) */}
           {screen !== 'standby' && screen !== 'goodnight' && (
