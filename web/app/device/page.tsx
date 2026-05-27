@@ -291,7 +291,7 @@ function CircleBtn({ label, sub, icon, bg, size = 56, iconOnly = false, onClick 
       <div
         style={{
           width: size, height: size, borderRadius: '50%',
-          background: 'rgba(36,28,20,0.52)',
+          background: bg ?? 'rgba(36,28,20,0.52)',
           backdropFilter: 'blur(24px) saturate(180%)',
           WebkitBackdropFilter: 'blur(24px) saturate(180%)',
           border: '1px solid rgba(255,255,255,0.14)',
@@ -984,7 +984,9 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
             width: 8, height: 8, borderRadius: '50%', background: '#fff',
             animation: 'pulse 1.4s ease-in-out infinite',
           }} />
-          LIVE · 02:14
+          <span>LIVE</span>
+          <span style={{ width: 1, height: 12, background: 'rgba(255,255,255,0.5)', display: 'inline-block', margin: '0 2px' }} />
+          <span>02:14</span>
         </div>
         <Wifi size={18} strokeWidth={2} color="#fff" style={{ filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.55))' }} />
       </div>
@@ -1009,16 +1011,16 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
         />
       </div>
 
-      {/* 底部 4 顆按鈕 · 對齊設計稿：mic / camera-off / chat / 紅小圓 phone-hangup */}
+      {/* 底部 4 顆按鈕 · 對齊設計稿：mic / camera-off / chat / 紅小圓 phone（無斜線）· 前三顆淺灰玻璃 */}
       <div style={{
         position: 'absolute', bottom: 60, left: '50%',
         transform: 'translateX(-50%)',
         display: 'flex', gap: 18, alignItems: 'center',
       }}>
-        <CircleBtn iconOnly size={56} icon={<Mic size={22} strokeWidth={2} color="#fff" />} />
-        <CircleBtn iconOnly size={56} icon={<VideoOff size={22} strokeWidth={2} color="#fff" />} />
-        <CircleBtn iconOnly size={56} icon={<MessageCircle size={22} strokeWidth={2} color="#fff" />} />
-        <EndCallBtn icon={<PhoneOff size={26} strokeWidth={2.2} color="#fff" />} size={56} onClick={onEnd} />
+        <CircleBtn iconOnly size={56} bg="rgba(255,255,255,0.22)" icon={<Mic size={22} strokeWidth={2} color="#fff" />} />
+        <CircleBtn iconOnly size={56} bg="rgba(255,255,255,0.22)" icon={<VideoOff size={22} strokeWidth={2} color="#fff" />} />
+        <CircleBtn iconOnly size={56} bg="rgba(255,255,255,0.22)" icon={<MessageCircle size={22} strokeWidth={2} color="#fff" />} />
+        <EndCallBtn icon={<Phone size={26} strokeWidth={2.2} color="#fff" />} size={56} onClick={onEnd} />
       </div>
 
       {/* 左側 VOLUME · 對齊設計稿 09（+/- 按鈕 + 直立棒 + 小圓滑塊） */}
