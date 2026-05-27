@@ -370,7 +370,8 @@ function GlassChip({ children, primary = false, icon, onClick }: { children: Rea
     <button
       onClick={onClick}
       style={{
-        padding: icon ? '10px 18px 10px 14px' : '10px 20px',
+        padding: icon ? '14px 26px 14px 20px' : '14px 28px',
+        minWidth: 130,
         background: primary
           ? 'linear-gradient(155deg, rgba(143,168,151,0.92) 0%, rgba(122,148,130,0.86) 60%, rgba(95,122,104,0.88) 100%)'
           : 'transparent',
@@ -601,10 +602,13 @@ function ScreenNudge() {
           </span>
           阿姨、您今天<span style={{ color: T.roseDeep, fontWeight: 600 }}>活動量不太夠</span>。<br />
           要不要出去走走？今天再走 <span style={{ color: T.amber, fontWeight: 600 }}>1,000 步</span>、身體比較不會活動量太低喔。
-          {/* === 對話泡內 · 兩顆 sage 玻璃膠囊選項 === */}
-          <div style={{ display: 'flex', gap: 10, marginTop: 14 }}>
-            <GlassChip primary>好、看看</GlassChip>
-            <GlassChip>等一下</GlassChip>
+          {/* === 對話泡內 · 兩顆 sage 玻璃膠囊選項 + hint === */}
+          <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid rgba(31,27,23,0.10)' }}>
+            <div style={{ fontFamily: '"Noto Sans TC", sans-serif', fontSize: 12, fontWeight: 600, color: T.ink3, letterSpacing: '0.02em', marginBottom: 10 }}>直接說，或選一個：</div>
+            <div style={{ display: 'flex', gap: 12 }}>
+              <GlassChip primary>好、看看</GlassChip>
+              <GlassChip>等一下</GlassChip>
+            </div>
           </div>
         </GlassBubble>
       </div>
@@ -647,10 +651,13 @@ function ScreenHealth() {
           </span>
           <span style={{ fontSize: 15, color: T.ink2 }}>早安王阿姨～</span><br />
           <span style={{ color: T.amber, fontWeight: 600, fontSize: 22, lineHeight: 1.3, display: 'inline-block', marginTop: 4 }}>昨晚睡得怎麼樣？</span>
-          {/* === 對話泡內 · 兩顆 sage 玻璃膠囊選項 === */}
-          <div style={{ display: 'flex', gap: 10, marginTop: 14 }}>
-            <GlassChip primary>睡得好</GlassChip>
-            <GlassChip>沒睡好</GlassChip>
+          {/* === 對話泡內 · 兩顆 sage 玻璃膠囊選項 + hint === */}
+          <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid rgba(31,27,23,0.10)' }}>
+            <div style={{ fontFamily: '"Noto Sans TC", sans-serif', fontSize: 12, fontWeight: 600, color: T.ink3, letterSpacing: '0.02em', marginBottom: 10 }}>直接說，或選一個：</div>
+            <div style={{ display: 'flex', gap: 12 }}>
+              <GlassChip primary>睡得好</GlassChip>
+              <GlassChip>沒睡好</GlassChip>
+            </div>
           </div>
         </GlassBubble>
       </div>
@@ -865,10 +872,13 @@ function ScreenMedication() {
           <span style={{ fontSize: 15, color: T.ink2 }}>早安王阿姨～</span><br />
           <span style={{ color: T.amber, fontWeight: 600, fontSize: 22, lineHeight: 1.3, display: 'inline-block', marginTop: 4 }}>該吃藥囉。</span><br />
           <span style={{ fontSize: 15, color: T.ink2 }}>配藥槽已準備好兩顆，慢慢來。</span>
-          {/* === 對話泡內 · 兩顆 sage 玻璃膠囊選項（含 ✓ icon） === */}
-          <div style={{ display: 'flex', gap: 10, marginTop: 14 }}>
-            <GlassChip primary icon={<Check size={11} strokeWidth={3.2} color="#fff" />}>我吃了</GlassChip>
-            <GlassChip>等 15 分</GlassChip>
+          {/* === 對話泡內 · 兩顆 sage 玻璃膠囊選項 + hint（含 ✓ icon） === */}
+          <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid rgba(31,27,23,0.10)' }}>
+            <div style={{ fontFamily: '"Noto Sans TC", sans-serif', fontSize: 12, fontWeight: 600, color: T.ink3, letterSpacing: '0.02em', marginBottom: 10 }}>直接說，或選一個：</div>
+            <div style={{ display: 'flex', gap: 12 }}>
+              <GlassChip primary icon={<Check size={11} strokeWidth={3.2} color="#fff" />}>我吃了</GlassChip>
+              <GlassChip>等 15 分</GlassChip>
+            </div>
           </div>
         </GlassBubble>
       </div>
