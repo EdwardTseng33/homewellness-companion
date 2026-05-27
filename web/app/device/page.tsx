@@ -939,69 +939,61 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
   return (
     <>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      {/* 背景：模糊同一張照片填滿 · 視訊通話常見技法 · 取代之前 cover zoom 把臉撐爆的問題 */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        backgroundImage: 'url(/family/dahua-son.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center 20%',
-        filter: 'blur(36px) brightness(0.88)',
-        transform: 'scale(1.15)',
-      }} />
+      {/* 兒子大華 · cover 滿版 · objectPosition top 顯示頭頂到肩膀（不是只剩臉） */}
       <img
         src="/family/dahua-son.png"
         alt="兒子 · 大華"
         style={{
           position: 'absolute', inset: 0,
           width: '100%', height: '100%',
-          objectFit: 'contain',
-          objectPosition: 'center',
+          objectFit: 'cover',
+          objectPosition: 'center 12%',
         }}
       />
 
-      {/* 左上時間 · 對齊設計稿 09 左上 15:08 */}
+      {/* 左上時間 · 對齊設計稿 09 · 緊貼頂部 + 左邊、小字 */}
       <div style={{
-        position: 'absolute', top: 24, left: 32,
+        position: 'absolute', top: 14, left: 22,
         color: '#fff',
         fontFamily: '"Newsreader", serif',
-        fontSize: 22, fontWeight: 500, letterSpacing: '0.01em',
+        fontSize: 18, fontWeight: 500, letterSpacing: '0.01em',
         textShadow: '0 2px 10px rgba(0,0,0,0.55)',
+        zIndex: 7,
       }}>15:08</div>
 
-      {/* LIVE 玻璃膠囊 + wifi icon · 對齊設計稿 09 右上角 · 兩個元素並排 */}
+      {/* LIVE 紅膠囊 + wifi icon · 對齊設計稿 09 · 緊貼右上、wifi 在最右 */}
       <div style={{
-        position: 'absolute', top: 24, right: 240,
-        display: 'flex', alignItems: 'center', gap: 12,
+        position: 'absolute', top: 14, right: 22,
+        display: 'flex', alignItems: 'center', gap: 10,
+        zIndex: 7,
       }}>
         <div style={{
-          display: 'flex', alignItems: 'center', gap: 10,
-          padding: '8px 16px',
+          display: 'flex', alignItems: 'center', gap: 8,
+          padding: '6px 12px',
           background: 'rgba(216,90,85,0.92)', color: '#fff',
-          backdropFilter: 'blur(14px) saturate(140%)',
-          WebkitBackdropFilter: 'blur(14px) saturate(140%)',
           borderRadius: 999,
           fontFamily: '"JetBrains Mono", monospace',
-          fontSize: 12, fontWeight: 700, letterSpacing: '0.18em',
-          boxShadow: '0 6px 20px rgba(216,90,85,0.45), inset 0 1px 0 rgba(255,255,255,0.25)',
+          fontSize: 11, fontWeight: 700, letterSpacing: '0.16em',
+          boxShadow: '0 4px 12px rgba(216,90,85,0.35)',
         }}>
           <span style={{
-            width: 8, height: 8, borderRadius: '50%', background: '#fff',
+            width: 6, height: 6, borderRadius: '50%', background: '#fff',
             animation: 'pulse 1.4s ease-in-out infinite',
           }} />
           <span>LIVE</span>
-          <span style={{ width: 1, height: 12, background: 'rgba(255,255,255,0.5)', display: 'inline-block', margin: '0 2px' }} />
+          <span style={{ width: 1, height: 10, background: 'rgba(255,255,255,0.55)', display: 'inline-block', margin: '0 2px' }} />
           <span>02:14</span>
         </div>
-        <Wifi size={18} strokeWidth={2} color="#fff" style={{ filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.55))' }} />
+        <Wifi size={16} strokeWidth={2} color="#fff" style={{ filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.55))' }} />
       </div>
 
-      {/* PIP 玻璃框 · 王阿姨 · 右上 */}
+      {/* PIP 王阿姨 · 設計稿是「直立矩形 4:5」（窄高）· 不是橫躺！ */}
       <div style={{
-        position: 'absolute', top: 60, right: 32,
-        width: 196, height: 138, borderRadius: 16,
+        position: 'absolute', top: 50, right: 26,
+        width: 132, height: 168, borderRadius: 14,
         overflow: 'hidden',
-        border: '1.5px solid rgba(255,255,255,0.22)',
-        boxShadow: '0 12px 36px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.15)',
+        boxShadow: '0 8px 24px rgba(0,0,0,0.32)',
+        zIndex: 6,
       }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -1431,8 +1423,8 @@ export default function DevicePage() {
           {/* Mood Tint · 弱化、不擋臉 */}
           <div style={{ position: 'absolute', inset: 0, background: moodToTint(currentScreen.mood), pointerEvents: 'none', mixBlendMode: 'soft-light', opacity: 0.28 }} />
 
-          {/* Status Bar · 對齊設計稿：02/03 有日期、05/07/08/09 只時鐘 · 無「室溫 24°」 */}
-          {screen !== 'standby' && screen !== 'goodnight' && (
+          {/* Status Bar · 對齊設計稿：02/03 有日期、05/07/08 只時鐘 · 09 自己畫不走這條 · 無「室溫 24°」 */}
+          {screen !== 'standby' && screen !== 'goodnight' && screen !== 'family-call' && (
             <div style={{
               position: 'absolute', top: 24, left: 32,
               display: 'flex', alignItems: 'baseline', gap: 12,
