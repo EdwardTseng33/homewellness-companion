@@ -489,7 +489,7 @@ function ScreenStandby({ time, onWake }: { time: string; onWake: () => void }) {
         fontSize: 11, letterSpacing: '0.18em',
         color: T.paper, opacity: 0.78, fontWeight: 700,
       }}>
-        <span style={{ fontSize: 13 }}>⌃</span>
+        <Wifi size={14} strokeWidth={2} />
         已連線
       </div>
 
@@ -911,7 +911,7 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
           position: 'absolute', inset: 0,
           width: '100%', height: '100%',
           objectFit: 'cover',
-          objectPosition: 'center 38%',
+          objectPosition: 'center 30%',
         }}
       />
 
@@ -1140,29 +1140,31 @@ function ScreenMenu({ onPick }: { onPick: (s: ScreenId) => void }) {
         <VoicePill />
       </div>
 
-      {/* 左下 · 緊急聯絡 紅色 iconOnly 56px */}
-      <button
-        onClick={() => alert('（demo）緊急聯絡已撥出、人工確認後通報 119')}
-        aria-label="緊急聯絡"
-        style={{
-          position: 'absolute', bottom: 26, left: 26,
-          width: 56, height: 56, borderRadius: '50%',
-          background: 'rgba(216,90,85,0.92)',
-          backdropFilter: 'blur(20px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-          border: '1px solid rgba(255,255,255,0.18)',
-          color: '#fff', cursor: 'pointer',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 8px 22px rgba(216,90,85,0.42)',
-        }}
-      >
-        <AlertCircle size={24} strokeWidth={2.2} color="#fff" />
-      </button>
+      {/* 左下 · 緊急聯絡 紅圓 + label */}
+      <div style={{ position: 'absolute', bottom: 26, left: 26, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+        <button
+          onClick={() => alert('（demo）緊急聯絡已撥出、人工確認後通報 119')}
+          aria-label="緊急聯絡"
+          style={{
+            width: 56, height: 56, borderRadius: '50%',
+            background: 'rgba(216,90,85,0.92)',
+            backdropFilter: 'blur(20px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+            border: '1px solid rgba(255,255,255,0.18)',
+            color: '#fff', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 8px 22px rgba(216,90,85,0.42)',
+          }}
+        >
+          <AlertCircle size={24} strokeWidth={2.2} color="#fff" />
+        </button>
+        <span style={{ color: '#fff', fontFamily: '"Noto Serif TC", serif', fontSize: 13, fontWeight: 500, textShadow: '0 2px 8px rgba(0,0,0,0.7)' }}>緊急聯絡</span>
+      </div>
 
-      {/* 右下 · X 關閉 + Phone 呼叫家人 上下疊放 iconOnly 56px */}
-      <div style={{ position: 'absolute', bottom: 26, right: 26, display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <CircleBtn iconOnly size={56} icon={<X size={22} strokeWidth={2} color="#fff" />} onClick={() => onPick('aria-here')} />
-        <CircleBtn iconOnly size={56} icon={<Phone size={22} strokeWidth={2} color="#fff" />} onClick={() => onPick('family-call')} />
+      {/* 右下 · 返回 X + 呼叫家人 phone · 上下疊放 + label */}
+      <div style={{ position: 'absolute', bottom: 26, right: 26, display: 'flex', flexDirection: 'column', gap: 14, alignItems: 'center' }}>
+        <CircleBtn size={56} icon={<X size={22} strokeWidth={2} color="#fff" />} label="返回" onClick={() => onPick('aria-here')} />
+        <CircleBtn size={56} icon={<Phone size={22} strokeWidth={2} color="#fff" />} label="呼叫家人" onClick={() => onPick('family-call')} />
       </div>
     </>
   );
@@ -1406,11 +1408,17 @@ export default function DevicePage() {
           {/* 左下 1 顆 chat / 中央 VoicePill / 右下兩顆上下疊（X·返回 + phone·家人）— 注意：menu 鈕在主畫面但右下顯示為 X*/}
           {screen !== 'standby' && screen !== 'menu' && screen !== 'family-call' && screen !== 'companion' && (
             <>
-              {/* 左下 · 陪伴聊天 iconOnly 56px · 直接進計時、不確認 */}
+              {/* 左下 · 陪伴聊天 icon + label + sub「剩 90 分」· 對齊設計稿主畫面 */}
               <div style={{ position: 'absolute', bottom: 26, left: 26, pointerEvents: 'auto', zIndex: 5 }}>
-                <CircleBtn iconOnly size={56} icon={<MessageCircle size={24} strokeWidth={2} color="#fff" />} onClick={() => setScreen('companion')} />
+                <CircleBtn
+                  size={56}
+                  icon={<MessageCircle size={24} strokeWidth={2} color="#fff" />}
+                  label="陪伴聊天"
+                  sub="剩 90 分"
+                  onClick={() => setScreen('companion')}
+                />
               </div>
-              {/* 中央 · VoicePill · context-aware 副字 · 對齊設計稿 02 / 03 / 05 / 07-medication */}
+              {/* 中央 · VoicePill · context-aware 副字 */}
               <div style={{ position: 'absolute', bottom: 36, left: '50%', transform: 'translateX(-50%)', pointerEvents: 'auto', zIndex: 5 }}>
                 <VoicePill prompt={(() => {
                   if (screen === 'nudge') return '說「好、看看」或「等一下」';
@@ -1419,10 +1427,20 @@ export default function DevicePage() {
                   return undefined;
                 })()} />
               </div>
-              {/* 右下 · menu + phone 上下疊放 iconOnly 56px */}
-              <div style={{ position: 'absolute', bottom: 26, right: 26, display: 'flex', flexDirection: 'column', gap: 12, pointerEvents: 'auto', zIndex: 5 }}>
-                <CircleBtn iconOnly size={56} icon={<Menu size={24} strokeWidth={2} color="#fff" />} onClick={() => setScreen('menu')} />
-                <CircleBtn iconOnly size={56} icon={<Phone size={24} strokeWidth={2} color="#fff" />} onClick={() => setScreen('family-call')} />
+              {/* 右下 · 選單 + 呼叫家人 上下疊放 含 label · 對齊設計稿主畫面 */}
+              <div style={{ position: 'absolute', bottom: 26, right: 26, display: 'flex', flexDirection: 'column', gap: 14, pointerEvents: 'auto', zIndex: 5, alignItems: 'center' }}>
+                <CircleBtn
+                  size={56}
+                  icon={<Menu size={24} strokeWidth={2} color="#fff" />}
+                  label="選單"
+                  onClick={() => setScreen('menu')}
+                />
+                <CircleBtn
+                  size={56}
+                  icon={<Phone size={24} strokeWidth={2} color="#fff" />}
+                  label="呼叫家人"
+                  onClick={() => setScreen('family-call')}
+                />
               </div>
             </>
           )}
