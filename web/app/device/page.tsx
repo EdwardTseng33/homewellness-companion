@@ -167,41 +167,76 @@ function SummaryPanel({ title, rows }: { title: string; rows: { label: string; v
 }
 
 function CircleBtn({ label, sub, icon, bg, size = 72, onClick }: { label: string; sub?: string; icon: React.ReactNode; bg: string; size?: number; onClick?: () => void }) {
+  // 設計稿 DESIGN_NOTES L45-48 規範：
+  // - 彩色 icon 圓盤：純色填滿（無 alpha）+ 微 outer shadow
+  // - CircleBtn 72px、含 1.5px 頂緣高光
+  // - 統一質感：純色按鈕加 inner gradient（光從上方來的真實感）+ outer ring + 大 shadow
+  const isAmber = bg === T.amber;
+  const isSage = bg === T.sage;
+  const isDark = typeof bg === 'string' && bg.includes('36,28,20');
+  // 純色按鈕加 inner gradient（光從上方來的真實立體感）· 設計稿「彩色 icon 圓盤」規範
+  const richBg = isAmber
+    ? 'linear-gradient(155deg, #E08A4C 0%, #D4712A 50%, #B85A1F 100%)'
+    : isSage
+    ? 'linear-gradient(155deg, #8FA897 0%, #7A9482 50%, #5F7A68 100%)'
+    : isDark
+    ? 'linear-gradient(155deg, #3A2E25 0%, #1F1B17 60%, #12100D 100%)'
+    : bg;
   return (
     <button
       onClick={onClick}
       style={{
-        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
         background: 'transparent', border: 'none', cursor: 'pointer',
         pointerEvents: 'auto',
+        padding: 0,
       }}
     >
       <div
         style={{
           width: size, height: size, borderRadius: '50%',
-          background: bg,
+          background: richBg,
           color: '#fff',
-          backdropFilter: 'blur(20px) saturate(140%)',
-          WebkitBackdropFilter: 'blur(20px) saturate(140%)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 10px 28px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
+          // outer ring（玻璃感 white halo）+ 大 shadow（飄起）+ inset top highlight（光從上面）
+          boxShadow: `
+            0 0 0 1.5px rgba(255,255,255,0.18),
+            0 14px 36px rgba(0,0,0,0.42),
+            0 4px 12px rgba(0,0,0,0.25),
+            inset 0 2px 0 rgba(255,255,255,0.32),
+            inset 0 -3px 8px rgba(0,0,0,0.18)
+          `,
           position: 'relative', overflow: 'hidden',
         }}
       >
+        {/* 頂緣 1.5px 高光膠線 · 設計稿規範 */}
         <div
           style={{
-            position: 'absolute', top: 0, left: '15%', right: '15%', height: 1,
-            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.65), transparent)',
+            position: 'absolute', top: 1.5, left: '20%', right: '20%', height: 1.5,
+            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent)',
             borderRadius: 999, pointerEvents: 'none',
           }}
         />
         <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{icon}</span>
       </div>
-      <span style={{ color: '#fff', fontFamily: '"Noto Sans TC", sans-serif', fontSize: 14, fontWeight: 600, letterSpacing: '0.02em', textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}>
+      <span style={{
+        color: '#fff',
+        fontFamily: '"Noto Serif TC", "Newsreader", serif',
+        fontSize: 15, fontWeight: 500,
+        letterSpacing: '0.03em',
+        textShadow: '0 2px 8px rgba(0,0,0,0.7), 0 1px 2px rgba(0,0,0,0.5)',
+      }}>
         {label}
       </span>
       {sub && (
-        <span style={{ color: T.amberSoft, fontFamily: '"JetBrains Mono", monospace', fontSize: 11, marginTop: -4, textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}>
+        <span style={{
+          color: 'rgba(255,253,248,0.78)',
+          fontFamily: '"JetBrains Mono", monospace',
+          fontSize: 10, fontWeight: 600,
+          letterSpacing: '0.18em',
+          marginTop: -6,
+          textShadow: '0 1px 4px rgba(0,0,0,0.6)',
+        }}>
           {sub}
         </span>
       )}
@@ -1118,30 +1153,30 @@ export default function DevicePage() {
               語音優先 + 按鈕並排輔助、VoicePill 仍中央主視覺 */}
           {screen !== 'standby' && screen !== 'goodnight' && screen !== 'menu' && screen !== 'family-call' && screen !== 'companion-confirm' && (
             <div style={{ position: 'absolute', bottom: 26, left: 26, right: 26, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', pointerEvents: 'none' }}>
-              {/* 左下 · 陪伴聊天 amber 72px 含「剩 82 分」副字 */}
+              {/* 左下 · 陪伴聊天 amber 72px 含「剩 82 分」副字 · 設計稿 CircleBtn 規範 */}
               <CircleBtn
                 label="陪伴聊天"
                 sub="剩 82 分"
-                icon={<MessageCircle size={28} strokeWidth={1.8} color="#fff" />}
+                icon={<MessageCircle size={32} strokeWidth={2.2} color="#fff" />}
                 bg={T.amber}
                 onClick={() => setScreen('companion-confirm')}
               />
               {/* 中央 · VoicePill 主視覺（語音優先） */}
-              <div style={{ pointerEvents: 'auto', marginBottom: 8 }}><VoicePill /></div>
-              {/* 右下 · 呼叫家人（底） + 選單（上）兩顆疊放 */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'flex-end', pointerEvents: 'auto' }}>
+              <div style={{ pointerEvents: 'auto', marginBottom: 16 }}><VoicePill /></div>
+              {/* 右下 · 呼叫家人 + 選單 兩顆 72px 並列 · 大小跟陪伴聊天統一 */}
+              <div style={{ display: 'flex', gap: 14, alignItems: 'flex-end', pointerEvents: 'auto' }}>
                 <CircleBtn
                   label="呼叫家人"
-                  icon={<Phone size={22} strokeWidth={1.8} color="#fff" />}
+                  icon={<Phone size={30} strokeWidth={2.2} color="#fff" />}
                   bg={T.sage}
-                  size={56}
+                  size={72}
                   onClick={() => setScreen('family-call')}
                 />
                 <CircleBtn
                   label="選單"
-                  icon={<Menu size={22} strokeWidth={1.8} color="#fff" />}
+                  icon={<Menu size={30} strokeWidth={2.2} color="#fff" />}
                   bg="rgba(36,28,20,0.78)"
-                  size={56}
+                  size={72}
                   onClick={() => setScreen('menu')}
                 />
               </div>
