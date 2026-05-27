@@ -502,7 +502,7 @@ function ScreenStandby({ time, onWake }: { time: string; onWake: () => void }) {
           fontSize: 220, fontWeight: 300,
           letterSpacing: '-0.04em', lineHeight: 1,
           color: T.paper,
-          textShadow: '0 0 60px rgba(234,221,199,0.10)',
+          textShadow: 'none',
         }}>
           {time}
         </div>
@@ -522,34 +522,22 @@ function ScreenStandby({ time, onWake }: { time: string; onWake: () => void }) {
           aria-label="點我喚醒"
           style={{
             marginTop: 56,
-            width: 96, height: 96, borderRadius: '50%',
-            background: 'linear-gradient(155deg, rgba(58,46,37,0.92) 0%, rgba(31,27,23,0.88) 60%, rgba(18,16,13,0.92) 100%)',
-            color: '#fff', border: 'none', cursor: 'pointer',
+            width: 132, height: 132, borderRadius: '50%',
+            background: 'rgba(36,28,20,0.66)',
+            backdropFilter: 'blur(24px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+            border: '1px solid rgba(255,255,255,0.14)',
+            color: '#fff', cursor: 'pointer',
             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-            gap: 4, padding: 0,
-            backdropFilter: 'blur(18px) saturate(140%)',
-            WebkitBackdropFilter: 'blur(18px) saturate(140%)',
-            boxShadow: '0 0 0 1.5px rgba(255,255,255,0.14), 0 16px 40px rgba(0,0,0,0.55), 0 4px 14px rgba(0,0,0,0.30), inset 0 2px 0 rgba(255,255,255,0.22), inset 0 -3px 8px rgba(0,0,0,0.30)',
-            position: 'relative', overflow: 'hidden',
+            gap: 8, padding: 0,
+            boxShadow: '0 12px 30px rgba(0,0,0,0.45)',
           }}
         >
-          {/* 頂緣高光 */}
-          <div style={{
-            position: 'absolute', top: 1.5, left: '22%', right: '22%', height: 1.2,
-            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.72), transparent)',
-            borderRadius: 999, pointerEvents: 'none',
-          }} />
-          {/* mic icon · 上半部 */}
-          <Mic size={28} strokeWidth={2.2} color="#fff" style={{ marginTop: 6 }} />
-          {/* 內含小膠囊「點我喚醒」 · 下半部 */}
+          <Mic size={32} strokeWidth={2} color="#fff" />
           <span style={{
-            marginTop: 2,
-            padding: '2px 10px', borderRadius: 999,
-            background: 'rgba(0,0,0,0.40)',
-            border: '1px solid rgba(255,255,255,0.14)',
-            fontFamily: '"JetBrains Mono", monospace',
-            fontSize: 9, fontWeight: 600,
-            color: 'rgba(255,253,248,0.92)',
+            fontFamily: '"Noto Sans TC", sans-serif',
+            fontSize: 13, fontWeight: 500,
+            color: 'rgba(255,253,248,0.94)',
             letterSpacing: '0.10em',
           }}>
             點我喚醒
@@ -833,18 +821,15 @@ function ScreenCompanion({ onEnd }: { onEnd: () => void }) {
           onClick={onEnd}
           style={{
             width: 56, height: 56, borderRadius: '50%',
-            background: 'linear-gradient(155deg, #E27772 0%, #D85A55 50%, #B83A35 100%)',
-            color: '#fff', border: 'none', cursor: 'pointer',
+            background: 'rgba(216,90,85,0.92)',
+            backdropFilter: 'blur(20px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+            border: '1px solid rgba(255,255,255,0.18)',
+            color: '#fff', cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 0 0 1px rgba(255,255,255,0.18), 0 10px 24px rgba(216,90,85,0.50), 0 3px 10px rgba(0,0,0,0.20), inset 0 1.5px 0 rgba(255,255,255,0.28), inset 0 -2px 6px rgba(0,0,0,0.18)',
-            position: 'relative',
+            boxShadow: '0 8px 22px rgba(216,90,85,0.42)',
           }}
         >
-          <div style={{
-            position: 'absolute', top: 1.5, left: '22%', right: '22%', height: 1.2,
-            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.78), transparent)',
-            borderRadius: 999, pointerEvents: 'none',
-          }} />
           <Square size={18} strokeWidth={0} fill="#fff" />
         </button>
       </div>
@@ -1136,17 +1121,15 @@ function ScreenMenu({ onPick }: { onPick: (s: ScreenId) => void }) {
         style={{
           position: 'absolute', bottom: 26, left: 26,
           width: 56, height: 56, borderRadius: '50%',
-          background: 'linear-gradient(155deg, #E27772 0%, #D85A55 50%, #B83A35 100%)',
-          color: '#fff', border: 'none', cursor: 'pointer',
+          background: 'rgba(216,90,85,0.92)',
+          backdropFilter: 'blur(20px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+          border: '1px solid rgba(255,255,255,0.18)',
+          color: '#fff', cursor: 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 0 0 1px rgba(255,255,255,0.18), 0 12px 30px rgba(216,90,85,0.55), 0 3px 10px rgba(0,0,0,0.20), inset 0 1.5px 0 rgba(255,255,255,0.28), inset 0 -2px 6px rgba(0,0,0,0.18)',
+          boxShadow: '0 8px 22px rgba(216,90,85,0.42)',
         }}
       >
-        <div style={{
-          position: 'absolute', top: 1.5, left: '22%', right: '22%', height: 1.2,
-          background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.78), transparent)',
-          borderRadius: 999, pointerEvents: 'none',
-        }} />
         <AlertCircle size={24} strokeWidth={2.2} color="#fff" />
       </button>
 
@@ -1343,7 +1326,7 @@ export default function DevicePage() {
           style={{
             width: 1280, height: 800, maxWidth: '100%', maxHeight: 'calc(100vh - 40px)', aspectRatio: '1280 / 800',
             borderRadius: 28, overflow: 'hidden', position: 'relative', background: T.void,
-            boxShadow: '0 60px 120px rgba(0,0,0,0.6), 0 0 0 8px #1F1B17, 0 0 0 10px #0a0807',
+            boxShadow: '0 24px 60px rgba(0,0,0,0.4)',
           }}
         >
           {/* Lifestyle 真人照片 / 說話 mp4 背景 · 比照設計稿 */}
