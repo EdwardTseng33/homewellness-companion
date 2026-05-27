@@ -625,7 +625,7 @@ function ScreenAriaHere() {
   );
 }
 
-function ScreenNudge() {
+function ScreenNudge({ onResolve }: { onResolve: () => void }) {
   return (
     <>
       <div style={{ position: 'absolute', top: '32%', left: 60 }}>
@@ -639,8 +639,8 @@ function ScreenNudge() {
           <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid rgba(31,27,23,0.10)' }}>
             <div style={{ fontFamily: '"Noto Sans TC", sans-serif', fontSize: 12, fontWeight: 600, color: T.ink3, letterSpacing: '0.02em', marginBottom: 10 }}>直接說，或選一個：</div>
             <div style={{ display: 'flex', gap: 12 }}>
-              <GlassChip primary>好、看看</GlassChip>
-              <GlassChip>等一下</GlassChip>
+              <GlassChip primary onClick={onResolve}>好、看看</GlassChip>
+              <GlassChip onClick={onResolve}>等一下</GlassChip>
             </div>
           </div>
         </GlassBubble>
@@ -674,7 +674,7 @@ function ScreenEngage() {
   );
 }
 
-function ScreenHealth() {
+function ScreenHealth({ onResolve }: { onResolve: () => void }) {
   return (
     <>
       <div style={{ position: 'absolute', top: '30%', left: 60 }}>
@@ -688,8 +688,8 @@ function ScreenHealth() {
           <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid rgba(31,27,23,0.10)' }}>
             <div style={{ fontFamily: '"Noto Sans TC", sans-serif', fontSize: 12, fontWeight: 600, color: T.ink3, letterSpacing: '0.02em', marginBottom: 10 }}>直接說，或選一個：</div>
             <div style={{ display: 'flex', gap: 12 }}>
-              <GlassChip primary>睡得好</GlassChip>
-              <GlassChip>沒睡好</GlassChip>
+              <GlassChip primary onClick={onResolve}>睡得好</GlassChip>
+              <GlassChip onClick={onResolve}>沒睡好</GlassChip>
             </div>
           </div>
         </GlassBubble>
@@ -894,7 +894,7 @@ function ScreenCompanion({ onEnd }: { onEnd: () => void }) {
   );
 }
 
-function ScreenMedication() {
+function ScreenMedication({ onResolve }: { onResolve: () => void }) {
   return (
     <>
       <div style={{ position: 'absolute', top: '30%', left: 60 }}>
@@ -909,8 +909,8 @@ function ScreenMedication() {
           <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid rgba(31,27,23,0.10)' }}>
             <div style={{ fontFamily: '"Noto Sans TC", sans-serif', fontSize: 12, fontWeight: 600, color: T.ink3, letterSpacing: '0.02em', marginBottom: 10 }}>直接說，或選一個：</div>
             <div style={{ display: 'flex', gap: 12 }}>
-              <GlassChip primary icon={<Check size={11} strokeWidth={3.2} color="#fff" />}>我吃了</GlassChip>
-              <GlassChip>等 15 分</GlassChip>
+              <GlassChip primary onClick={onResolve} icon={<Check size={11} strokeWidth={3.2} color="#fff" />}>我吃了</GlassChip>
+              <GlassChip onClick={onResolve}>等 15 分</GlassChip>
             </div>
           </div>
         </GlassBubble>
@@ -1434,10 +1434,10 @@ export default function DevicePage() {
           {/* 砍掉：04 純語音 / 06 確認彈窗 / 11 今日回顧 / 12 晚安模式 — 都不在設計稿 */}
           {screen === 'standby' && <ScreenStandby time={time} onWake={() => setScreen('aria-here')} />}
           {screen === 'aria-here' && <ScreenAriaHere />}
-          {screen === 'nudge' && <ScreenNudge />}
-          {screen === 'health' && <ScreenHealth />}
+          {screen === 'nudge' && <ScreenNudge onResolve={() => setScreen('aria-here')} />}
+          {screen === 'health' && <ScreenHealth onResolve={() => setScreen('aria-here')} />}
           {screen === 'companion' && <ScreenCompanion onEnd={() => setScreen('aria-here')} />}
-          {screen === 'medication' && <ScreenMedication />}
+          {screen === 'medication' && <ScreenMedication onResolve={() => setScreen('aria-here')} />}
           {screen === 'family-call' && <ScreenFamilyCall onEnd={() => setScreen('aria-here')} />}
           {screen === 'menu' && <ScreenMenu onPick={setScreen} />}
 
