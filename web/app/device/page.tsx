@@ -1322,15 +1322,6 @@ function DevPanel({ currentScreen, onSelect, onClose }: { currentScreen: ScreenI
         ))}
       </div>
       <div style={{ marginTop: 24, paddingTop: 18, borderTop: '1px solid rgba(255,253,248,0.1)' }}>
-        <div style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 11, letterSpacing: '0.18em', color: T.sage, fontWeight: 700, marginBottom: 10 }}>● 模擬 IOT 事件</div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
-          <button onClick={() => onSelect('nudge')} style={{ padding: '8px', background: 'rgba(229,191,184,0.15)', color: T.rose, border: '1px solid rgba(229,191,184,0.3)', borderRadius: 8, fontSize: 12, cursor: 'pointer', fontFamily: 'Inter' }}>PIR 觸發</button>
-          <button onClick={() => onSelect('medication')} style={{ padding: '8px', background: 'rgba(212,113,42,0.15)', color: T.amberSoft, border: '1px solid rgba(212,113,42,0.3)', borderRadius: 8, fontSize: 12, cursor: 'pointer', fontFamily: 'Inter' }}>用藥時間</button>
-          <button onClick={() => onSelect('companion')} style={{ padding: '8px', background: 'rgba(212,113,42,0.15)', color: T.amberSoft, border: '1px solid rgba(212,113,42,0.3)', borderRadius: 8, fontSize: 12, cursor: 'pointer', fontFamily: 'Inter' }}>語音輸入</button>
-          <button onClick={() => onSelect('family-call')} style={{ padding: '8px', background: 'rgba(122,148,130,0.15)', color: T.sageSoft, border: '1px solid rgba(122,148,130,0.3)', borderRadius: 8, fontSize: 12, cursor: 'pointer', fontFamily: 'Inter' }}>呼叫家人</button>
-        </div>
-      </div>
-      <div style={{ marginTop: 24, paddingTop: 18, borderTop: '1px solid rgba(255,253,248,0.1)' }}>
         <div style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 11, letterSpacing: '0.18em', color: T.rose, fontWeight: 700, marginBottom: 8 }}>● ABOUT</div>
         <div style={{ fontFamily: '"Noto Sans TC", sans-serif', fontSize: 12, color: T.ink3, lineHeight: 1.6 }}>
           CAREON Companion · POC v0.1<br />
