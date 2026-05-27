@@ -95,16 +95,13 @@ function moodToTint(mood: string) {
   return 'rgba(0,0,0,0)';
 }
 
-// 莉莉「在跟你說話」的畫面用 lily-talking.mp4（動態錄影、嘴型有動）
-// 其餘畫面（待機 / 沉默 / 選單）用靜態 portrait
-// 選單 menu 設計稿也是莉莉在背景 + 玻璃磁磚浮上（窗景哲學）
+// 每個說話畫面用對應的單一段預錄影片（含 lip-sync + 自然女聲）
+// 還沒生影片的畫面暫用靜態 portrait
 function screenToBg(s: ScreenId): { type: 'img' | 'video'; src: string } | null {
   if (s === 'standby' || s === 'goodnight' || s === 'family-call' || s === 'reflect') return null;
-  // 03 主動關懷 / 05 健康關心 / 07 陪伴聊天 / 08 用藥提醒 — 莉莉正在說話、用 mp4
-  if (s === 'nudge' || s === 'health' || s === 'companion' || s === 'medication' || s === 'engage') {
-    return { type: 'video', src: '/lily/lily-talking.mp4' };
-  }
-  // 02 莉莉在 / 10 選單 / companion-confirm — 靜止 portrait
+  // 02 莉莉在 — Edward 生好的講話影片
+  if (s === 'aria-here') return { type: 'video', src: '/lily/voice/02-aria-here.mp4' };
+  // 其餘 03 / 05 / 07 / 08 等影片生好後再接 · 暫用靜態 portrait
   return { type: 'img', src: '/lily/lily-portrait.png' };
 }
 
@@ -629,7 +626,6 @@ function ScreenAriaHere() {
 }
 
 function ScreenNudge() {
-  useLilyVoice('阿姨，您今天活動量不太夠。要不要出去走走？今天再走一千步，身體比較不會活動量太低喔。');
   return (
     <>
       <div style={{ position: 'absolute', top: '32%', left: 60 }}>
@@ -679,7 +675,6 @@ function ScreenEngage() {
 }
 
 function ScreenHealth() {
-  useLilyVoice('早安王阿姨，昨晚睡得怎麼樣？');
   return (
     <>
       <div style={{ position: 'absolute', top: '30%', left: 60 }}>
@@ -810,7 +805,6 @@ function ScreenCompanionConfirm({ onConfirm, onCancel }: { onConfirm: () => void
 
 // === 07 · 陪伴聊天 · 計時中 · 對齊設計稿（紅色小圓 stop icon + 計時中 chip） ===
 function ScreenCompanion({ onEnd }: { onEnd: () => void }) {
-  useLilyVoice('阿姨，我們聊聊天好嗎？想聊什麼都可以，我陪您。');
   return (
     <>
       <div style={{ position: 'absolute', bottom: 50, right: 32, width: 296 }}>
@@ -901,7 +895,6 @@ function ScreenCompanion({ onEnd }: { onEnd: () => void }) {
 }
 
 function ScreenMedication() {
-  useLilyVoice('早安王阿姨，該吃藥囉。配藥槽已經準備好兩顆，慢慢來。');
   return (
     <>
       <div style={{ position: 'absolute', top: '30%', left: 60 }}>
@@ -1400,12 +1393,13 @@ export default function DevicePage() {
             boxShadow: '0 24px 60px rgba(0,0,0,0.4)',
           }}
         >
-          {/* Lifestyle 真人照片 / 說話 mp4 背景 · 比照設計稿 */}
+          {/* Lifestyle 真人照片 / 說話 mp4 背景 · 比照設計稿
+              video 不 mute · 影片本身就是莉莉的聲音 · standby wake click 已 unlock autoplay-with-audio */}
           {bg && bg.type === 'video' && (
             <video
               key={bg.src}
               src={bg.src}
-              autoPlay loop muted playsInline preload="auto"
+              autoPlay loop playsInline preload="auto"
               poster="/lily/lily-portrait.png"
               style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
             />
