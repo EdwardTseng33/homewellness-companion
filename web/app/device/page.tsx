@@ -7,7 +7,7 @@
 import { useState, useEffect } from 'react';
 import {
   MessageCircle, Phone, PhoneOff, Menu, BarChart3, Pill, Search,
-  Thermometer, Users, Radio, User, Mic, Video as VideoIcon,
+  Thermometer, Users, Radio, User, Mic, Video as VideoIcon, VideoOff,
   AlertCircle, X, Check, AlertTriangle, Square, Plus, Minus,
 } from 'lucide-react';
 
@@ -821,8 +821,39 @@ function ScreenCompanion({ onEnd }: { onEnd: () => void }) {
           </div>
         </div>
       </div>
-      <div style={{ position: 'absolute', bottom: 130, left: '50%', transform: 'translateX(-50%)' }}>
-        <EndCallBtn icon={<Square size={26} strokeWidth={0} fill="#fff" />} size={72} onClick={onEnd} />
+      {/* 中央上方 · 陪伴中字幕 · mono · 低調 */}
+      <div style={{
+        position: 'absolute', top: '50%', left: '50%',
+        transform: 'translate(-50%, -90px)',
+        fontFamily: '"JetBrains Mono", monospace',
+        fontSize: 11, fontWeight: 600, color: 'rgba(255,253,248,0.78)',
+        letterSpacing: '0.22em',
+        textShadow: '0 2px 10px rgba(0,0,0,0.65)',
+        pointerEvents: 'none',
+      }}>
+        ● 陪伴中 · 00:08
+      </div>
+      {/* 中央 · 小巧橘紅停止鈕 56px · 對齊設計稿 07-companion */}
+      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <button
+          aria-label="結束陪伴"
+          onClick={onEnd}
+          style={{
+            width: 56, height: 56, borderRadius: '50%',
+            background: 'linear-gradient(155deg, #E27772 0%, #D85A55 50%, #B83A35 100%)',
+            color: '#fff', border: 'none', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 0 0 1px rgba(255,255,255,0.18), 0 10px 24px rgba(216,90,85,0.50), 0 3px 10px rgba(0,0,0,0.20), inset 0 1.5px 0 rgba(255,255,255,0.28), inset 0 -2px 6px rgba(0,0,0,0.18), 0 0 30px rgba(216,90,85,0.30)',
+            position: 'relative',
+          }}
+        >
+          <div style={{
+            position: 'absolute', top: 1.5, left: '22%', right: '22%', height: 1.2,
+            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.78), transparent)',
+            borderRadius: 999, pointerEvents: 'none',
+          }} />
+          <Square size={18} strokeWidth={0} fill="#fff" />
+        </button>
       </div>
     </>
   );
@@ -932,7 +963,7 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
         display: 'flex', gap: 18, alignItems: 'center',
       }}>
         <CircleBtn iconOnly size={56} icon={<Mic size={24} strokeWidth={2} color="#fff" />} />
-        <CircleBtn iconOnly size={56} icon={<VideoIcon size={24} strokeWidth={2} color="#fff" />} />
+        <CircleBtn iconOnly size={56} icon={<VideoOff size={24} strokeWidth={2} color="#fff" />} />
         <CircleBtn iconOnly size={56} icon={<MessageCircle size={24} strokeWidth={2} color="#fff" />} />
         <EndCallBtn icon={<PhoneOff size={24} strokeWidth={2.2} color="#fff" />} size={56} onClick={onEnd} />
       </div>
@@ -1046,11 +1077,11 @@ function ScreenMenu({ onPick }: { onPick: (s: ScreenId) => void }) {
         </span>
       </div>
 
-      {/* 8 磁磚 4×2 grid · 中央區 */}
+      {/* 8 磁磚 4×2 grid · 中央區 · 對齊設計稿緊湊 · 留底中 VoicePill 空間 */}
       <div style={{
-        position: 'absolute', top: 100, left: 80, right: 80, bottom: 130,
+        position: 'absolute', top: 92, left: 80, right: 80, bottom: 170,
         display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gridTemplateRows: 'repeat(2, 1fr)',
-        gap: 14,
+        gap: 12,
       }}>
         {items.map((item, i) => (
           <button
@@ -1059,7 +1090,7 @@ function ScreenMenu({ onPick }: { onPick: (s: ScreenId) => void }) {
             style={{
               background: '#FFFEFA',
               border: '1px solid rgba(31,27,23,0.06)',
-              borderRadius: 18, padding: '14px 10px 22px',
+              borderRadius: 18, padding: '12px 10px 20px',
               cursor: item.screen ? 'pointer' : 'default',
               opacity: item.screen ? 1 : 0.82,
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', gap: 5,
@@ -1069,11 +1100,11 @@ function ScreenMenu({ onPick }: { onPick: (s: ScreenId) => void }) {
             }}
           >
             <div style={{
-              width: 42, height: 42, borderRadius: '50%',
+              width: 40, height: 40, borderRadius: '50%',
               background: item.tint, color: '#fff',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               boxShadow: '0 6px 16px ' + item.tint + '55',
-              marginBottom: 3,
+              marginBottom: 2,
             }}>{item.icon}</div>
             <span style={{
               fontFamily: '"Noto Serif TC", serif', fontSize: 16, fontWeight: 600, color: T.ink, letterSpacing: '0.01em',
@@ -1089,6 +1120,11 @@ function ScreenMenu({ onPick }: { onPick: (s: ScreenId) => void }) {
             }}>{item.voice}</span>
           </button>
         ))}
+      </div>
+
+      {/* 底中央 · VoicePill 「直接說、莉莉在聽」 · 對齊 10-menu 設計稿 */}
+      <div style={{ position: 'absolute', bottom: 92, left: '50%', transform: 'translateX(-50%)', zIndex: 4 }}>
+        <VoicePill />
       </div>
 
       {/* 左下 · 緊急聯絡 紅色 iconOnly 56px */}
