@@ -990,27 +990,38 @@ export default function DevicePage() {
           {screen === 'goodnight' && <ScreenGoodnight time={time} />}
 
           {/* Bottom Floating Buttons */}
-          {/* 底部 = 語音優先、按鈕極簡 · 中央 VoicePill 主視覺 / 右下選單最小化 */}
+          {/* 底部 4 元素 · 比照設計稿（DESIGN_NOTES L100-104）：
+              左下「陪伴聊天 amber 72px」+ 中央 VoicePill + 右下底「呼叫家人 sage 56px」+ 右下上「選單 56px」
+              語音優先 + 按鈕並排輔助、VoicePill 仍中央主視覺 */}
           {screen !== 'standby' && screen !== 'goodnight' && screen !== 'menu' && screen !== 'family-call' && (
-            <div style={{ position: 'absolute', bottom: 32, left: 0, right: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', pointerEvents: 'none' }}>
-              <div style={{ pointerEvents: 'auto' }}><VoicePill /></div>
-              <button
-                onClick={() => setScreen('menu')}
-                aria-label="選單"
-                style={{
-                  position: 'absolute', right: 32, bottom: 0,
-                  width: 44, height: 44, borderRadius: '50%',
-                  background: 'rgba(36,28,20,0.55)',
-                  backdropFilter: 'blur(14px) saturate(140%)',
-                  WebkitBackdropFilter: 'blur(14px) saturate(140%)',
-                  border: '1px solid rgba(255,255,255,0.12)',
-                  cursor: 'pointer', pointerEvents: 'auto',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  boxShadow: '0 4px 14px rgba(0,0,0,0.3)',
-                }}
-              >
-                <Menu size={18} strokeWidth={1.8} color="#fff" />
-              </button>
+            <div style={{ position: 'absolute', bottom: 26, left: 26, right: 26, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', pointerEvents: 'none' }}>
+              {/* 左下 · 陪伴聊天 amber 72px 含「剩 82 分」副字 */}
+              <CircleBtn
+                label="陪伴聊天"
+                sub="剩 82 分"
+                icon={<MessageCircle size={28} strokeWidth={1.8} color="#fff" />}
+                bg={T.amber}
+                onClick={() => setScreen('companion')}
+              />
+              {/* 中央 · VoicePill 主視覺（語音優先） */}
+              <div style={{ pointerEvents: 'auto', marginBottom: 8 }}><VoicePill /></div>
+              {/* 右下 · 呼叫家人（底） + 選單（上）兩顆疊放 */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'flex-end', pointerEvents: 'auto' }}>
+                <CircleBtn
+                  label="呼叫家人"
+                  icon={<Phone size={22} strokeWidth={1.8} color="#fff" />}
+                  bg={T.sage}
+                  size={56}
+                  onClick={() => setScreen('family-call')}
+                />
+                <CircleBtn
+                  label="選單"
+                  icon={<Menu size={22} strokeWidth={1.8} color="#fff" />}
+                  bg="rgba(36,28,20,0.78)"
+                  size={56}
+                  onClick={() => setScreen('menu')}
+                />
+              </div>
             </div>
           )}
 
