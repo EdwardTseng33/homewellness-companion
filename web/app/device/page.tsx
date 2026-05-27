@@ -17,7 +17,7 @@ const T = {
   ink: '#1F1B17',
   ink2: '#5A4F46',
   ink3: '#8A7F73',
-  glass: 'rgba(255,253,248,0.78)',
+  glass: 'rgba(255,253,248,0.36)',
   glassDeep: 'rgba(255,253,248,0.94)',
   glassDark: 'rgba(36,28,20,0.55)',
   glassDarkDeep: 'rgba(36,28,20,0.78)',
@@ -88,13 +88,13 @@ function GlassBubble({
         backdropFilter: 'blur(20px) saturate(140%)',
         WebkitBackdropFilter: 'blur(20px) saturate(140%)',
         borderRadius: 24,
-        padding: '20px 24px',
-        maxWidth: 480,
+        padding: '18px 22px',
+        maxWidth: 460,
         fontFamily: '"Noto Serif TC", "Newsreader", serif',
-        fontSize: 22,
+        fontSize: 17,
         lineHeight: 1.55,
         boxShadow: '0 12px 40px rgba(0,0,0,0.25)',
-        borderLeft: accent ? `4px solid ${accent}` : 'none',
+        borderLeft: accent ? `3px solid ${accent}` : 'none',
         position: 'relative',
       }}
     >
@@ -107,6 +107,20 @@ function GlassBubble({
           pointerEvents: 'none',
         }}
       />
+      {/* bubble tail · 指向莉莉的小三角 */}
+      <span style={{
+        position: 'absolute',
+        right: side === 'right' ? undefined : -8,
+        left: side === 'right' ? -8 : undefined,
+        top: 30,
+        width: 0, height: 0,
+        borderTop: '7px solid transparent',
+        borderBottom: '7px solid transparent',
+        borderLeft: side === 'right' ? undefined : `9px solid ${dark ? T.glassDarkDeep : T.glassDeep}`,
+        borderRight: side === 'right' ? `9px solid ${dark ? T.glassDarkDeep : T.glassDeep}` : undefined,
+        filter: 'drop-shadow(2px 0 4px rgba(0,0,0,0.10))',
+        pointerEvents: 'none',
+      }} />
       {children}
     </div>
   );
@@ -140,39 +154,13 @@ function SummaryPanel({ title, subtitle, rows, statusChip }: { title: string; su
         backdropFilter: 'blur(20px) saturate(140%)',
         WebkitBackdropFilter: 'blur(20px) saturate(140%)',
         borderRadius: 22,
-        padding: '20px 22px',
+        padding: '18px 22px 16px',
         minWidth: 296,
         position: 'relative',
         boxShadow: '0 12px 32px rgba(0,0,0,0.20)',
       }}
     >
-      {/* === 右上 status chip · ok = sage / warn = amber === */}
-      {statusChip && (
-        <span style={{
-          position: 'absolute', top: 14, right: 14,
-          display: 'inline-flex', alignItems: 'center', gap: 5,
-          padding: '4px 10px', borderRadius: 999,
-          background: statusChip.type === 'ok' ? T.sage : T.amber,
-          color: '#fff',
-          fontFamily: '"JetBrains Mono", monospace',
-          fontSize: 10, fontWeight: 700, letterSpacing: '0.14em',
-          boxShadow: statusChip.type === 'ok'
-            ? '0 4px 10px rgba(122,148,130,0.45), inset 0 1px 0 rgba(255,255,255,0.30)'
-            : '0 4px 10px rgba(212,113,42,0.45), inset 0 1px 0 rgba(255,255,255,0.30)',
-        }}>
-          <span style={{
-            width: 13, height: 13, borderRadius: '50%',
-            background: 'rgba(255,255,255,0.22)',
-            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            flexShrink: 0,
-          }}>
-            {statusChip.type === 'ok'
-              ? <Check size={9} strokeWidth={3.4} color="#fff" />
-              : <AlertTriangle size={9} strokeWidth={2.6} color="#fff" />}
-          </span>
-          {statusChip.text}
-        </span>
-      )}
+
       <div
         style={{
           position: 'absolute',
@@ -180,23 +168,55 @@ function SummaryPanel({ title, subtitle, rows, statusChip }: { title: string; su
           background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent)',
           borderRadius: 999,
         }}
-      />
-      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 12 }}>
+      />      {/* TODAY mono subtitle + status chip 同列、不蓋字 */}
+      {(subtitle || statusChip) && (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+          {subtitle ? (
+            <span style={{
+              fontFamily: '"JetBrains Mono", monospace', fontSize: 10, letterSpacing: '0.18em', color: T.ink3, fontWeight: 700,
+            }}>{subtitle}</span>
+          ) : <span />}
+          {statusChip && (
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              padding: '3px 9px', borderRadius: 999,
+              background: statusChip.type === 'ok' ? T.sage : T.amber,
+              color: '#fff',
+              fontFamily: '"JetBrains Mono", monospace',
+              fontSize: 9.5, fontWeight: 700, letterSpacing: '0.12em',
+              boxShadow: statusChip.type === 'ok'
+                ? '0 3px 8px rgba(122,148,130,0.42), inset 0 1px 0 rgba(255,255,255,0.30)'
+                : '0 3px 8px rgba(212,113,42,0.42), inset 0 1px 0 rgba(255,255,255,0.30)',
+            }}>
+              <span style={{
+                width: 12, height: 12, borderRadius: '50%',
+                background: 'rgba(255,255,255,0.22)',
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0,
+              }}>
+                {statusChip.type === 'ok'
+                  ? <Check size={8} strokeWidth={3.4} color="#fff" />
+                  : <AlertTriangle size={8} strokeWidth={2.6} color="#fff" />}
+              </span>
+              {statusChip.text}
+            </span>
+          )}
+        </div>
+      )}
+      {/* 主標獨立一行 */}
+      <div style={{ marginBottom: 10 }}>
         <span style={{
           fontFamily: '"Noto Serif TC", "Newsreader", serif',
-          fontSize: 18, fontWeight: 600, color: T.ink, letterSpacing: '0.01em',
+          fontSize: 19, fontWeight: 600, color: T.ink, letterSpacing: '0.01em',
         }}>{title}</span>
-        {subtitle && <span style={{
-          fontFamily: '"JetBrains Mono", monospace', fontSize: 10, letterSpacing: '0.18em', color: T.ink3, fontWeight: 700,
-        }}>{subtitle}</span>}
       </div>
       {rows.map((r, i) => (
-        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 0', borderTop: i > 0 ? '1px solid rgba(36,28,20,0.08)' : 'none' }}>
+        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 0', borderTop: i > 0 ? '1px solid rgba(36,28,20,0.08)' : 'none' }}>
           {r.status && <StatusBadge status={r.status} />}
           <span style={{ flex: '0 0 52px', fontFamily: '"Noto Sans TC", Inter, sans-serif', fontSize: 13, fontWeight: 600, color: T.ink2 }}>
             {r.label}
           </span>
-          <span style={{ flex: 1, fontFamily: '"Newsreader", serif', fontSize: 20, fontWeight: 500, color: T.ink, display: 'flex', alignItems: 'baseline', gap: 5 }}>
+          <span style={{ flex: 1, fontFamily: '"Newsreader", serif', fontSize: 19, fontWeight: 500, color: T.ink, display: 'flex', alignItems: 'baseline', gap: 5 }}>
             {r.value}
             {r.unit && <span style={{ fontSize: 11, color: T.ink3 }}>{r.unit}</span>}
           </span>
@@ -318,26 +338,27 @@ function VoicePill({ state = 'listening', prompt }: { state?: 'listening' | 'spe
     speaking: { color: T.sage, text: '莉莉正在說話…' },
     thinking: { color: T.amber, text: '莉莉想一下…' },
   }[state];
+  // 設計稿真相：底部 capsule 有 prompt 時只顯示 prompt（單行）· 不雙行
+  const displayText = prompt || config.text;
   return (
     <div
       style={{
-        padding: prompt ? '10px 22px 11px' : '12px 24px',
-        background: 'rgba(36,28,20,0.72)',
+        padding: '11px 22px',
+        background: 'rgba(36,28,20,0.78)',
         backdropFilter: 'blur(20px) saturate(140%)',
         WebkitBackdropFilter: 'blur(20px) saturate(140%)',
         borderRadius: 999,
-        display: 'flex', alignItems: 'center', gap: 12,
+        display: 'flex', alignItems: 'center', gap: 10,
         boxShadow: '0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.14)',
         border: '1px solid rgba(255,255,255,0.08)',
       }}
     >
-      {/* 5 條波形動畫 · 不是靜態圓點 */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 3, height: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 3, height: 14 }}>
         {[0, 1, 2, 1, 0].map((idx, i) => (
           <span
             key={i}
             style={{
-              width: 3, height: 12,
+              width: 2.5, height: 11,
               background: config.color,
               borderRadius: 2,
               boxShadow: `0 0 6px ${config.color}aa`,
@@ -348,22 +369,11 @@ function VoicePill({ state = 'listening', prompt }: { state?: 'listening' | 'spe
           />
         ))}
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-        <span style={{
-          fontFamily: '"Noto Serif TC", serif',
-          fontSize: 17, fontWeight: 500, color: '#fff', letterSpacing: '0.02em',
-          lineHeight: 1.2,
-        }}>{config.text}</span>
-        {prompt && (
-          <span style={{
-            fontFamily: '"JetBrains Mono", monospace',
-            fontSize: 11, fontWeight: 500,
-            color: 'rgba(255,253,248,0.62)',
-            letterSpacing: '0.04em',
-            lineHeight: 1.3,
-          }}>{prompt}</span>
-        )}
-      </div>
+      <span style={{
+        fontFamily: '"Noto Serif TC", serif',
+        fontSize: 15, fontWeight: 500, color: 'rgba(255,253,248,0.92)', letterSpacing: '0.02em',
+        lineHeight: 1.2,
+      }}>{displayText}</span>
     </div>
   );
 }
@@ -465,9 +475,9 @@ function ScreenStandby({ time, onWake }: { time: string; onWake: () => void }) {
         display: 'flex', alignItems: 'center', gap: 12,
         fontFamily: '"JetBrains Mono", monospace',
         fontSize: 11, letterSpacing: '0.18em',
-        color: T.paper, opacity: 0.62, fontWeight: 600,
+        color: T.paper, opacity: 0.78, fontWeight: 700,
       }}>
-        <span>25°C · 58%RH</span>
+        <span style={{ letterSpacing: '0.22em' }}>25°C · 58%RH</span>
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
           <span style={{ width: 5, height: 5, borderRadius: '50%', background: T.sage }} />
           適合保存
@@ -479,10 +489,10 @@ function ScreenStandby({ time, onWake }: { time: string; onWake: () => void }) {
         position: 'absolute', top: 22, left: 0, right: 0,
         display: 'flex', justifyContent: 'center', alignItems: 'baseline', gap: 8,
         fontFamily: '"Newsreader", serif',
-        color: T.paper, opacity: 0.78,
+        color: T.paper, opacity: 0.85,
       }}>
-        <span style={{ fontSize: 22, fontWeight: 400, letterSpacing: '0.04em' }}>CAREON</span>
-        <span style={{ fontSize: 22, fontWeight: 400, fontStyle: 'italic', letterSpacing: '0.01em', color: T.amberSoft }}>Companion</span>
+        <span style={{ fontSize: 20, fontWeight: 400, letterSpacing: '0.08em' }}>CAREON</span>
+        <span style={{ fontSize: 20, fontWeight: 400, fontStyle: 'italic', letterSpacing: '0.01em', color: T.amberSoft }}>Companion</span>
       </div>
 
       {/* === 右上 · 已連線 wifi === */}
@@ -491,7 +501,7 @@ function ScreenStandby({ time, onWake }: { time: string; onWake: () => void }) {
         display: 'inline-flex', alignItems: 'center', gap: 6,
         fontFamily: '"JetBrains Mono", monospace',
         fontSize: 11, letterSpacing: '0.18em',
-        color: T.paper, opacity: 0.62, fontWeight: 600,
+        color: T.paper, opacity: 0.78, fontWeight: 700,
       }}>
         <span style={{ fontSize: 13 }}>⌃</span>
         已連線
@@ -516,12 +526,12 @@ function ScreenStandby({ time, onWake }: { time: string; onWake: () => void }) {
         {/* 日期 */}
         <div style={{
           fontFamily: '"Noto Serif TC", serif',
-          fontSize: 22, fontWeight: 400,
+          fontSize: 20, fontWeight: 400,
           marginTop: 10, opacity: 0.78,
           color: T.paper,
-          letterSpacing: '0.04em',
+          letterSpacing: '0.02em',
         }}>
-          5 月 20 日　週二
+          5月20日 週二
         </div>
         {/* mic 喚醒大圓鈕 · 中央下方 ~48px gap */}
         <button
@@ -575,8 +585,8 @@ function ScreenAriaHere() {
           <span style={{ display: 'block', fontFamily: '"JetBrains Mono", monospace', fontSize: 13, letterSpacing: '0.16em', fontWeight: 700, color: T.sage, marginBottom: 10 }}>
             ● 莉莉 · 在
           </span>
-          早安、王阿姨。<br />
-          今天台北 25°，適合到陽台坐坐。
+          <span style={{ fontSize: 22, fontWeight: 500, color: T.ink, display: 'inline-block', marginBottom: 4 }}>早安、王阿姨。</span><br />
+          <span style={{ fontSize: 15, color: T.ink2 }}>今天台北 25°，適合到陽台坐坐。</span>
         </GlassBubble>
       </div>
       <div style={{ position: 'absolute', top: 80, right: 32 }}>
@@ -651,8 +661,8 @@ function ScreenHealth() {
           <span style={{ display: 'block', fontFamily: '"JetBrains Mono", monospace', fontSize: 13, letterSpacing: '0.16em', fontWeight: 700, color: T.sage, marginBottom: 10 }}>
             ● 莉莉 · 早晨關心
           </span>
-          早安王阿姨～<br />
-          <span style={{ color: T.amber, fontWeight: 600 }}>昨晚睡得怎麼樣？</span>
+          <span style={{ fontSize: 15, color: T.ink2 }}>早安王阿姨～</span><br />
+          <span style={{ color: T.amber, fontWeight: 600, fontSize: 22, lineHeight: 1.3, display: 'inline-block', marginTop: 4 }}>昨晚睡得怎麼樣？</span>
           {/* === 對話泡內 · 兩顆 sage 玻璃膠囊選項 === */}
           <div style={{ display: 'flex', gap: 10, marginTop: 14 }}>
             <GlassChip primary>睡得好</GlassChip>
@@ -793,14 +803,14 @@ function ScreenCompanion({ onEnd }: { onEnd: () => void }) {
               COMPANION · 10:48
             </span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 18 }}>
-            <span style={{ fontFamily: '"Noto Serif TC", serif', fontSize: 20, fontWeight: 600, color: T.ink }}>陪伴聊天</span>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+            <span style={{ fontFamily: '"Noto Serif TC", serif', fontSize: 19, fontWeight: 600, color: T.ink }}>陪伴聊天</span>
             <span style={{
-              display: 'inline-flex', alignItems: 'center', gap: 6,
-              padding: '4px 10px', borderRadius: 999,
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              padding: '3px 9px', borderRadius: 999,
               background: T.sage, color: '#fff',
-              fontFamily: '"Noto Sans TC", sans-serif', fontSize: 11, fontWeight: 600, letterSpacing: '0.06em',
-              boxShadow: '0 4px 10px rgba(122,148,130,0.45)',
+              fontFamily: '"JetBrains Mono", monospace', fontSize: 9.5, fontWeight: 700, letterSpacing: '0.12em',
+              boxShadow: '0 3px 8px rgba(122,148,130,0.42)',
             }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#fff', animation: 'pulse 1.4s ease-in-out infinite' }} />
               計時中
@@ -843,7 +853,7 @@ function ScreenCompanion({ onEnd }: { onEnd: () => void }) {
             background: 'linear-gradient(155deg, #E27772 0%, #D85A55 50%, #B83A35 100%)',
             color: '#fff', border: 'none', cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 0 0 1px rgba(255,255,255,0.18), 0 10px 24px rgba(216,90,85,0.50), 0 3px 10px rgba(0,0,0,0.20), inset 0 1.5px 0 rgba(255,255,255,0.28), inset 0 -2px 6px rgba(0,0,0,0.18), 0 0 30px rgba(216,90,85,0.30)',
+            boxShadow: '0 0 0 1px rgba(255,255,255,0.18), 0 10px 24px rgba(216,90,85,0.50), 0 3px 10px rgba(0,0,0,0.20), inset 0 1.5px 0 rgba(255,255,255,0.28), inset 0 -2px 6px rgba(0,0,0,0.18)',
             position: 'relative',
           }}
         >
@@ -867,9 +877,9 @@ function ScreenMedication() {
           <span style={{ display: 'block', fontFamily: '"JetBrains Mono", monospace', fontSize: 13, letterSpacing: '0.16em', fontWeight: 700, color: T.amber, marginBottom: 10 }}>
             ● 莉莉 · 用藥提醒
           </span>
-          早安王阿姨～<br />
-          <span style={{ color: T.amber, fontWeight: 600 }}>該吃藥囉。</span><br />
-          配藥槽已準備好兩顆，慢慢來。
+          <span style={{ fontSize: 15, color: T.ink2 }}>早安王阿姨～</span><br />
+          <span style={{ color: T.amber, fontWeight: 600, fontSize: 22, lineHeight: 1.3, display: 'inline-block', marginTop: 4 }}>該吃藥囉。</span><br />
+          <span style={{ fontSize: 15, color: T.ink2 }}>配藥槽已準備好兩顆，慢慢來。</span>
           {/* === 對話泡內 · 兩顆 sage 玻璃膠囊選項（含 ✓ icon） === */}
           <div style={{ display: 'flex', gap: 10, marginTop: 14 }}>
             <GlassChip primary icon={<Check size={11} strokeWidth={3.2} color="#fff" />}>我吃了</GlassChip>
@@ -909,6 +919,15 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
           objectPosition: 'center 20%',
         }}
       />
+
+      {/* 左上時間 · 對齊設計稿 09 左上 15:08 */}
+      <div style={{
+        position: 'absolute', top: 24, left: 32,
+        color: '#fff',
+        fontFamily: '"Newsreader", serif',
+        fontSize: 22, fontWeight: 500, letterSpacing: '0.01em',
+        textShadow: '0 2px 10px rgba(0,0,0,0.55)',
+      }}>15:08</div>
 
       {/* LIVE 玻璃膠囊 · 對齊設計稿 09 右上角位置 */}
       <div style={{
@@ -962,10 +981,10 @@ function ScreenFamilyCall({ onEnd }: { onEnd: () => void }) {
         transform: 'translateX(-50%)',
         display: 'flex', gap: 18, alignItems: 'center',
       }}>
-        <CircleBtn iconOnly size={56} icon={<Mic size={24} strokeWidth={2} color="#fff" />} />
-        <CircleBtn iconOnly size={56} icon={<VideoOff size={24} strokeWidth={2} color="#fff" />} />
-        <CircleBtn iconOnly size={56} icon={<MessageCircle size={24} strokeWidth={2} color="#fff" />} />
-        <EndCallBtn icon={<PhoneOff size={24} strokeWidth={2.2} color="#fff" />} size={56} onClick={onEnd} />
+        <CircleBtn iconOnly size={52} icon={<Mic size={22} strokeWidth={2} color="#fff" />} />
+        <CircleBtn iconOnly size={52} icon={<VideoOff size={22} strokeWidth={2} color="#fff" />} />
+        <CircleBtn iconOnly size={52} icon={<MessageCircle size={22} strokeWidth={2} color="#fff" />} />
+        <EndCallBtn icon={<PhoneOff size={26} strokeWidth={2.2} color="#fff" />} size={62} onClick={onEnd} />
       </div>
 
       {/* 左側 VOLUME · 對齊設計稿 09（+/- 按鈕 + 直立棒 + 小圓滑塊） */}
@@ -1044,7 +1063,7 @@ function ScreenMenu({ onPick }: { onPick: (s: ScreenId) => void }) {
     { label: '聯絡家人', sub: '聯絡 · 觸發狀態', voice: "說『家人』", icon: <Users size={26} strokeWidth={1.6} />, tint: T.roseDeep, screen: 'family-call' },
     { label: '陪伴聊天', sub: '角色 · 充值 · 剩 90 分', voice: "說『陪伴』", icon: <MessageCircle size={26} strokeWidth={1.6} />, tint: T.amber, screen: 'companion' },
     { label: '連線裝置', sub: 'Wi-Fi · 藍芽 · 手錶', voice: "說『裝置』", icon: <Radio size={26} strokeWidth={1.6} />, tint: T.sage },
-    { label: '個人資料', sub: '名稱 · 年齡 · 體態', voice: "說『我的』", icon: <User size={26} strokeWidth={1.6} />, tint: T.roseDeep },
+    { label: '個人資料', sub: '名稱 · 年齡 · 體態', voice: "說『我的』", icon: <User size={26} strokeWidth={1.6} />, tint: T.rose },
   ];
   return (
     <>
@@ -1090,7 +1109,7 @@ function ScreenMenu({ onPick }: { onPick: (s: ScreenId) => void }) {
             style={{
               background: '#FFFEFA',
               border: '1px solid rgba(31,27,23,0.06)',
-              borderRadius: 18, padding: '12px 10px 20px',
+              borderRadius: 18, padding: '20px 12px 18px',
               cursor: item.screen ? 'pointer' : 'default',
               opacity: item.screen ? 1 : 0.82,
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', gap: 5,
@@ -1110,7 +1129,7 @@ function ScreenMenu({ onPick }: { onPick: (s: ScreenId) => void }) {
               fontFamily: '"Noto Serif TC", serif', fontSize: 16, fontWeight: 600, color: T.ink, letterSpacing: '0.01em',
             }}>{item.label}</span>
             <span style={{
-              fontFamily: '"Noto Sans TC", sans-serif', fontSize: 11, fontWeight: 500, color: T.ink3, letterSpacing: '0.02em',
+              fontFamily: '"Noto Sans TC", sans-serif', fontSize: 12, fontWeight: 500, color: T.ink2, letterSpacing: '0.02em',
               textAlign: 'center', lineHeight: 1.4,
             }}>{item.sub}</span>
             <span style={{
@@ -1341,7 +1360,7 @@ export default function DevicePage() {
           style={{
             width: 1280, height: 800, maxWidth: '100%', maxHeight: 'calc(100vh - 40px)', aspectRatio: '1280 / 800',
             borderRadius: 28, overflow: 'hidden', position: 'relative', background: T.void,
-            boxShadow: '0 60px 120px rgba(0,0,0,0.6), 0 0 0 8px #2A201A, 0 0 0 10px #14100D',
+            boxShadow: '0 60px 120px rgba(0,0,0,0.6), 0 0 0 8px #1F1B17, 0 0 0 10px #0a0807',
           }}
         >
           {/* Lifestyle 真人照片 / 說話 mp4 背景 · 比照設計稿 */}
@@ -1365,19 +1384,18 @@ export default function DevicePage() {
           )}
 
           {/* Mood Tint · 弱化、不擋臉 */}
-          <div style={{ position: 'absolute', inset: 0, background: moodToTint(currentScreen.mood), pointerEvents: 'none', mixBlendMode: 'soft-light', opacity: 0.6 }} />
+          <div style={{ position: 'absolute', inset: 0, background: moodToTint(currentScreen.mood), pointerEvents: 'none', mixBlendMode: 'soft-light', opacity: 0.28 }} />
 
           {/* Status Bar · 純文字浮在莉莉照片上、不加 chip 框 · 比照設計稿 */}
           {screen !== 'standby' && screen !== 'goodnight' && (
             <div style={{
-              position: 'absolute', top: 22, left: 32,
-              display: 'flex', flexDirection: 'column', gap: 2,
+              position: 'absolute', top: 24, left: 32,
+              display: 'flex', alignItems: 'baseline', gap: 14,
               color: '#fff',
-              textDecoration: 'none',
-              textShadow: '0 2px 12px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.4)',
+              textShadow: '0 2px 10px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.4)',
             }}>
-              <span style={{ fontFamily: '"Newsreader", serif', fontSize: 30, fontWeight: 500, letterSpacing: '-0.01em', textDecoration: 'none', lineHeight: 1.1 }}>{time}</span>
-              <span style={{ fontFamily: 'Inter, "Noto Sans TC", sans-serif', fontSize: 13, opacity: 0.92, fontWeight: 500, letterSpacing: '0.02em', textDecoration: 'none' }}>5/26 週二 · 室溫 24°</span>
+              <span style={{ fontFamily: '"Newsreader", serif', fontSize: 22, fontWeight: 500, letterSpacing: '0.01em', lineHeight: 1 }}>{time}</span>
+              <span style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 10, fontWeight: 600, opacity: 0.78, letterSpacing: '0.22em', lineHeight: 1 }}>室溫 24°</span>
             </div>
           )}
 
@@ -1417,18 +1435,7 @@ export default function DevicePage() {
             </>
           )}
 
-          {/* companion screen 也要顯示左下 chat + 右下兩顆（但中央位置是紅色 stop · 由 ScreenCompanion 內部處理） */}
-          {screen === 'companion' && (
-            <>
-              <div style={{ position: 'absolute', bottom: 26, left: 26, pointerEvents: 'auto', zIndex: 5 }}>
-                <CircleBtn iconOnly size={56} icon={<MessageCircle size={24} strokeWidth={2} color="#fff" />} />
-              </div>
-              <div style={{ position: 'absolute', bottom: 26, right: 26, display: 'flex', flexDirection: 'column', gap: 12, pointerEvents: 'auto', zIndex: 5 }}>
-                <CircleBtn iconOnly size={56} icon={<Menu size={24} strokeWidth={2} color="#fff" />} onClick={() => setScreen('menu')} />
-                <CircleBtn iconOnly size={56} icon={<Phone size={24} strokeWidth={2} color="#fff" />} onClick={() => setScreen('family-call')} />
-              </div>
-            </>
-          )}
+          {/* 07-companion 設計稿：無任何 floating · 只有摘要面板 + 中央紅停止鈕 + 左上時間 */}
 
           {/* Dev Panel · 仍在裝置框內顯示（佔右側） */}
           {devOpen && <DevPanel currentScreen={screen} onSelect={setScreen} onClose={() => setDevOpen(false)} />}
